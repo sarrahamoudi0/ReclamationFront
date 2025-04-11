@@ -34,6 +34,7 @@ export class ReclamationService {
     const url = `${this.apiUrl}/getReclamationById/${idReclamation}`;
     return this.http.get<Reclamation>(url);
   }
+  
 
 
 }

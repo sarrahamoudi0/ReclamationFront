@@ -58,12 +58,16 @@ export class ReclamationComponent implements OnInit {
     this.reclamationservice.addReclamation(formData).subscribe({
       next: (res) => {
         console.log('Réclamation envoyée avec succès :', res);
-        this.newReclamation = new Reclamation();
-        this.selectedFile = null;
+        this.newReclamation = new Reclamation(); // Reset the form data
+        this.selectedFile = null; // Clear the file selection
+
+        // Navigate to "My Reclamations" page after successful submission
+        this.router.navigate(['/MyReclamation']); // Navigates to the "MyReclamationComponent"
       },
       error: (err) => {
         console.error('Erreur lors de l’envoi de la réclamation :', err);
       }
     });
+  }
 
-  }}
+  }

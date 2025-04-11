@@ -1,0 +1,40 @@
+<div class="reclamations-container">
+    <h1 class="page-title">My Reclamations</h1>
+  
+    <!-- Display loading message while fetching data -->
+    <div *ngIf="reclamations.length === 0" class="loading-message">
+      <p>No reclamations found or loading...</p>
+    </div>
+  
+    <!-- Display the list of reclamations -->
+    <div *ngIf="reclamations.length > 0" class="reclamation-list">
+      <div *ngFor="let reclamation of reclamations" class="reclamation-item">
+  
+        <!-- Statut button placed at the top -->
+        <div class="statut-container">
+          <span class="statut-button" [ngClass]="getStatutClass(reclamation.statut)">
+            {{ reclamation.statut }}
+          </span>
+        </div>
+  
+        <!-- Image displayed after the statut -->
+        <div class="reclamation-image">
+          <img *ngIf="reclamation.image_reclamation" class="img-fluid" [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation" alt="Reclamation Image" />
+        </div>
+  
+        <!-- Reclamation header with title -->
+        <div class="reclamation-header">
+          <h3>{{ reclamation.titre }}</h3>
+        </div>
+  
+        <!-- Description and date -->
+        <div class="reclamation-details">
+          <p class="description"><strong>Description:</strong> {{ reclamation.description }}</p>
+          <p class="created-date"><strong>Created on:</strong> {{ getFormattedDate(reclamation.createdDate) }}</p>
+        </div>
+  
+        <hr />
+      </div>
+    </div>
+  </div>
+  

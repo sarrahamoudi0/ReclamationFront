@@ -14,6 +14,9 @@ export class Reclamation {
     url?: string | ArrayBuffer;
     statut!: Statut;
     priorite!: Priorite;
+    userId?:number;
 
+
+    
   }
   

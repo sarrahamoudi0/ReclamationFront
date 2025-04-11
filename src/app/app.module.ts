@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CategorieComponent } from './categorie/categorie.component';
 import { MailComponent } from './mail/mail.component';
 import { FooterComponent } from './footer/footer.component';
+import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FooterComponent } from './footer/footer.component';
     ReclamationComponent,
     CategorieComponent,
     MailComponent,
-    FooterComponent
+    FooterComponent,
+    MyReclamationComponent
   ],
   imports: [
     BrowserModule,
