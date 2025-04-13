@@ -10,6 +10,7 @@ import { CategorieComponent } from './categorie/categorie.component';
 import { MailComponent } from './mail/mail.component';
 import { FooterComponent } from './footer/footer.component';
 import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
+import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MyReclamationComponent } from './my-reclamation/my-reclamation.componen
     CategorieComponent,
     MailComponent,
     FooterComponent,
-    MyReclamationComponent
+    MyReclamationComponent,
+    ReclamtionBackofficeComponent
   ],
   imports: [
     BrowserModule,
