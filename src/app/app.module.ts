@@ -11,6 +11,7 @@ import { MailComponent } from './mail/mail.component';
 import { FooterComponent } from './footer/footer.component';
 import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
+import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtio
     MailComponent,
     FooterComponent,
     MyReclamationComponent,
-    ReclamtionBackofficeComponent
+    ReclamtionBackofficeComponent,
+    ShowReclamationComponent
   ],
   imports: [
     BrowserModule,

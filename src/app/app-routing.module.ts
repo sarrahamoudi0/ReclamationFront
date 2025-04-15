@@ -3,12 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReclamationComponent } from './reclamation/reclamation.component';
 import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
+import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/reclamation', pathMatch: 'full' },
   {path:"reclamation",component:ReclamationComponent},
   {path:"MyReclamation",component:MyReclamationComponent},
-  {path:"admin",component:ReclamtionBackofficeComponent}
+  {path:"admin",component:ReclamtionBackofficeComponent},
+  {path:"reclamation/:id",component:ShowReclamationComponent}
+
 
 ];
 

@@ -62,7 +62,7 @@ export class ReclamationComponent implements OnInit {
         this.selectedFile = null; // Clear the file selection
 
         // Navigate to "My Reclamations" page after successful submission
-        this.router.navigate(['/MyReclamation']); // Navigates to the "MyReclamationComponent"
+        this.router.navigate(['/myReclamation']); // Navigates to the "MyReclamationComponent"
       },
       error: (err) => {
         console.error('Erreur lors de l’envoi de la réclamation :', err);

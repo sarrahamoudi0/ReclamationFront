@@ -1,0 +1,36 @@
+<div class="container" *ngIf="reclamation">
+    <div class="reclamation-card">
+      <!-- Statut en haut à droite -->
+      <div class="statut-container">
+        <span [ngClass]="getStatutClass(reclamation.statut)" class="statut-badge">
+          {{ reclamation.statut }}
+        </span>
+      </div>
+      
+      <!-- Contenu principal (Titre et Description) -->
+      <div class="reclamation-info">
+        <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
+        <p class="reclamation-description">{{ reclamation.description }}</p>
+      </div>
+      
+      <!-- Image -->
+      <div *ngIf="reclamation.image_reclamation" class="reclamation-image">
+        <img [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation" 
+             alt="Image de la réclamation" />
+      </div>
+      
+      <!-- Footer : Date à gauche et bouton de mise à jour à droite -->
+      <div class="reclamation-footer">
+        <span class="created-date">{{ reclamation.createdDate | date:'mediumDate' }}</span>
+        <button class="update-button" >
+          <i class="fas fa-edit"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Message de chargement -->
+  <div *ngIf="!reclamation" class="loading-message">
+    <p>Chargement des informations de la réclamation...</p>
+  </div>
+  
