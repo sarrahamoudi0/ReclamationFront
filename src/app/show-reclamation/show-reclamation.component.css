@@ -1,20 +1,30 @@
+/* Container principal */
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    font-family: 'Arial', sans-serif;
   }
   
+  /* Carte de réclamation */
   .reclamation-card {
     position: relative;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 25px;
+    padding: 25px 25px 60px 25px; /* Padding en bas augmenté pour le footer */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
-    min-height: 400px; /* Pour que le footer reste toujours en bas */
+    min-height: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
+  .reclamation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Statut */
   .statut-container {
     position: absolute;
     top: 15px;
@@ -30,14 +40,14 @@
     white-space: nowrap;
   }
   
-  /* Exemples de classes en fonction du statut */
   .statut-nouveau { background-color: #4CAF50; }
   .statut-en-cours { background-color: #FF9800; }
   .statut-escalé  { background-color: #2196F3; }
   .statut-resolu  { background-color: #F44336; }
   
+  /* Titre et description */
   .reclamation-info {
-    margin-top: 40px; /* Pour laisser de la place au badge en haut à droite */
+    margin-top: 40px; /* Laisser de l'espace pour le badge */
     margin-bottom: 20px;
   }
   
@@ -46,6 +56,7 @@
     font-weight: 600;
     color: #333;
     margin: 0 0 10px 0;
+    word-break: break-word;
   }
   
   .reclamation-description {
@@ -55,6 +66,7 @@
     margin: 0;
   }
   
+  /* Image */
   .reclamation-image {
     display: flex;
     justify-content: center;
@@ -62,13 +74,14 @@
   }
   
   .reclamation-image img {
-    width: 120px; /* image petite */
+    width: 120px;  /* Image petite */
     height: auto;
     border-radius: 6px;
     object-fit: cover;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
   
+  /* Footer : date et bouton */
   .reclamation-footer {
     position: absolute;
     bottom: 20px;
@@ -77,11 +90,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 0.9rem;
+    color: #666;
   }
   
   .created-date {
-    font-size: 0.9rem;
-    color: #666;
     font-style: italic;
   }
   
@@ -90,14 +103,14 @@
     border: none;
     border-radius: 50%;
     padding: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
     width: 40px;
     height: 40px;
-    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
   }
   
   .update-button:hover {
@@ -108,10 +121,107 @@
     font-size: 1.1rem;
   }
   
+  /* Message de chargement */
   .loading-message {
     text-align: center;
     font-size: 1.2rem;
     color: #666;
     margin-top: 30px;
+  }
+  
+  /* Pop-up de mise à jour */
+  .popup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .popup-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  
+  .popup-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .popup-actions button {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-save {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+  
+  .btn-save:hover {
+    background-color: #45a049;
+  }
+  
+  .btn-cancel {
+    background-color: #ccc;
+    color: #333;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #b3b3b3;
   }
   

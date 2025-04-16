@@ -25,7 +25,7 @@ export class ReclamationService {
     return this.http.delete(`${this.apiUrl}/remove/${reclamation.idReclamation}`);
   }
 
-  updateReclamation(updatedReclamation: Reclamation): Observable<Reclamation> {
+  updateReclamation(updatedReclamation: Partial<Reclamation>): Observable<Reclamation> {
     const url = `${this.apiUrl}/updateReclamation`;
     return this.http.put<Reclamation>(url, updatedReclamation);
   }

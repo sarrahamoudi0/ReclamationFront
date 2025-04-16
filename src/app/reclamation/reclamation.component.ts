@@ -12,7 +12,7 @@ import { Priorite } from '../models/Priorite';
 })
 export class ReclamationComponent implements OnInit {
 
-  reclamations : Reclamation [] = []; 
+  reclamations : Reclamation [] = [];
   selectedFile: File | null = null;
 
   constructor(private reclamationservice: ReclamationService, private router: Router) { }
@@ -34,7 +34,7 @@ export class ReclamationComponent implements OnInit {
     statut: Statut.Nouveau,
     priorite: Priorite.Faible
 
- 
+
   };
 
   onFileSelected(event: any): void {
@@ -62,7 +62,7 @@ export class ReclamationComponent implements OnInit {
         this.selectedFile = null; // Clear the file selection
 
         // Navigate to "My Reclamations" page after successful submission
-        this.router.navigate(['/myReclamation']); // Navigates to the "MyReclamationComponent"
+        this.router.navigate(['/myreclamation']); // Navigates to the "MyReclamationComponent"
       },
       error: (err) => {
         console.error('Erreur lors de l’envoi de la réclamation :', err);

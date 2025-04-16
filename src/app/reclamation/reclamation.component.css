@@ -1,20 +1,19 @@
-/* Body and Page Styling */
 
-  
   /* Wrapper for Image and Form */
   .form-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;  /* Increase max-width for a larger form */
-    width: 70%;  /* Adjust width to make it wider */
+
     padding: 30px;  /* Add padding inside the wrapper */
+    margin-top: 70px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;  /* Ensure that the content wraps on smaller screens */
   }
-  
+
   /* Image Container */
   .image-container {
     width: 45%;  /* Increase image container width */
@@ -22,14 +21,14 @@
     justify-content: center;
     align-items: center;
   }
-  
+
   .form-image {
     width: 85%;  /* Increase image size */
     height: auto;
     object-fit: cover;
     border-radius: 8px;
   }
-  
+
   /* Form Styles */
   .reclamation-form {
     width: 50%;  /* Increase form container width */
@@ -37,14 +36,14 @@
     flex-direction: column;
     padding-left: 10px;
   }
-  
+
   .form-group {
     margin-bottom: 12px;  /* Increased space between each label/input group */
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  
+
   label {
     font-weight: bold;
     font-size: 12px;  /* Increased label font size */
@@ -52,7 +51,7 @@
     width: 30%;
     margin-right: 10px;
   }
-  
+
   input[type="text"], input[type="email"], textarea, input[type="file"] {
     padding: 6px 10px;  /* Slightly increased padding */
     font-size: 12px;  /* Increased font size for inputs */
@@ -61,23 +60,23 @@
     transition: border-color 0.3s ease;
     width: 65%;  /* Increased width for input fields */
   }
-  
+
   input[type="text"]:focus, input[type="email"]:focus, textarea:focus, input[type="file"]:focus {
     border-color: #4CAF50;
   }
-  
+
   textarea {
     resize: vertical;
     min-height: 60px;  /* Increased height for textarea */
   }
-  
+
   .form-control-file {
     border: none;
     padding: 6px;
     font-size: 12px;
     margin-top: 5px;
   }
-  
+
   /* Submit Button */
   .btn-submit {
     padding: 8px 16px;  /* Increased button size */
@@ -90,11 +89,11 @@
     transition: background-color 0.3s ease;
     margin-top: 12px;
   }
-  
+
   .btn-submit:hover {
     background-color: #e47429;
   }
-  
+
   /* Make form more responsive on smaller screens */
   @media (max-width: 768px) {
     .form-wrapper {
@@ -102,34 +101,65 @@
       width: 90%;  /* Ensure form and image take up 90% of screen width on smaller devices */
       padding: 20px;  /* Ensure padding remains consistent */
     }
-  
+
     .image-container, .reclamation-form {
       width: 100%;  /* Make both containers full width on small screens */
       padding: 0;
     }
-  
-    .form-group {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
     label {
       width: auto;
       margin-bottom: 6px;
     }
-  
+
     input[type="text"], input[type="email"], textarea {
       width: 100%;
     }
   }
-  
+
   @media (max-width: 480px) {
     .form-group label {
       font-size: 10px;  /* Further reduced font size on very small screens */
     }
-  
+
     input[type="text"], input[type="email"], textarea {
       font-size: 11px;  /* Smaller input text size for very small screens */
     }
   }
-  
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .field-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-danger {
+    color: red;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    margin-left: 12rem;
+  }
+
+
+
+
+
+
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-3px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Optionnel : améliore l'espacement général entre les groupes */
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .global-error {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }

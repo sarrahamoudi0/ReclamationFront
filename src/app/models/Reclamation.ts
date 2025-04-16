@@ -10,7 +10,7 @@ export class Reclamation {
     titre!: string;
     description!: string;
     createdDate?: Date | null; 
-    image_reclamation!: File | null; 
+    image_reclamation?: File | null; 
     url?: string | ArrayBuffer;
     statut!: Statut;
     priorite!: Priorite;

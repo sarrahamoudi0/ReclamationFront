@@ -8,7 +8,7 @@ import { ShowReclamationComponent } from './show-reclamation/show-reclamation.co
 const routes: Routes = [
   { path: '', redirectTo: '/reclamation', pathMatch: 'full' },
   {path:"reclamation",component:ReclamationComponent},
-  {path:"MyReclamation",component:MyReclamationComponent},
+  {path:"myreclamation",component:MyReclamationComponent},
   {path:"admin",component:ReclamtionBackofficeComponent},
   {path:"reclamation/:id",component:ShowReclamationComponent}
 

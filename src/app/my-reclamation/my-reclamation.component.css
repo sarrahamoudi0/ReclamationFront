@@ -1,109 +1,239 @@
-/* Ensure the container takes the full height and is scrollable */
-.reclamations-container {
-    max-height: 100vh; /* Ensures the container doesn't exceed the viewport height */
-    overflow-y: auto; /* Allows scrolling if content exceeds the viewport */
-    padding: 20px;
-    font-family: Arial, sans-serif;
+.reclamation-card {
+  display: flex;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.reclamation-card:hover {
+  transform: translateY(-3px);
+}
+
+
+.reclamation-content {
+  padding: 20px;
+  flex: 1;
+}
+.reclamation-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reclamation-title {
+  font-size: 20px;
+  color: #002244;
+  margin: 0;
+}
+.buy-now {
+  background: #e3d6ff;
+  color: #4c3cb8;
+  border: 2px solid #c6b9f8;
+  border-radius: 24px;
+  padding: 6px 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.reclamation-meta {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+.meta-item {
+  margin-right: 15px;
+}
+.instructor-info {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+.instructor-img {
+  width: 40px;
+  height: 40px;
+  background: #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.instructor-name {
+  margin: 0;
+  font-weight: bold;
+}
+.instructor-title {
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+}
+.reclamation-img-wrapper {
+  margin: 30px;
+  width: 220px;
+  height: 150px;
+  border-radius: 50%; /* coins arrondis */
+  overflow: hidden; /* masque l'image qui dépasse */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* effet d’ombre douce */
+  background-color: #f9f9f9; /* couleur de fond si l’image ne charge pas */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reclamation-img-wrapper img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover; /* pour bien remplir sans déformer */
+  display: block;
+}
+.created-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.created-date {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+}
+
+.arrow-btn {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.arrow-btn:hover {
+  background-color: #f0f0f0;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Limit the image size and ensure it's positioned after the statut button */
-  .reclamation-image img {
-    width: 100%;      /* Image will take full width of the container */
-    max-height: 250px; /* Set a maximum height for the image */
-    object-fit: cover; /* Ensures the image doesn't stretch and maintains aspect ratio */
-    border-radius: 8px; /* Optional: rounds the image corners */
-    margin-bottom: 15px; /* Space between image and title */
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Styling for the reclamation items */
-  .reclamation-item {
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px; /* Rounded corners for the reclamation item */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-    transition: transform 0.3s ease; /* Smooth hover effect */
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .reclamation-item:hover {
-    transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+.statut-button {
+  display: inline-block;
+  width: 9ch;
+  text-align: center;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.9em;
+  font-weight: bold;
+  border-radius: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+
+  box-shadow: 5 5 15px rgba(0, 0, 0, 0.1);
+
+  /* ✨ Animation automatique */
+  animation: pulse 2s ease-in-out infinite;
+}
+
+
+/* Apply different colors based on the statut */
+.statut-nouveau {
+  background-color: #f39c12; /* Orange */
+}
+
+.statut-en-cours {
+  background-color: #3498db; /* Blue */
+}
+
+.statut-escalé {
+  background-color: #9b59b6; /* Purple */
+}
+
+.statut-resolu {
+  background-color: #2ecc71; /* Green */
+}
+
+
+
+.reclamation-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+
+
+
+.reclamation-description {
+  font-size: 14px;
+
+  line-height: 1.6;
+  margin: 0;
+  padding: 8px 12px;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  width: 100%;
+  font-size: 15px;
+  color: #4d4545;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  background-color: #f8f8f8;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(27, 21, 21, 0.05);
+}
+
+/* Permet de forcer un retour à la ligne après ~60 caractères visibles */
+@media (min-width: 600px) {
+  .reclamation-description {
+    max-width: 50ch; /* Environ 60 caractères */
   }
-  
-  /* Styling for the statut button container */
-  .statut-container {
-    display: flex;
-    justify-content: flex-start; /* Aligns the button to the left */
-    margin-bottom: 10px; /* Adds space between the button and image */
+}
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin: 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+/* Ligne animée de gauche à droite */
+.page-title::after {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 5px;
+  margin: 12px auto 0;
+  border-radius: 4px;
+
+  background: linear-gradient(90deg, #ff9800, #ff5722,#3498db, #9b59b6 ,#2ecc71, #ff9800);
+  background-size: 200% 100%;
+
+  animation: moveLeftToRight 2.5s linear infinite;
+}
+
+/* Animation déplacement gauche vers droite */
+@keyframes moveLeftToRight {
+  0% {
+    background-position: 200% 0%;
   }
-  
-  /* Statut button styling with border */
-  .statut-button {
-    background-color: orange; /* Orange background */
-    color: white;  /* White text */
-    padding: 6px 12px;  /* Adds some space inside the button */
-    border-radius: 5px;  /* Rounded corners */
-    font-weight: bold;  /* Bold text */
-    text-transform: uppercase;  /* Uppercase text */
-    font-size: 0.9em;  /* Slightly smaller text */
-    cursor: pointer;  /* Makes it look clickable */
-    border: 2px solid white; /* Add a border with a white color */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow around the button */
+  100% {
+    background-position: -200% 0%;
   }
-  
-  /* Apply different colors based on the statut */
-  .statut-nouveau {
-    background-color: #ff6600; /* Darker orange for "Nouveau" */
-  }
-  
-  .statut-en-cours {
-    background-color: #ff9900; /* Lighter orange for "En cours" */
-  }
-  
-  .statut-escalé {
-    background-color: #ffcc00; /* Yellow-orange for "Escalé" */
-  }
-  
-  .statut-resolu {
-    background-color: #ffb84d; /* A more subdued orange for "Résolu" */
-  }
-  
-  /* Styling for the reclamation header */
-  .reclamation-header {
-    margin-top: 15px; /* Adds space above the header */
-  }
-  
-  .reclamation-header h3 {
-    font-size: 1.6em;
-    font-weight: 600;
-    margin: 0;
-    color: #333; /* Darker color for better contrast */
-  }
-  
-  /* Styling for the reclamation details (description and date) */
-  .reclamation-details {
-    margin-top: 10px; /* Adds space between title and details */
-    font-size: 1.1em;
-  }
-  
-  .reclamation-details p {
-    margin-bottom: 8px;
-  }
-  
-  .reclamation-details .description {
-    color: #555; /* Lighter color for description */
-  }
-  
-  .reclamation-details .created-date {
-    color: #888; /* Slightly lighter color for the date */
-    font-style: italic; /* Italicize the date */
-    font-size: 0.95em;
-  }
-  
-  /* Optional styling for the separator line */
-  hr {
-    border: 0;
-    border-top: 1px solid #ddd;
-    margin-top: 20px;
-  }
-  
+}
+
