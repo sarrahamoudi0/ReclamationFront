@@ -1,22 +1,28 @@
-<!-- show-admin-reclamation.component.html -->
-
 <!-- Card Container -->
 <div class="container" *ngIf="reclamation">
-  <div class="reclamation-card">
-
-    <!-- Statut -->
-    <div class="statut-container">
-      <!-- Badge that acts as a toggle button -->
-      <span
-        [ngClass]="getStatutClass(reclamation.statut)"
-        class="statut-badge"
-        (click)="toggleStatutList()">
-        {{ reclamation.statut }}
-      </span>
-
-      <!-- Statut Dropdown -->
-      <div *ngIf="showStatutList" class="statut-dropdown">
-        <ul class="statut-list">
+    <div class="reclamation-card">
+      
+      <!-- Statut and Priorité -->
+      <div class="statut-priorite-container">
+        
+        <!-- Statut Badge -->
+        <span
+          [ngClass]="getStatutClass(reclamation.statut)"
+          class="statut-badge"
+          (click)="toggleStatutList()">
+          {{ reclamation.statut }}
+        </span>
+  
+        <!-- Priorité Badge styled like Statut -->
+        <span
+          [ngClass]="getPrioriteClass(reclamation.priorite)"
+          class="priorite-badge"
+          (click)="togglePrioriteList()">
+          {{ reclamation.priorite }}
+        </span>
+      
+        <!-- List of Statuts shown when toggled -->
+        <ul *ngIf="showStatutList" class="statut-list">
           <li
             *ngFor="let statut of statutValues"
             (click)="selectStatut(statut)"
@@ -24,34 +30,43 @@
             {{ statut }}
           </li>
         </ul>
+  
+        <!-- List of Priorités shown when toggled -->
+        <ul *ngIf="showPrioriteList" class="priorite-list">
+          <li
+            *ngFor="let priorite of prioriteValues"
+            (click)="selectPriorite(priorite)"
+            [class.active]="priorite === selectedPriorite">
+            {{ priorite }}
+          </li>
+        </ul>
       </div>
+  
+      <!-- Infos -->
+      <div class="reclamation-info">
+        <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
+        <p class="reclamation-description">{{ reclamation.description }}</p>
+      </div>
+  
+      <!-- Image -->
+      <div
+        *ngIf="reclamation.image_reclamation"
+        class="reclamation-image"
+        [ngClass]="{'zoomed': isImageZoomed}"
+        (click)="zoomImage()">
+        <img
+          [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation"
+          alt="Image de la réclamation" />
+      </div>
+  
+      <!-- Footer -->
+      <div class="reclamation-footer">
+        <span class="created-date">
+          🕒 {{ reclamation.createdDate | date:'mediumDate' }}
+        </span>
+      </div>
+      
     </div>
-
-    <!-- Infos -->
-    <div class="reclamation-info">
-      <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
-      <p class="reclamation-description">{{ reclamation.description }}</p>
-    </div>
-
-    <!-- Image -->
-    <div
-      *ngIf="reclamation.image_reclamation"
-      class="reclamation-image"
-      [ngClass]="{'zoomed': isImageZoomed}"
-      (click)="zoomImage()">
-      <img
-        [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation"
-        alt="Image de la réclamation" />
-    </div>
-
-    <!-- Footer -->
-    <div class="reclamation-footer">
-      <span class="created-date">
-        🕒 {{ reclamation.createdDate | date:'mediumDate' }}
-      </span>
-    </div>
-
-  </div>
 </div>
 
 <!-- Loading Message -->

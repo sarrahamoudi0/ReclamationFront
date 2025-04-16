@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reclamation } from '../models/Reclamation';
 import { Statut } from '../models/Statut';
+import { Priorite } from '../models/Priorite';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,10 @@ export class ReclamationService {
   updateReclamationStatut(id: string, statut: Statut): Observable<Reclamation> {
     // The request body will be in the format { statut: "Encours" }, etc.
     return this.http.put<Reclamation>(`${this.apiUrl}/updateReclamationStatut/${id}`, { statut });
+  }
+
+  updateReclamationPriority(id: string, priority: Priorite): Observable<Reclamation> {
+    return this.http.put<Reclamation>(`${this.apiUrl}/${id}/priority?priority=${priority}`, {});
   }
 
 }

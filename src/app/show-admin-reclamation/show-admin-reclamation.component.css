@@ -6,9 +6,9 @@ body, html {
     justify-content: center;
     align-items: center;
     background-color: #f7f7f7; /* Optional background color */
-  }
-  
-  .container {
+}
+
+.container {
     max-width: 800px;
     width: 100%; /* Allow the container to stretch but limit the max width */
     padding: 20px;
@@ -16,10 +16,10 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  /* Carte de réclamation */
-  .reclamation-card {
+}
+
+/* Carte de réclamation */
+.reclamation-card {
     position: relative;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -31,50 +31,54 @@ body, html {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%; /* Make sure the card takes full width of the container */
     max-width: 800px; /* Ensure card width doesn't exceed this */
-  }
-  
-  .reclamation-card:hover {
+}
+
+.reclamation-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  }
-  
-/* Statut */
-/* Statut */
-.statut-container {
+}
+
+/* Statut and Priorité container */
+.statut-priorite-container {
     position: absolute;
     top: 15px;
     right: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Space between Statut and Priorité buttons */
 }
 
 /* Badge du statut - Bouton plus fin et plus petit */
-.statut-badge {
-    padding: 6px 12px; /* Moins de padding pour le rendre plus fin */
-    border-radius: 15px; /* Plus petit rayon pour le rendre plus fin */
-    font-size: 0.9rem; /* Police plus petite */
-    font-weight: bold;
-    color: #fff;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.3s ease, transform 0.2s ease;
-    width: auto; /* La largeur s'adapte automatiquement au contenu */
-    height: 30px; /* Hauteur réduite pour rendre le bouton plus petit */
-    display: inline-flex;
-    justify-content: center; /* Centrer le texte horizontalement */
-    align-items: center; /* Centrer le texte verticalement */
-    min-width: 80px; /* Largeur minimale pour garantir que le texte est bien centré */
-    max-width: 150px; /* Largeur maximale pour plus de flexibilité */
-}
+.statut-badge, .priorite-badge {
+    display: inline-block;
+    width: 9ch;  /* Fixed width for 7 characters */
+    text-align: center;  /* Center the text inside the badge */
+    padding: 4px 8px;  /* Add padding for better visibility */
+    font-size: 14px;  /* Adjust font size as needed */
+    border-radius: 12px;  /* Rounded corners */
+    white-space: nowrap;  /* Prevent the badge text from wrapping */
+    overflow: hidden;  /* Hide overflow text */
+    text-overflow: ellipsis;  /* Add ellipsis for overflow text */
+  }
 
+
+  .badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 12px; /* Smaller font size */
+    text-transform: capitalize;
+    font-weight: 500;
+    display: inline-block;
+}
+  
 /* Hover du badge de statut */
-.statut-badge:hover {
+.statut-badge:hover, .priorite-badge:hover {
     transform: scale(1.05);
 }
 
-/* Liste déroulante des statuts */
-.statut-list {
+/* Liste déroulante des statuts et priorités */
+.statut-list, .priorite-list {
     display: none; /* Masquer par défaut */
     position: absolute;
     top: 40px; /* Ajuster la position selon votre design */
@@ -95,15 +99,15 @@ body, html {
 }
 
 /* Afficher la liste lorsque le conteneur est survolé */
-.statut-container:hover .statut-list {
+.statut-priorite-container:hover .statut-list,
+.statut-priorite-container:hover .priorite-list {
     display: block; /* Afficher la liste */
     opacity: 1; /* La rendre visible */
     visibility: visible; /* La rendre visible */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Items de la liste */
-.statut-list li {
+.statut-list li, .priorite-list li {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
@@ -111,12 +115,12 @@ body, html {
 }
 
 /* Dernier élément de la liste, sans bordure */
-.statut-list li:last-child {
+.statut-list li:last-child, .priorite-list li:last-child {
     border-bottom: none;
 }
 
 /* Hover des éléments de la liste */
-.statut-list li:hover {
+.statut-list li:hover, .priorite-list li:hover {
     background-color: #3498db; /* Hover bleu */
     color: white; /* Couleur du texte au survol */
 }
@@ -143,7 +147,7 @@ body, html {
 }
 
 /* Etat actif pour un statut sélectionné */
-.statut-list li.active {
+.statut-list li.active, .priorite-list li.active {
     background-color: #2ecc71; /* Vert pour un statut actif */
     color: white;
 }
@@ -170,52 +174,50 @@ body, html {
     opacity: 0.8;
 }
 
-
-  
-  /* Titre et description */
-  .reclamation-info {
+/* Titre et description */
+.reclamation-info {
     margin-top: 40px; /* Laisser de l'espace pour le badge */
     margin-bottom: 20px;
-  }
-  
-  .reclamation-title {
+}
+
+.reclamation-title {
     font-size: 1.4rem;
     font-weight: 600;
     color: #333;
     margin: 0 0 10px 0;
     word-break: break-word;
-  }
-  
-  .reclamation-description {
+}
+
+.reclamation-description {
     font-size: 1rem;
     color: #555;
     line-height: 1.5;
     margin: 0;
-  }
-  
-  /* Image */
-  .reclamation-image {
+}
+
+/* Image */
+.reclamation-image {
     display: flex;
     justify-content: center;
     margin: 20px 0;
-  }
-  
-  .reclamation-image img {
+}
+
+.reclamation-image img {
     width: 120px;
     height: auto;
     border-radius: 6px;
     object-fit: cover;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease; /* Smooth transition for zoom */
-  }
-  
-  .reclamation-image.zoomed img {
+}
+
+.reclamation-image.zoomed img {
     transform: scale(5); /* Increased zoom to 5x */
     cursor: zoom-out; /* Change cursor to indicate the zoom out action */
-  }
-  
-  /* Footer : date et bouton */
-  .reclamation-footer {
+}
+
+/* Footer : date et bouton */
+.reclamation-footer {
     position: absolute;
     bottom: 20px;
     left: 20px;
@@ -225,13 +227,13 @@ body, html {
     align-items: center;
     font-size: 0.9rem;
     color: #666;
-  }
-  
-  .created-date {
+}
+
+.created-date {
     font-style: italic;
-  }
-  
-  .update-button {
+}
+
+.update-button {
     background-color: #007bff;
     border: none;
     border-radius: 50%;
@@ -244,26 +246,26 @@ body, html {
     align-items: center;
     justify-content: center;
     color: #fff;
-  }
-  
-  .update-button:hover {
+}
+
+.update-button:hover {
     background-color: #0056b3;
-  }
-  
-  .update-button i {
+}
+
+.update-button i {
     font-size: 1.1rem;
-  }
-  
-  /* Message de chargement */
-  .loading-message {
+}
+
+/* Message de chargement */
+.loading-message {
     text-align: center;
     font-size: 1.2rem;
     color: #666;
     margin-top: 30px;
-  }
-  
-  /* Pop-up de mise à jour */
-  .popup-modal {
+}
+
+/* Pop-up de mise à jour */
+.popup-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -275,85 +277,82 @@ body, html {
     justify-content: center;
     z-index: 2000;
     animation: fadeIn 0.3s ease-out;
-  }
-  
-  .popup-card {
+}
+
+.popup-card {
     background: #fff;
     border-radius: 10px;
     padding: 30px;
     width: 90%;
     max-width: 500px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  }
-  
-  .popup-title {
+}
+
+.popup-title {
     text-align: center;
     font-size: 1.5rem;
     margin-bottom: 20px;
     color: #333;
-  }
-  
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  .form-group label {
+}
+
+.form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
     color: #333;
-  }
-  
-  .form-group input {
+}
+
+.form-group input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
-  }
-  
-  /* For textarea fields */
-  .form-group textarea {
+}
+
+/* For textarea fields */
+.form-group textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
-    height: 150px; /* Increased height for textarea */
-    resize: vertical; /* Allows resizing vertically */
-  }
-  
-  .popup-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .popup-actions button {
-    padding: 8px 14px;
-    font-size: 0.9rem;
+    min-height: 100px;
+}
+
+/* Close Button */
+.popup-close-btn {
+    background-color: #e74c3c;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    padding: 8px 16px;
     cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .btn-save {
-    background-color: #4CAF50;
-    color: #fff;
-  }
-  
-  .btn-save:hover {
-    background-color: #45a049;
-  }
-  
-  .btn-cancel {
-    background-color: #ccc;
-    color: #333;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #b3b3b3;
-  }
-  
+    transition: background-color 0.3s ease;
+}
+
+.popup-close-btn:hover {
+    background-color: #c0392b;
+}
+/* Priorité Faible */
+/* Priorite Colors */
+.badge-high {
+    background-color: #e74c3c; /* Red */
+}
+
+.badge-medium {
+    background-color: #f1c40f; /* Yellow */
+    
+}
+
+.badge-low {
+    background-color: #1abc9c; /* Teal */
+}
+
+.badge-default {
+    background-color: #7f8c8d; /* Gray */
+}
