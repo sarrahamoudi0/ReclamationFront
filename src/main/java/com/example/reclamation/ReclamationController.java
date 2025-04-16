@@ -31,6 +31,7 @@ public class ReclamationController {
             @RequestParam("description") String description,
             @RequestParam(value = "image_reclamation", required = false) MultipartFile fileReclamation) throws IOException {
 
+        // Création de l'objet Reclamation
         Reclamation reclamation = new Reclamation();
         reclamation.setNom(nom);
         reclamation.setPrenom(prenom);
@@ -38,11 +39,23 @@ public class ReclamationController {
         reclamation.setEmail(email);
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
-        reclamation.setImage_reclamation(fileReclamation.getBytes());
 
+        // Vérification si un fichier a été téléchargé
+        if (fileReclamation != null && !fileReclamation.isEmpty()) {
+            // Si un fichier est présent, on convertit en tableau de bytes
+            reclamation.setImage_reclamation(fileReclamation.getBytes());
+        } else {
+            // Si aucun fichier n'est fourni, on garde le champ image_reclamation nul
+            reclamation.setImage_reclamation(null);
+        }
+
+        // Sauvegarde de la réclamation dans la base de données
         Reclamation savedReclamation = reclamationService.createReclamation(reclamation);
+
+        // Retour de la réclamation sauvegardée avec un code de statut HTTP 200
         return ResponseEntity.ok(savedReclamation);
     }
+
 
 
     @GetMapping("/getAllReclamation")
