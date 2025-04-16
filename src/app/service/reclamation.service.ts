@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reclamation } from '../models/Reclamation';
+import { Statut } from '../models/Statut';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,9 @@ export class ReclamationService {
     return this.http.get<Reclamation>(url);
   }
   
-
+  updateReclamationStatut(id: string, statut: Statut): Observable<Reclamation> {
+    // The request body will be in the format { statut: "Encours" }, etc.
+    return this.http.put<Reclamation>(`${this.apiUrl}/updateReclamationStatut/${id}`, { statut });
+  }
 
 }

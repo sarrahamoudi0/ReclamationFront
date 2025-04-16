@@ -1,9 +1,21 @@
-/* Container principal */
-.container {
+/* Body and Container to center the card */
+body, html {
+    height: 100%; /* Ensure full height */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7; /* Optional background color */
+  }
+  
+  .container {
     max-width: 800px;
-    margin: 0 auto;
+    width: 100%; /* Allow the container to stretch but limit the max width */
     padding: 20px;
     font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   /* Carte de réclamation */
@@ -12,11 +24,13 @@
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 25px 25px 60px 25px; /* Padding en bas augmenté pour le footer */
+    padding: 25px 25px 60px 25px; /* Padding at the bottom for footer */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
     min-height: 400px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Make sure the card takes full width of the container */
+    max-width: 800px; /* Ensure card width doesn't exceed this */
   }
   
   .reclamation-card:hover {
@@ -29,32 +43,115 @@
     position: absolute;
     top: 15px;
     right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
   .statut-badge {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: bold;
     color: #fff;
+    cursor: pointer;
     white-space: nowrap;
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    transition: background 0.3s ease, transform 0.2s ease;
   }
   
+  .statut-badge:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Dropdown list */
+ /* Statut List */
+.statut-list {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 40px; /* Adjust position based on your design */
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 150px; /* Smaller width */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem; /* Smaller font size */
+    opacity: 0; /* Initially invisible */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  /* Show the list when active */
+  .statut-container:hover .statut-list {
+    display: block; /* Display list */
+    opacity: 1; /* Make it visible */
+    visibility: visible; /* Make it visible */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .statut-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .statut-list li:last-child {
+    border-bottom: none; /* Remove border on the last item */
+  }
+  
+  .statut-list li:hover {
+    background-color: #3498db; /* Blue hover */
+    color: white; /* Text color on hover */
+  }
+  
+  /* Assign background colors for each statut */
   .statut-nouveau {
     background-color: #f39c12; /* Orange */
+    color: white;
   }
   
   .statut-en-cours {
     background-color: #3498db; /* Blue */
+    color: white;
   }
   
   .statut-escalé {
     background-color: #9b59b6; /* Purple */
+    color: white;
   }
   
   .statut-resolu {
     background-color: #2ecc71; /* Green */
+    color: white;
   }
+  
+  /* Active state for selected statut */
+  .statut-list li.active {
+    background-color: #2ecc71; /* Green for active statut */
+    color: white;
+  }
+  
+  .statut-badge {
+    font-size: 1rem; /* Slightly smaller font size for badge */
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: #fff;
+    background-color: #3498db; /* Default color */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .statut-badge:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+  }
+  
   
   /* Titre et description */
   .reclamation-info {
@@ -85,11 +182,17 @@
   }
   
   .reclamation-image img {
-    width: 120px;  /* Image petite */
+    width: 120px;
     height: auto;
     border-radius: 6px;
     object-fit: cover;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Smooth transition for zoom */
+  }
+  
+  .reclamation-image.zoomed img {
+    transform: scale(5); /* Increased zoom to 5x */
+    cursor: zoom-out; /* Change cursor to indicate the zoom out action */
   }
   
   /* Footer : date et bouton */
@@ -153,17 +256,6 @@
     justify-content: center;
     z-index: 2000;
     animation: fadeIn 0.3s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
   
   .popup-card {
@@ -246,17 +338,3 @@
     background-color: #b3b3b3;
   }
   
-  
-  .reclamation-image img {
-    width: 120px;
-    height: auto;
-    border-radius: 6px;
-    object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease; /* Smooth transition for zoom */
-  }
-  
-  .reclamation-image.zoomed img {
-    transform: scale(5); /* Increased zoom to 5x */
-    cursor: zoom-out; /* Change cursor to indicate the zoom out action */
-  }

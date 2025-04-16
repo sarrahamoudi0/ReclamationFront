@@ -12,6 +12,7 @@ import { FooterComponent } from './footer/footer.component';
 import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
 import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
+import { ShowAdminReclamationComponent } from './show-admin-reclamation/show-admin-reclamation.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ShowReclamationComponent } from './show-reclamation/show-reclamation.co
     FooterComponent,
     MyReclamationComponent,
     ReclamtionBackofficeComponent,
-    ShowReclamationComponent
+    ShowReclamationComponent,
+    ShowAdminReclamationComponent
   ],
   imports: [
     BrowserModule,

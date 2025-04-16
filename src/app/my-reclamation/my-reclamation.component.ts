@@ -3,7 +3,7 @@ import { ReclamationService } from '../service/reclamation.service';
 import { Reclamation } from '../models/Reclamation';
 import { Statut } from '../models/Statut'; 
 import { Router } from '@angular/router'; 
-import { Priorite } from '../models/Priorite';
+
 
 @Component({
   selector: 'app-my-reclamation',
@@ -13,11 +13,9 @@ import { Priorite } from '../models/Priorite';
 export class MyReclamationComponent    {
 
   reclamations: Reclamation[] = [];
-  selectedFile: File | null = null;
 
 
-
-  constructor(private reclamationService: ReclamationService,private router: Router) {}
+  constructor(private reclamationService: ReclamationService) {}
 
   ngOnInit(): void {
     this.fetchReclamations();
@@ -72,6 +70,5 @@ getFormattedDate(date: Date | null | undefined): string {
     }
   }
 
- 
  
 }

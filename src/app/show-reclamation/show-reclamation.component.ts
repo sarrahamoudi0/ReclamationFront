@@ -14,6 +14,7 @@ export class ShowReclamationComponent implements OnInit {
 
   reclamation!: Reclamation;
   reclamations: Reclamation[] = [];
+  isImageZoomed = false; 
 
   newReclamation: Reclamation = {
     idReclamation:"",
@@ -86,9 +87,17 @@ export class ShowReclamationComponent implements OnInit {
   }
 
   openPopupUpdate(r: Reclamation): void {
-    this.reclamationToUpdate = { ...r }; 
+    this.reclamationToUpdate = { ...r };  // Set all fields
+  
+    // Convert base64 image to URL for preview in popup
+    if (r.image_reclamation) {
+      const base64Image = 'data:image/jpeg;base64,' + r.image_reclamation;
+      this.reclamationToUpdate.url = base64Image; // Set the URL for the preview image
+    }
+    
     this.isPopupUpdateVisible = true;
   }
+  
 
   // Fermer le pop-up
   closePopupUpdate(): void {
@@ -145,6 +154,8 @@ export class ShowReclamationComponent implements OnInit {
     this.openPopupUpdate(this.reclamation);
   }
 
-
+  zoomImage() {
+    this.isImageZoomed = !this.isImageZoomed;
+  }
   
 }
