@@ -38,120 +38,139 @@ body, html {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   }
   
-  /* Statut */
-  .statut-container {
+/* Statut */
+/* Statut */
+.statut-container {
     position: absolute;
     top: 15px;
     right: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
-  }
-  
-  .statut-badge {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 1rem;
+}
+
+/* Badge du statut - Bouton plus fin et plus petit */
+.statut-badge {
+    padding: 6px 12px; /* Moins de padding pour le rendre plus fin */
+    border-radius: 15px; /* Plus petit rayon pour le rendre plus fin */
+    font-size: 0.9rem; /* Police plus petite */
     font-weight: bold;
     color: #fff;
     cursor: pointer;
     white-space: nowrap;
-    background: linear-gradient(145deg, #3498db, #2980b9);
     transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .statut-badge:hover {
+    width: auto; /* La largeur s'adapte automatiquement au contenu */
+    height: 30px; /* Hauteur réduite pour rendre le bouton plus petit */
+    display: inline-flex;
+    justify-content: center; /* Centrer le texte horizontalement */
+    align-items: center; /* Centrer le texte verticalement */
+    min-width: 80px; /* Largeur minimale pour garantir que le texte est bien centré */
+    max-width: 150px; /* Largeur maximale pour plus de flexibilité */
+}
+
+/* Hover du badge de statut */
+.statut-badge:hover {
     transform: scale(1.05);
-  }
-  
-  /* Dropdown list */
- /* Statut List */
+}
+
+/* Liste déroulante des statuts */
 .statut-list {
-    display: none; /* Hidden by default */
+    display: none; /* Masquer par défaut */
     position: absolute;
-    top: 40px; /* Adjust position based on your design */
+    top: 40px; /* Ajuster la position selon votre design */
     right: 0;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: 150px; /* Smaller width */
+    width: 150px; /* Largeur de la liste plus petite */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 10;
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 0.9rem; /* Smaller font size */
-    opacity: 0; /* Initially invisible */
-    visibility: hidden; /* Initially hidden */
+    font-size: 0.9rem; /* Taille de police plus petite */
+    opacity: 0; /* Initialement invisible */
+    visibility: hidden; /* Initialement caché */
     transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
-  
-  /* Show the list when active */
-  .statut-container:hover .statut-list {
-    display: block; /* Display list */
-    opacity: 1; /* Make it visible */
-    visibility: visible; /* Make it visible */
+}
+
+/* Afficher la liste lorsque le conteneur est survolé */
+.statut-container:hover .statut-list {
+    display: block; /* Afficher la liste */
+    opacity: 1; /* La rendre visible */
+    visibility: visible; /* La rendre visible */
     transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
-  
-  .statut-list li {
+}
+
+/* Items de la liste */
+.statut-list li {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .statut-list li:last-child {
-    border-bottom: none; /* Remove border on the last item */
-  }
-  
-  .statut-list li:hover {
-    background-color: #3498db; /* Blue hover */
-    color: white; /* Text color on hover */
-  }
-  
-  /* Assign background colors for each statut */
-  .statut-nouveau {
-    background-color: #f39c12; /* Orange */
+}
+
+/* Dernier élément de la liste, sans bordure */
+.statut-list li:last-child {
+    border-bottom: none;
+}
+
+/* Hover des éléments de la liste */
+.statut-list li:hover {
+    background-color: #3498db; /* Hover bleu */
+    color: white; /* Couleur du texte au survol */
+}
+
+/* Assignation des couleurs de fond pour chaque statut */
+.statut-nouveau {
+    background-color: #f39c12; /* Orange (Nouveau) */
     color: white;
-  }
-  
-  .statut-en-cours {
-    background-color: #3498db; /* Blue */
+}
+
+.statut-en-cours {
+    background-color: #3498db; /* Bleu (En Cours) */
     color: white;
-  }
-  
-  .statut-escalé {
-    background-color: #9b59b6; /* Purple */
+}
+
+.statut-escalé {
+    background-color: #9b59b6; /* Violet (Escalé) */
     color: white;
-  }
-  
-  .statut-resolu {
-    background-color: #2ecc71; /* Green */
+}
+
+.statut-resolu {
+    background-color: #2ecc71; /* Vert (Résolu) */
     color: white;
-  }
-  
-  /* Active state for selected statut */
-  .statut-list li.active {
-    background-color: #2ecc71; /* Green for active statut */
+}
+
+/* Etat actif pour un statut sélectionné */
+.statut-list li.active {
+    background-color: #2ecc71; /* Vert pour un statut actif */
     color: white;
-  }
-  
-  .statut-badge {
-    font-size: 1rem; /* Slightly smaller font size for badge */
-    font-weight: bold;
-    padding: 6px 12px;
-    border-radius: 20px;
-    color: #fff;
-    background-color: #3498db; /* Default color */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .statut-badge:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-  }
-  
+}
+
+/* Badge du statut (pour plus de précision sur le style du bouton) */
+.statut-badge.statut-nouveau {
+    background-color: #f39c12; /* Orange (Nouveau) */
+}
+
+.statut-badge.statut-en-cours {
+    background-color: #3498db; /* Bleu (En Cours) */
+}
+
+.statut-badge.statut-escalé {
+    background-color: #9b59b6; /* Violet (Escalé) */
+}
+
+.statut-badge.statut-resolu {
+    background-color: #2ecc71; /* Vert (Résolu) */
+}
+
+/* Hover du badge */
+.statut-badge:hover {
+    opacity: 0.8;
+}
+
+
   
   /* Titre et description */
   .reclamation-info {
