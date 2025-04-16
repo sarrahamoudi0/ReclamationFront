@@ -21,7 +21,7 @@ export class ShowAdminReclamationComponent implements OnInit {
   statuts: Statut[] = this.statutValues;
 
   // Priorité handling
-  prioriteValues: Priorite[] = Object.values(Priorite);  // List of priorities
+  prioriteValues: Priorite[] = Object.values(Priorite);
   selectedPriorite: Priorite = Priorite.Faible;
   showPrioriteList = false;
 
@@ -111,42 +111,47 @@ export class ShowAdminReclamationComponent implements OnInit {
       );
   }
 
-  toggleStatutList() {
+  toggleStatutList(event: MouseEvent): void {
     this.showStatutList = !this.showStatutList;
     if (this.showStatutList) {
-      this.showPrioriteList = false; // Hide Priorité dropdown if Statut is visible
+      this.showPrioriteList = false; // Masquer le dropdown Priorité si Statut est visible
     }
   }
-
-  togglePrioriteList() {
+  
+  togglePrioriteList(event: MouseEvent): void {
     this.showPrioriteList = !this.showPrioriteList;
     if (this.showPrioriteList) {
-      this.showStatutList = false; // Hide Statut dropdown if Priorité is visible
+      this.showStatutList = false; // Masquer le dropdown Statut si Priorité est visible
     }
   }
+  
 
   selectStatut(statut: Statut) {
     this.selectedStatut = statut;
-    this.showStatutList = false;           // Hide the list after selection
-    this.updateStatut();                   // Update the statut
+    this.showStatutList = false; // Hide the list after selection
+    this.updateStatut();         // Update the statut
   }
 
   selectPriorite(priorite: Priorite) {
     this.selectedPriorite = priorite;
-    this.showPrioriteList = false;           // Hide the list after selection
-    this.updatePriorite();                   // Update the priorite
+    this.showPrioriteList = false; // Hide the list after selection
+    this.updatePriorite();         // Update the priorite
   }
 
+  // HostListener to detect clicks outside and close the dropdown
   @HostListener('document:click', ['$event'])
-  clickOutside(event: MouseEvent) {
-    const statutElement = document.getElementById('statut-container');
-    const prioriteElement = document.getElementById('priorite-container');
-    
-    if (statutElement && !statutElement.contains(event.target as Node)) {
+  onClickOutside(event: MouseEvent): void {
+    const statutDropdown = document.querySelector('.statut-list');
+    const prioriteDropdown = document.querySelector('.priorite-list');
+    const statutContainer = document.querySelector('.statut-priorite-container');
+
+    // Close dropdown if clicked outside
+    if (
+      statutDropdown && !statutDropdown.contains(event.target as Node) &&
+      prioriteDropdown && !prioriteDropdown.contains(event.target as Node) &&
+      statutContainer && !statutContainer.contains(event.target as Node)
+    ) {
       this.showStatutList = false;
-    }
-    
-    if (prioriteElement && !prioriteElement.contains(event.target as Node)) {
       this.showPrioriteList = false;
     }
   }

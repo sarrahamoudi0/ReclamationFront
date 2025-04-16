@@ -9,7 +9,7 @@
         <span
           [ngClass]="getStatutClass(reclamation.statut)"
           class="statut-badge"
-          (click)="toggleStatutList()">
+          (click)="toggleStatutList($event)">
           {{ reclamation.statut }}
         </span>
   
@@ -17,12 +17,12 @@
         <span
           [ngClass]="getPrioriteClass(reclamation.priorite)"
           class="priorite-badge"
-          (click)="togglePrioriteList()">
+          (click)="togglePrioriteList($event)">
           {{ reclamation.priorite }}
         </span>
       
         <!-- List of Statuts shown when toggled -->
-        <ul *ngIf="showStatutList" class="statut-list">
+        <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">
           <li
             *ngFor="let statut of statutValues"
             (click)="selectStatut(statut)"
@@ -32,7 +32,7 @@
         </ul>
   
         <!-- List of Priorités shown when toggled -->
-        <ul *ngIf="showPrioriteList" class="priorite-list">
+        <ul *ngIf="showPrioriteList" class="priorite-list" [ngClass]="{'show': showPrioriteList}">
           <li
             *ngFor="let priorite of prioriteValues"
             (click)="selectPriorite(priorite)"
@@ -67,9 +67,10 @@
       </div>
       
     </div>
-</div>
-
-<!-- Loading Message -->
-<div *ngIf="!reclamation" class="loading-message">
-  <p>Chargement des informations de la réclamation...</p>
-</div>
+  </div>
+  
+  <!-- Loading Message -->
+  <div *ngIf="!reclamation" class="loading-message">
+    <p>Chargement des informations de la réclamation...</p>
+  </div>
+  
