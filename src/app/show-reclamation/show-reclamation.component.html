@@ -17,7 +17,7 @@
       <div *ngIf="reclamation.image_reclamation" class="reclamation-image">
         <img [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation" alt="Image de la réclamation" />
       </div>
-  
+      
       <!-- Footer -->
       <div class="reclamation-footer">
         <span class="created-date">{{ reclamation.createdDate | date:'mediumDate' }}</span>
@@ -48,10 +48,10 @@
         </div>
         <div class="form-group">
           <label for="popup-image">Nouvelle image (facultatif)</label>
-          <input type="file" id="popup-image" (change)="onFileSelected($event)" accept="image/*">
+          <input type="file" id="popup-image" (change)="onFileSelected($event)" accept="image/*" placeholder="Choose an image">
         </div>
         <!-- Image Preview -->
-        <div *ngIf="reclamationToUpdate.url" class="reclamation-image">
+        <div *ngIf="reclamationToUpdate.image_reclamation" class="reclamation-image">
           <img [src]="reclamationToUpdate.url" alt="Aperçu de l’image modifiée" />
         </div>
         <div class="popup-actions">

@@ -40,10 +40,21 @@
     white-space: nowrap;
   }
   
-  .statut-nouveau { background-color: #4CAF50; }
-  .statut-en-cours { background-color: #FF9800; }
-  .statut-escalé  { background-color: #2196F3; }
-  .statut-resolu  { background-color: #F44336; }
+  .statut-nouveau {
+    background-color: #f39c12; /* Orange */
+  }
+  
+  .statut-en-cours {
+    background-color: #3498db; /* Blue */
+  }
+  
+  .statut-escalé {
+    background-color: #9b59b6; /* Purple */
+  }
+  
+  .statut-resolu {
+    background-color: #2ecc71; /* Green */
+  }
   
   /* Titre et description */
   .reclamation-info {

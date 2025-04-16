@@ -3,7 +3,8 @@ import { Reclamation } from '../models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
 import { ActivatedRoute } from '@angular/router';
 import { Statut } from '../models/Statut';
-
+import { Priorite } from '../models/Priorite';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-show-reclamation',
   templateUrl: './show-reclamation.component.html',
@@ -12,6 +13,25 @@ import { Statut } from '../models/Statut';
 export class ShowReclamationComponent implements OnInit {
 
   reclamation!: Reclamation;
+  reclamations: Reclamation[] = [];
+
+  newReclamation: Reclamation = {
+    idReclamation:"",
+    nom: "",
+    prenom: "",
+    email:"",
+    num:"",
+    titre:"",
+    description:"",
+    image_reclamation:null,
+    createdDate:null,
+    statut: Statut.Nouveau,
+    priorite: Priorite.Faible
+
+
+  };
+  selectedFile: File | null = null;
+
 
   // Objet partiel pour la mise à jour
   reclamationToUpdate: Partial<Reclamation> = {
@@ -26,7 +46,7 @@ export class ShowReclamationComponent implements OnInit {
   // Contrôle l'affichage du pop-up de mise à jour
   isPopupUpdateVisible: boolean = false;
 
-  constructor(private reclamationService: ReclamationService, private route: ActivatedRoute) { }
+  constructor(private reclamationService: ReclamationService, private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -79,33 +99,52 @@ export class ShowReclamationComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.reclamationToUpdate.image_reclamation = file; // Store the file object
+      this.reclamationToUpdate.image_reclamation = file; // Store the file directly
       const reader = new FileReader();
-
       reader.onload = (e: any) => {
-        this.reclamationToUpdate.url = e.target.result; // Save the image preview URL
+        this.reclamationToUpdate.url = e.target.result; // Preview the image
       };
-
-      reader.readAsDataURL(file); // Read the file as a data URL for preview
+      reader.readAsDataURL(file); // Read the file for preview
     }
   }
-
-  // Update the reclamation
+  
+  
+  
   updateReclamation(): void {
-    console.log("Mise à jour avec : ", this.reclamationToUpdate);
-    this.reclamationService.updateReclamation(this.reclamationToUpdate).subscribe(
+    // Create FormData to include both fields and the file
+    const formData = new FormData();
+    
+    // Add all the fields that need to be updated
+    formData.append('idReclamation', this.reclamationToUpdate.idReclamation || '');
+    formData.append('titre', this.reclamationToUpdate.titre || '');
+    formData.append('description', this.reclamationToUpdate.description || '');
+    
+    // Add the image if it's available (only if it has been changed)
+    if (this.reclamationToUpdate.image_reclamation) {
+      formData.append('image_reclamation', this.reclamationToUpdate.image_reclamation);
+    }
+  
+    // Make the PUT request with the form data
+    this.reclamationService.updateReclamation(formData).subscribe(
       (updatedReclamation: Reclamation) => {
         console.log('Réclamation mise à jour avec succès :', updatedReclamation);
-        this.closePopupUpdate();
-        this.getReclamation(updatedReclamation.idReclamation || '');
+        this.closePopupUpdate(); // Close the popup
+        this.getReclamation(updatedReclamation.idReclamation || ''); // Reload updated reclamation
       },
       (error) => {
-        console.error('Erreur lors de la mise à jour :', error);
+        console.error('Erreur lors de la mise à jour de la réclamation :', error);
       }
     );
   }
+  
+  
+
+
 
   onUpdateClick(): void {
     this.openPopupUpdate(this.reclamation);
   }
+
+
+  
 }
