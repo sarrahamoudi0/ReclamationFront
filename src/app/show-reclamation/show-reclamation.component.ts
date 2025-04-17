@@ -157,5 +157,22 @@ export class ShowReclamationComponent implements OnInit {
   zoomImage() {
     this.isImageZoomed = !this.isImageZoomed;
   }
+
+  deleteReclamation(reclamation: Reclamation): void {
+    // Show confirmation dialog before deletion
+    const confirmDelete = confirm('Are you sure you want to delete this reclamation?');
+    if (confirmDelete) {
+      this.reclamationService.deleteReclamation(reclamation).subscribe(
+        () => {
+          console.log('Reclamation deleted');
+          this.router.navigate(['/myreclamation']);
+           
+        },
+        (error) => {
+          console.error('Error deleting reclamation:', error);
+        }
+      );
+    }
+  }
   
 }

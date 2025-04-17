@@ -13,21 +13,23 @@ export class CategorieService {
   constructor(private http: HttpClient) { } 
 
   addCategorie(categorie: Categorie): Observable<Categorie> {
-    return this.http.post<Categorie>(`${this.apiUrl}/addCategorie`, categorie, {
-      headers: new HttpHeaders({'Content-Type': 'application/json'})
-    });
+    return this.http.post<Categorie>(`${this.apiUrl}/addCategorie`, categorie);
   }
 
-  getAllCategorie(): Observable<Categorie[]> {
+  // Get all categories
+  getAllCategories(): Observable<Categorie[]> {
     return this.http.get<Categorie[]>(`${this.apiUrl}/getAllCategorie`);
-
   }
 
-  deleteReclamation(categorie: Categorie): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/remove/${categorie.idCategorie}`);
+  // Update a category
+  updateCategorie(categorie: Categorie): Observable<Categorie> {
+    const url = `${this.apiUrl}/updateCategorie`; // URL to the update endpoint
+    return this.http.put<Categorie>(url, categorie); // Send the PUT request with the category data
   }
-
-  updateReclamation(updatedCategorie: Categorie): Observable<Categorie> {
-    const url = `${this.apiUrl}/updateReclamation`;
-    return this.http.put<Categorie>(url, updatedCategorie);
-  }}
+  
+  // Delete a category by ID
+  deleteCategorie(idCategorie: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/remove/${idCategorie}`);
+  }
+    
+  }

@@ -20,10 +20,17 @@
 
     <!-- Footer -->
     <div class="reclamation-footer">
-      <span class="created-date">{{ reclamation.createdDate | date:'mediumDate' }}</span>
+      <span class="created-date">
+        <i class="fas fa-clock"></i>
+        {{ reclamation.createdDate | date:'mediumDate' }}
+      </span>
       
-      <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
         <i class="fas fa-edit"></i>
+      </button>
+      <button class="action-button delete-button" (click)="deleteReclamation(reclamation)" title="Delete">
+        <i class="fas fa-trash-alt"></i> <!-- Trash icon for Delete -->
       </button>
     </div>
   </div>
@@ -52,9 +59,7 @@
         <input type="file" id="popup-image" (change)="onFileSelected($event)" accept="image/*" placeholder="Choose an image">
       </div>
       <!-- Image Preview -->
-      <div *ngIf="reclamationToUpdate.image_reclamation" class="reclamation-image">
-        <img [src]="reclamationToUpdate.url" alt="Aperçu de l’image modifiée" />
-      </div>
+      
       <div class="popup-actions">
         <button type="submit" class="btn-save">Enregistrer</button>
         <button type="button" class="btn-cancel" (click)="closePopupUpdate()">Annuler</button>

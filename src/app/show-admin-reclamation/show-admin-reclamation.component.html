@@ -6,20 +6,20 @@
       <div class="statut-priorite-container">
         
         <!-- Statut Badge -->
-        <span
+        <button
           [ngClass]="getStatutClass(reclamation.statut)"
           class="statut-badge"
           (click)="toggleStatutList($event)">
           {{ reclamation.statut }}
-        </span>
+        </button>
   
         <!-- Priorité Badge styled like Statut -->
-        <span
+        <button
           [ngClass]="getPrioriteClass(reclamation.priorite)"
           class="priorite-badge"
           (click)="togglePrioriteList($event)">
           {{ reclamation.priorite }}
-        </span>
+        </button>
       
         <!-- List of Statuts shown when toggled -->
         <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">

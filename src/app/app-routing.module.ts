@@ -5,6 +5,7 @@ import { MyReclamationComponent } from './my-reclamation/my-reclamation.componen
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
 import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
 import { ShowAdminReclamationComponent } from './show-admin-reclamation/show-admin-reclamation.component';
+import { CategorieComponent } from './categorie/categorie.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/reclamation', pathMatch: 'full' },
@@ -12,7 +13,9 @@ const routes: Routes = [
   {path:"myreclamation",component:MyReclamationComponent},
   {path:"admin",component:ReclamtionBackofficeComponent},
   {path:"reclamation/:id",component:ShowReclamationComponent},
-  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent}
+  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent},
+  {path:"categorie",component:CategorieComponent},
+
 
 
 ];

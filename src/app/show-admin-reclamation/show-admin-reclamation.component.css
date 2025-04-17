@@ -51,13 +51,14 @@ body, html {
 /* Badge du statut - Bouton plus fin et plus petit */
 .statut-badge, .priorite-badge {
     display: inline-block;
-    width: 9ch;  /* Fixed width for 7 characters */
+    width: 10ch;  /* Fixed width for 7 characters */
     text-align: center;  /* Center the text inside the badge */
     padding: 4px 8px;  /* Add padding for better visibility */
     font-size: 14px;  /* Adjust font size as needed */
     border-radius: 12px;  /* Rounded corners */
     white-space: nowrap;  /* Prevent the badge text from wrapping */
     overflow: hidden;  /* Hide overflow text */
+    border-color: white;
     text-overflow: ellipsis;  /* Add ellipsis for overflow text */
 }
 

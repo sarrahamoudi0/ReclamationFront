@@ -1,1 +1,52 @@
-<p>categorie works!</p>
+<div class="main-card">
+    <!-- En-tête avec titre -->
+    <div class="card-header">
+      <h2 class="title-animate">Les Catégories des réclamations</h2>
+    </div>
+  
+    <!-- Section contenant le bouton Ajouter et la liste des catégories -->
+    <div class="category-section">
+      <div class="add-button-container">
+        <button class="add-category-btn" (click)="openModal(false)">➕ Ajouter</button>
+      </div>
+  
+      <!-- Liste des catégories -->
+      <div class="category-list">
+        <div *ngFor="let category of categories" class="category-card">
+          <div class="category-info">
+            {{ category.nomCategorie }}
+          </div>
+          <div class="action-icons">
+            <button class="edit-icon" (click)="editCategorie(category)" title="Modifier">✏️</button>
+            <button class="delete-icon" (click)="deleteCategorie(category.idCategorie)" title="Supprimer">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal Ajouter / Modifier -->
+    <div class="modal-overlay" *ngIf="isModalOpen">
+      <div class="modal modal-animate">
+        <h3>{{ editMode ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h3>
+  
+        <form (ngSubmit)="editMode ? updateCategorie() : addCategorie()">
+          <input
+            type="text"
+            [(ngModel)]="categorieName"
+            name="nomCategorie"
+            placeholder="Nom de la catégorie"
+            required
+            autofocus
+          />
+  
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="closeModal()">Annuler</button>
+            <button type="submit" class="update-btn">
+              {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

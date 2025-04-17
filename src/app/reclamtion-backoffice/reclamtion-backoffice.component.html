@@ -37,7 +37,7 @@
           
           <td data-label="Date">{{ getFormattedDate(reclamation.createdDate)  }}</td>
           <td data-label="Action">
-            <button class="action-button show-button" title="Show">
+            <button class="action-button show-button" [routerLink]="['/reclamationadmin', reclamation.idReclamation]" title="Show">
               <i class="fas fa-eye"></i> <!-- Eye icon for Show -->
             </button>
            
