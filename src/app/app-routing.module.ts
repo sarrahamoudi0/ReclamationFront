@@ -6,15 +6,25 @@ import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtio
 import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
 import { ShowAdminReclamationComponent } from './show-admin-reclamation/show-admin-reclamation.component';
 import { CategorieComponent } from './categorie/categorie.component';
+import { RegisterComponent } from './register/register.component';
+import { ActivationComponent } from './activation/activation.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/reclamation', pathMatch: 'full' },
   {path:"reclamation",component:ReclamationComponent},
   {path:"myreclamation",component:MyReclamationComponent},
   {path:"admin",component:ReclamtionBackofficeComponent},
   {path:"reclamation/:id",component:ShowReclamationComponent},
   {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent},
   {path:"categorie",component:CategorieComponent},
+  {path:"register",component:RegisterComponent},
+  { path: 'activate', component: ActivationComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, 
+
+  { path: 'login', component: LoginComponent },
+
+
+
 
 
 

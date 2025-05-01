@@ -1,0 +1,60 @@
+<div class="login-container">
+    <div class="card login-card">
+      <h2 class="login-title">Connexion à votre compte</h2>
+  
+      <form (ngSubmit)="onLogin()">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Adresse email</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Entrez votre email"
+            class="form-control"
+            [ngClass]="{'input-error': emailInvalid}"
+          />
+          <div *ngIf="emailInvalid" class="error-message">Email invalide !</div>
+        </div>
+  
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Entrez votre mot de passe"
+            class="form-control"
+            [ngClass]="{'input-error': passwordInvalid}"
+          />
+          <div *ngIf="passwordInvalid" class="error-message">Mot de passe requis !</div>
+        </div>
+  
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+  
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+          Se connecter
+        </button>
+  
+        <!-- Link to Register Page -->
+        <div class="register-link">
+          <p class="text-muted">
+            Pas encore inscrit ? <a routerLink="/register">Créer un compte</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+  

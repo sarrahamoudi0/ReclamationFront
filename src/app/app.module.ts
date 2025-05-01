@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReclamationComponent } from './reclamation/reclamation.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CategorieComponent } from './categorie/categorie.component';
 import { MailComponent } from './mail/mail.component';
@@ -13,6 +13,11 @@ import { MyReclamationComponent } from './my-reclamation/my-reclamation.componen
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
 import { ShowReclamationComponent } from './show-reclamation/show-reclamation.component';
 import { ShowAdminReclamationComponent } from './show-admin-reclamation/show-admin-reclamation.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+import { ActivationComponent } from './activation/activation.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './AuthInterceptor';
 
 @NgModule({
   declarations: [
@@ -24,15 +29,21 @@ import { ShowAdminReclamationComponent } from './show-admin-reclamation/show-adm
     MyReclamationComponent,
     ReclamtionBackofficeComponent,
     ShowReclamationComponent,
-    ShowAdminReclamationComponent
+    ShowAdminReclamationComponent,
+    RegisterComponent,
+    LoginComponent,
+    ActivationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
