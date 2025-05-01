@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -18,7 +20,7 @@ import java.util.List;
 @CrossOrigin("*")
 public class ReclamationController {
     @Autowired
-    private  IReclamationService reclamationService;
+    private IReclamationService reclamationService;
 
 
     @PostMapping("/addReclamation")
@@ -31,7 +33,6 @@ public class ReclamationController {
             @RequestParam("description") String description,
             @RequestParam(value = "image_reclamation", required = false) MultipartFile fileReclamation) throws IOException {
 
-        // Création de l'objet Reclamation
         Reclamation reclamation = new Reclamation();
         reclamation.setNom(nom);
         reclamation.setPrenom(prenom);
@@ -39,23 +40,11 @@ public class ReclamationController {
         reclamation.setEmail(email);
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
+        reclamation.setImage_reclamation(fileReclamation.getBytes());
 
-        // Vérification si un fichier a été téléchargé
-        if (fileReclamation != null && !fileReclamation.isEmpty()) {
-            // Si un fichier est présent, on convertit en tableau de bytes
-            reclamation.setImage_reclamation(fileReclamation.getBytes());
-        } else {
-            // Si aucun fichier n'est fourni, on garde le champ image_reclamation nul
-            reclamation.setImage_reclamation(null);
-        }
-
-        // Sauvegarde de la réclamation dans la base de données
         Reclamation savedReclamation = reclamationService.createReclamation(reclamation);
-
-        // Retour de la réclamation sauvegardée avec un code de statut HTTP 200
         return ResponseEntity.ok(savedReclamation);
     }
-
 
 
     @GetMapping("/getAllReclamation")
@@ -65,12 +54,33 @@ public class ReclamationController {
     }
 
     @PutMapping("/updateReclamation")
-    public Reclamation updateReclamation(@RequestBody Reclamation reclamation){
+    public ResponseEntity<Reclamation> updateReclamation(
+            @RequestParam("idReclamation") String idReclamation,
+            @RequestParam("titre") String titre,
+            @RequestParam("description") String description,
+            @RequestParam(value = "image_reclamation", required = false) MultipartFile image_reclamation) throws IOException {
 
-        return reclamationService.updateReclamation(reclamation);
+        // Get the reclamation by ID
+        Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+
+        // Update the other fields
+        reclamation.setTitre(titre);
+        reclamation.setDescription(description);
+
+        // If there's a new image, update it; otherwise, keep the old image
+        if (image_reclamation != null) {
+            reclamation.setImage_reclamation(image_reclamation.getBytes());
+        }
+
+        // Save the updated reclamation
+        Reclamation updatedReclamation = reclamationService.updateReclamation(reclamation);
+
+        return ResponseEntity.ok(updatedReclamation);
     }
+
+
     @DeleteMapping("/remove/{reclamation-id}")
-    public void deleteReclamation(@PathVariable("reclamation-id")String id){
+    public void deleteReclamation(@PathVariable("reclamation-id") String id) {
 
         reclamationService.deleteReclamation(id);
     }
@@ -81,4 +91,37 @@ public class ReclamationController {
         return reclamationService.getReclamationById(id);
     }
 
-}
+    @PutMapping("/updateReclamationStatut/{id}")
+    public ResponseEntity<Reclamation> updateReclamationStatut(
+            @PathVariable String id,
+            @RequestBody Map<String, String> request) {
+
+        String newStatut = request.get("statut");
+        try {
+            // Convert the incoming string to the Statut enum
+            Statut statutEnum = Statut.valueOf(newStatut);
+            Reclamation updated = reclamationService.updateStatut(id, statutEnum);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null); // Return 400 if statut invalid
+        }
+    }
+
+    @PutMapping("/{id}/priority")
+    public ResponseEntity<Reclamation> updatePriority(
+            @PathVariable("id") String id,
+            @RequestParam("priority") Priorite priority) {
+
+        // Call the service to update the priority
+        Reclamation updatedReclamation = reclamationService.updatePriority(id, priority);
+
+        // Check if the reclamation was found and updated
+        if (updatedReclamation != null) {
+            return ResponseEntity.ok(updatedReclamation);
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if reclamation is not found
+        }
+    }
+
+
+    }

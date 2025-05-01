@@ -18,17 +18,11 @@ public class ReclamationImpService implements IReclamationService{
         return reclamationRepository.save(reclamation);
     }
 
-    @Override
-    public List<Reclamation> getAllReclamations() {
-        // Fetch all reclamations from the database
-        List<Reclamation> reclamations = reclamationRepository.findAll();
+@Override
+public List<Reclamation> getAllReclamations() {
 
-        // Log the number of reclamations fetched for debugging
-        System.out.println("Number of reclamations fetched: " + reclamations.size());
-
-        // Return the fetched list of reclamations
-        return reclamations;
-    }
+    return reclamationRepository.findAll();
+}
 
 @Override
     public Reclamation updateReclamation(Reclamation reclamation){
@@ -44,5 +38,29 @@ public class ReclamationImpService implements IReclamationService{
 
         return reclamationRepository.findById(id).orElse(null);
     }
+    @Override
+    public Reclamation updateStatut(String id, Statut statut) {
+        Reclamation reclamation = reclamationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Réclamation non trouvée avec id: " + id));
+        reclamation.setStatut(statut);
+        return reclamationRepository.save(reclamation);
+    }
+
+    @Override
+    public Reclamation updatePriority(String id, Priorite priority) {
+        // Find the reclamation by its ID
+        Reclamation reclamation = reclamationRepository.findById(id).orElse(null);
+
+        if (reclamation != null) {
+            // Set the new priority
+            reclamation.setPriorite(priority);
+            // Save the updated reclamation back to MongoDB
+            return reclamationRepository.save(reclamation);
+        }
+
+        // Return null if the reclamation is not found
+        return null;
+    }
+
 
 }

@@ -9,5 +9,7 @@ public interface IReclamationService {
     Reclamation updateReclamation(Reclamation reclamation);
     void deleteReclamation(String id);
     Reclamation getReclamationById(String id);
+    Reclamation updateStatut(String id, Statut statut);
+    Reclamation updatePriority(String id, Priorite priority);
 
 }

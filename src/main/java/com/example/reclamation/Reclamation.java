@@ -26,12 +26,13 @@ public class Reclamation {
     private String num;
     private String titre;
     private String description;
-    private Integer userId = 1;
     private LocalDateTime createdDate = LocalDateTime.now();
     private Statut statut= Statut.valueOf("Nouveau");
     private Priorite priorite= Priorite.valueOf("Faible");
-
-        private byte[] image_reclamation;
+    private long userId = 1;
+    @Lob
+    @Column(length = 209715200)
+    private byte[] image_reclamation;
 
     @DBRef
     private List<Commentaire> commentaires;
