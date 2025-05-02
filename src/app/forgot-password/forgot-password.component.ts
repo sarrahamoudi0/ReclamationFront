@@ -1,0 +1,44 @@
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthenticationService } from '../service/authentication.service';
+
+@Component({
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.css']
+})
+export class ForgotPasswordComponent {
+  forgotPasswordForm: FormGroup;
+  submissionStatus: { message: string, success: boolean } | null = null;
+
+  constructor(private authService: AuthenticationService) {
+    this.forgotPasswordForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+    });
+  }
+
+  onSubmit() {
+    if (this.forgotPasswordForm.valid) {
+      const email = this.forgotPasswordForm.get('email')?.value;
+      this.authService.sendResetPasswordEmail(email).subscribe(
+        (response) => {
+          this.submissionStatus = {
+            message: 'Un email de réinitialisation a été envoyé avec succès !',
+            success: true
+          };
+        },
+        (error) => {
+          this.submissionStatus = {
+            message: 'Erreur: ' + error.message,
+            success: false
+          };
+        }
+      );
+    } else {
+      this.submissionStatus = {
+        message: 'Veuillez entrer un email valide.',
+        success: false
+      };
+    }
+  }
+}

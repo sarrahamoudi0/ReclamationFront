@@ -9,6 +9,9 @@ import { CategorieComponent } from './categorie/categorie.component';
 import { RegisterComponent } from './register/register.component';
 import { ActivationComponent } from './activation/activation.component';
 import { LoginComponent } from './login/login.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 
 const routes: Routes = [
   {path:"reclamation",component:ReclamationComponent},
@@ -19,6 +22,9 @@ const routes: Routes = [
   {path:"categorie",component:CategorieComponent},
   {path:"register",component:RegisterComponent},
   { path: 'activate', component: ActivationComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'forgotpass', component: ForgotPasswordComponent },
+
   { path: '', redirectTo: 'login', pathMatch: 'full' }, 
 
   { path: 'login', component: LoginComponent },

@@ -9,20 +9,25 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthenticationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Retrieve the token from AuthenticationService
+    // Exclure les requêtes vers /auth/login et /auth/register
+    const publicUrls = ['/auth/register', '/auth/authenticate', '/auth/activate-account', '/auth/forgot-password', '/auth/reset-password'];
+    const isPublic = publicUrls.some(url => req.url.includes(url));
+
+    if (isPublic) {
+      return next.handle(req); // Ne pas ajouter le token
+    }
+
     const token = this.authService.getToken();
 
-    // If the token exists, clone the request and add the Authorization header
     if (token) {
       const cloned = req.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}` // Add the token to the Authorization header
+          Authorization: `Bearer ${token}`
         }
       });
-      return next.handle(cloned); // Pass the modified request
+      return next.handle(cloned);
     }
 
-    // If there's no token, pass the original request
     return next.handle(req);
   }
 }

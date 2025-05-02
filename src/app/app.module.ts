@@ -18,6 +18,8 @@ import { LoginComponent } from './login/login.component';
 import { ActivationComponent } from './activation/activation.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './AuthInterceptor';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { AuthInterceptor } from './AuthInterceptor';
     ShowAdminReclamationComponent,
     RegisterComponent,
     LoginComponent,
-    ActivationComponent
+    ActivationComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
