@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { RegistrationRequest } from '../models/RegistrationRequest';
 import { AuthenticationResponse } from '../models/AuthenticationResponse';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
+import { ResetPassword } from '../models/ResetPassword';
 
 @Injectable({
   providedIn: 'root'
@@ -79,17 +80,30 @@ export class AuthenticationService {
       })
     );
   }
+  resetPassword(payload: { token: string, newPassword: string, confirmPassword: string }): Observable<string> {
+    // Ensure the token is not empty
+    if (!payload.token) {
+      throw new Error('Token is required');
+    }
 
-  // Reset Password with token and new password
-  resetPassword(request: { token: string, newPassword: string,  confirmPassword: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password`, request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error during password reset:', error);
-        return throwError(() => new Error('Password reset failed.'));
-      })
-    );
+    // Prepare the request body
+    const body: ResetPassword = {
+      newPassword: payload.newPassword,
+      confirmPassword: payload.confirmPassword,
+      token: payload.token // Add the token to the request body
+    };
+
+    // Call the API endpoint to reset the password
+    return this.http.post('http://localhost:8083/auth/reset-password?token=' + payload.token, body, { responseType: 'text' });
+
+
 }
 
+  
+  
+  
+  
+  
   
 
   // Stocker le token dans le localStorage après la connexion
