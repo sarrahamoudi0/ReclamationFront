@@ -6,6 +6,8 @@ import { RegistrationRequest } from '../models/RegistrationRequest';
 import { AuthenticationResponse } from '../models/AuthenticationResponse';
 import { AuthenticationRequest } from '../models/AuthenticationRequest';
 import { ResetPassword } from '../models/ResetPassword';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ import { ResetPassword } from '../models/ResetPassword';
 export class AuthenticationService {
   private apiUrl = 'http://localhost:8083/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // Enregistrement de l'utilisateur
   register(request: RegistrationRequest): Observable<void> {
@@ -132,9 +134,24 @@ resetPassword(payload: { token: string, newPassword: string, confirmPassword: st
 
   // Récupérer le token stocké
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    if (token && !this.isTokenExpired(token)) {
+      return token;
+    }
+    this.logout(); // Auto-logout if token expired
+    return null;
   }
 
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return (payload.exp * 1000) < Date.now(); // Convert to ms
+    } catch (e) {
+      console.warn('Invalid token format', e);
+      return true;
+    }
+  }
+    
   // Vérifier si l'utilisateur est authentifié
   isAuthenticated(): boolean {
     return this.getToken() !== null;
@@ -143,5 +160,7 @@ resetPassword(payload: { token: string, newPassword: string, confirmPassword: st
   // Supprimer le token du localStorage (déconnexion)
   logout(): void {
     localStorage.removeItem('authToken');
+    this.router.navigate(['/login']); // Redirect to login page
   }
+  
 }

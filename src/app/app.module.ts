@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './AuthInterceptor';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     LoginComponent,
     ActivationComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

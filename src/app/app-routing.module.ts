@@ -11,24 +11,27 @@ import { ActivationComponent } from './activation/activation.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { authGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
-  {path:"reclamation",component:ReclamationComponent},
-  {path:"myreclamation",component:MyReclamationComponent},
-  {path:"admin",component:ReclamtionBackofficeComponent},
-  {path:"reclamation/:id",component:ShowReclamationComponent},
-  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent},
-  {path:"categorie",component:CategorieComponent},
-  {path:"register",component:RegisterComponent},
+  {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard]},
+  {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard]},
+  {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard]},
+  {path:"reclamation/:id",component:ShowReclamationComponent,canActivate: [authGuard]},
+  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard]},
+  {path:"categorie",component:CategorieComponent,canActivate: [authGuard]},
   { path: 'activate', component: ActivationComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgotpass', component: ForgotPasswordComponent },
+  { path: 'navbar', component: NavbarComponent },
+
 
   { path: '', redirectTo: 'login', pathMatch: 'full' }, 
 
   { path: 'login', component: LoginComponent },
-
+  { path: '**', redirectTo: '/login' }
 
 
 
