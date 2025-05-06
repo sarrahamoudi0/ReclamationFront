@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -21,7 +22,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     // Uncomment if you need a custom filter
-    // private final JwtFilter jwtAuthFilter;
+    private final JwtFilter jwtAuthFilter;
 
     private final AuthenticationProvider authenticationProvider;
 
@@ -32,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
-                                        "/auth/**",
+                                        "/auth/**", // ça inclut activate-account
                                         "/project/**",
                                         "/v2/api-docs",
                                         "/v3/api-docs",
@@ -48,8 +49,8 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-
-                .authenticationProvider(authenticationProvider);
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // <-- à ne pas oublier
 
         return http.build();
     }
