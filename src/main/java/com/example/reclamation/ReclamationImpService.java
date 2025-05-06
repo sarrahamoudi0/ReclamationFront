@@ -1,5 +1,6 @@
 package com.example.reclamation;
 
+import com.example.reclamation.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,12 @@ public List<Reclamation> getAllReclamations() {
         // Return null if the reclamation is not found
         return null;
     }
+
+    @Override
+    public List<Reclamation> getReclamationsByUser(User user) {
+        return reclamationRepository.findByUser(user);
+    }
+
 
 
 }

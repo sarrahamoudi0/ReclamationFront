@@ -159,37 +159,28 @@ public class AuthenticationService {
 
 
     public void sendResetPasswordEmail(String email) throws MessagingException {
-        // 1) Lookup user
+        // 1) Lookup user by email
         var user = userRepository.findByEmailIgnoreCase(email.trim())
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
 
-        // 2) Generate & persist a one-time reset token
-        String token = generateActivationCode(6);
-        var resetToken = Token.builder()
-                .token(token)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(15))
-                .user(user)
-                .build();
-        tokenRepository.save(resetToken);
+        // 2) Generate a JWT token for password reset
+        String token = jwtService.generateTokenForEmail(email);
 
-        // 3) Build the FRONTEND reset link with ?token=<token>
-        //    e.g. http://localhost:4200/reset-password?token=ABC123
+        // 3) Build the FRONTEND reset link with the JWT token as a query parameter
         String link = UriComponentsBuilder
-                .fromHttpUrl(resetPasswordUrl)      // → http://localhost:4200/reset-password
-                .queryParam("token", token)         // → ?token=713658
+                .fromHttpUrl(resetPasswordUrl)  // Base URL for password reset page
+                .queryParam("token", token)     // Add the token to the query string
                 .build()
                 .toUriString();
 
-
-        // 4) Send the email using the existing generic sendEmail(...) method:
+        // 4) Send the reset password email using the email service
         emailService.sendEmail(
-                user.getEmail(),                               // to
-                user.getFullName(),                            // username (for personalization)
-                EmailTemplateName.RESET_PASSWORD,              // which template to use
-                link,                                          // confirmationUrl → the full link
-                token,                                         // activationCode (i.e. the raw token)
-                "Réinitialisation du mot de passe"             // email subject
+                user.getEmail(),                        // To email address
+                user.getFullName(),                     // User's full name for personalization
+                EmailTemplateName.RESET_PASSWORD,       // Email template for reset password
+                link,                                   // The full reset link with the token
+                token,                                  // The token itself (raw token for debugging)
+                "Réinitialisation du mot de passe"      // Subject of the email
         );
     }
 
@@ -198,25 +189,37 @@ public class AuthenticationService {
 
 
 
+
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        // Récupérer le token de la requête
-        Token token = tokenRepository.findByToken(request.getToken())
-                .orElseThrow(() -> new RuntimeException("Token invalide"));
+        String token = request.getToken();
 
-        if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
-            throw new RuntimeException("Le token a expiré.");
+        // Validate and extract the email from the JWT token
+        String email;
+        try {
+            email = jwtService.extractEmailFromToken(token); // Extract email from the token
+        } catch (Exception e) {
+            throw new RuntimeException("Token invalide ou expiré.");  // Handle invalid or expired token
         }
 
-        // Récupérer l'utilisateur lié au token
-        User user = token.getUser();
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
+        // Ensure the new password and confirmation password match
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Les mots de passe ne correspondent pas.");
+        }
 
-        // Marquer le token comme validé
-        token.setValidatedAt(LocalDateTime.now());
-        tokenRepository.save(token);
+        // Retrieve the user by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé."));
+
+        // Update the user's password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);  // Save the updated user
+
+        // Optionally, invalidate the token after use (you can implement this if needed)
+        // tokenRepository.deleteByToken(token);   // Delete the used token from the database, if applicable
     }
+
+
 
 
 

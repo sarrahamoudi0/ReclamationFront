@@ -1,17 +1,19 @@
 package com.example.reclamation;
 
+import com.example.reclamation.user.User;
+import com.example.reclamation.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 @NoArgsConstructor
@@ -22,36 +24,64 @@ public class ReclamationController {
     @Autowired
     private IReclamationService reclamationService;
 
+    @Autowired
+    private UserService userService;
+
+    // Helper method to get the current authenticated user
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Ensure the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        String email = authentication.getName(); // getName() returns the principal, which is the email in this case
+
+        // Use UserService to find the user by email
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     @PostMapping("/addReclamation")
     public ResponseEntity<Reclamation> createReclamation(
-            @RequestParam("nom") String nom,
-            @RequestParam("prenom") String prenom,
-            @RequestParam("email") String email,
-            @RequestParam("num") String num,
+
             @RequestParam("titre") String titre,
             @RequestParam("description") String description,
             @RequestParam(value = "image_reclamation", required = false) MultipartFile fileReclamation) throws IOException {
 
+        // Fetch the current authenticated user
+        User currentUser = getCurrentUser();
+
         Reclamation reclamation = new Reclamation();
-        reclamation.setNom(nom);
-        reclamation.setPrenom(prenom);
-        reclamation.setNum(num);
-        reclamation.setEmail(email);
+
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
-        reclamation.setImage_reclamation(fileReclamation.getBytes());
 
+        // Associate the reclamation with the authenticated user
+        reclamation.setUser(currentUser); // Assuming 'user' is the field that references User
+
+        if (fileReclamation != null) {
+            reclamation.setImage_reclamation(fileReclamation.getBytes());
+        }
+
+        // Save the reclamation with the associated user
         Reclamation savedReclamation = reclamationService.createReclamation(reclamation);
         return ResponseEntity.ok(savedReclamation);
     }
+    @GetMapping("/getMyReclamations")
+    public List<Reclamation> getMyReclamations() {
+        User currentUser = userService.getCurrentUser();
+        return reclamationService.getReclamationsByUser(currentUser);
+    }
 
-
-    @GetMapping("/getAllReclamation")
-    public List<Reclamation> getAllReclamation() {
-
+    @GetMapping("/getAllReclamations")
+    public List<Reclamation> getAllReclamations() {
+        // You could optionally check if the current user has an ADMIN role
         return reclamationService.getAllReclamations();
     }
+
+
 
     @PutMapping("/updateReclamation")
     public ResponseEntity<Reclamation> updateReclamation(
@@ -78,16 +108,13 @@ public class ReclamationController {
         return ResponseEntity.ok(updatedReclamation);
     }
 
-
     @DeleteMapping("/remove/{reclamation-id}")
     public void deleteReclamation(@PathVariable("reclamation-id") String id) {
-
         reclamationService.deleteReclamation(id);
     }
 
     @GetMapping("/getReclamationById/{id}")
     public Reclamation getReclamationById(@PathVariable String id) {
-
         return reclamationService.getReclamationById(id);
     }
 
@@ -122,6 +149,4 @@ public class ReclamationController {
             return ResponseEntity.notFound().build(); // Return 404 if reclamation is not found
         }
     }
-
-
-    }
+}

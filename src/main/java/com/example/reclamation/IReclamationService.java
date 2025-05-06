@@ -1,8 +1,10 @@
 package com.example.reclamation;
 
 import java.util.List;
+import com.example.reclamation.user.User;
 
 public interface IReclamationService {
+    List<Reclamation> getReclamationsByUser(User user);
     Reclamation createReclamation(Reclamation reclamation);
     List<Reclamation> getAllReclamations();
 

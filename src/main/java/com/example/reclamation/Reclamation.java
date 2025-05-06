@@ -1,5 +1,6 @@
 package com.example.reclamation;
 
+import com.example.reclamation.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
 import lombok.*;
@@ -20,16 +21,12 @@ import java.util.List;
 public class Reclamation {
     @Id
     private String idReclamation;
-    private String nom;
-    private String prenom;
-    private String email;
-    private String num;
+
     private String titre;
     private String description;
     private LocalDateTime createdDate = LocalDateTime.now();
     private Statut statut= Statut.valueOf("Nouveau");
     private Priorite priorite= Priorite.valueOf("Faible");
-    private long userId = 1;
     @Lob
     @Column(length = 209715200)
     private byte[] image_reclamation;
@@ -39,6 +36,8 @@ public class Reclamation {
 
     @DBRef
     private Categorie categorie;
+    @DBRef
+    private User user;
 
 }
 

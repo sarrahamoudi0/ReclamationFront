@@ -57,29 +57,30 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         try {
-            service.sendResetPasswordEmail(email);
+            service.sendResetPasswordEmail(email);  // Send the reset email
             return ResponseEntity.ok("Email de réinitialisation envoyé.");
+        } catch (MessagingException e) {
+            // Handle email sending failure
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur d'envoi de l'email : " + e.getMessage());
         } catch (Exception e) {
+            // Handle other errors (e.g., user not found)
             return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());
         }
     }
-    // In your controller method
+
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(
             @RequestParam("token") String token,  // Token from query parameter
-            @Valid @RequestBody ResetPasswordRequest request) {
+            @RequestBody @Valid ResetPasswordRequest request) {
 
         // Check if the token is provided
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().body("Token is required");
         }
-
-        // Log the token (optional, for debugging purposes)
-        System.out.println("Received token: " + token);
 
         // Add the token to the request body object
         request.setToken(token);
@@ -87,12 +88,11 @@ public class AuthenticationController {
         try {
             // Call your service to handle the password reset
             service.resetPassword(request);
-            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+            return ResponseEntity.ok("Password successfully reset");
         } catch (Exception e) {
-            // Log the exception (optional, for debugging purposes)
-            e.printStackTrace();
+            // Handle exception and send response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de la réinitialisation du mot de passe");
+                    .body("Error resetting password: " + e.getMessage());
         }
     }
 

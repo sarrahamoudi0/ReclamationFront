@@ -83,5 +83,18 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);  // Generate the signing key using HMAC SHA
     }
 
+    public String generateTokenForEmail(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration)) // e.g., 30 min
+                .signWith(getSignInKey())
+                .compact();
+    }
+    public String extractEmailFromToken(String token) {
+        return extractUsername(token); // Alias, for clarity
+    }
+
+
 }
 
