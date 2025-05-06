@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Reclamation } from 'src/app/models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
 import { Statut } from '../models/Statut';
@@ -21,7 +20,7 @@ export class ReclamtionBackofficeComponent implements OnInit {
   }
 
   getAllReclamations(): void {
-    this.reclamationService.getAllReclamation().subscribe(
+    this.reclamationService.getAllReclamations().subscribe(
       (data: Reclamation[]) => {
         this.reclamations = data;
       },
@@ -33,9 +32,9 @@ export class ReclamtionBackofficeComponent implements OnInit {
 
   getFormattedDate(date: Date | string | null | undefined): string {
     if (!date) return 'N/A';
-    
+
     const formattedDate = new Date(date);
-    
+
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'short',
@@ -44,7 +43,7 @@ export class ReclamtionBackofficeComponent implements OnInit {
       minute: '2-digit',
       hour12: false // Use 24-hour time format
     };
-  
+
     return formattedDate.toLocaleString('en-GB', options);  // Use en-GB locale for correct month abbreviations (e.g., "Oct")
   }
 
@@ -62,7 +61,6 @@ export class ReclamtionBackofficeComponent implements OnInit {
         return 'badge-default';
     }
   }
-  
 
   getPrioriteClass(priorite: Priorite): string {
     switch (priorite) {
@@ -76,6 +74,7 @@ export class ReclamtionBackofficeComponent implements OnInit {
         return 'badge-default';
     }
   }
+
   deleteReclamation(reclamation: Reclamation): void {
     // Show confirmation dialog before deletion
     const confirmDelete = confirm('Are you sure you want to delete this reclamation?');
@@ -91,5 +90,13 @@ export class ReclamtionBackofficeComponent implements OnInit {
       );
     }
   }
-  
+
+  // Safe access to user properties (with optional chaining)
+  getUserFullName(reclamation: Reclamation): string {
+    return `${reclamation.user?.firstname || 'Unknown'} ${reclamation.user?.lastname || 'Unknown'}`;
+  }
+
+  getUserEmail(reclamation: Reclamation): string {
+    return reclamation.user?.email || 'No email provided';
+  }
 }

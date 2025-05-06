@@ -18,10 +18,7 @@ export class ShowReclamationComponent implements OnInit {
 
   newReclamation: Reclamation = {
     idReclamation:"",
-    nom: "",
-    prenom: "",
-    email:"",
-    num:"",
+   
     titre:"",
     description:"",
     image_reclamation:null,

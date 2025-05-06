@@ -1,201 +1,185 @@
-/* Table Container */
+/* Overall Table Container */
 .table-container {
-    padding: 15px; /* Smaller padding */
+    padding: 30px;
+    background-color: #f4f6f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f9f9f9;
-}
-
-h1 {
+    color: #2f3b52;
+    margin-top: 20px;
+  }
+  
+  /* Title */
+  .page-title {
     text-align: center;
-    margin-bottom: 15px; /* Smaller space below the header */
-    color: #2c3e50;
-    font-size: 22px; /* Smaller font size for the title */
-}
-
-/* Table Styling */
-.reclamation-table {
+    font-size: 28px;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 20px;
+  }
+  
+  /* Loading Message */
+  .loading-message {
+    text-align: center;
+    font-size: 16px;
+    color: #7f8c8d;
+    padding: 30px;
+    background-color: #ecf0f1;
+    border-radius: 6px;
+  }
+  
+  /* Table Styling */
+  .reclamation-table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px; /* Smaller font size */
-}
-
-.reclamation-table th,
-.reclamation-table td {
-    padding: 8px 10px; /* Smaller padding */
-    border-bottom: 1px solid #e0e0e0;
-    text-align: left;
-    word-break: break-word;
-}
-
-.reclamation-table th {
-    background-color: #f0f0f0;
-    font-weight: 600;
-    color: #555;
-}
-
-.reclamation-table tr:hover {
-    background-color: #f8f8f8;
-}
-
-/* Action Button Styling */
-.show-button,
-.update-button,
-.delete-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px 8px; /* Smaller padding */
-    font-size: 12px; /* Smaller font size */
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.show-button {
-    color: #3498db; /* Blue */
-}
-
-.update-button {
-    color: #f1c40f; /* Yellow */
-}
-
-.delete-button {
-    color: #e74c3c; /* Red */
-}
-
-/* Icon Styling */
-.action-button i {
-    font-size: 12px; /* Smaller icon size */
-}
-
-/* Hover Effects */
-.show-button:hover,
-.update-button:hover,
-.delete-button:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.1);
-}
-
-/* Badge Styling */
-.badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 12px; /* Smaller font size */
-    text-transform: capitalize;
-    font-weight: 500;
-    display: inline-block;
-}
-
-/* Statut Colors */
-.badge-pending {
-    background-color: #f39c12; /* Orange */
-}
-
-.badge-inprogress {
-    background-color: #3498db; /* Blue */
-}
-
-.badge-resolved {
-    background-color: #2ecc71; /* Green */
-}
-
-.badge-escalated {
-    background-color: #9b59b6; /* Purple */
-}
-
-/* Priorite Colors */
-.badge-high {
-    background-color: #e74c3c; /* Red */
-}
-
-.badge-medium {
-    background-color: #f1c40f; /* Yellow */
-    
-}
-
-.badge-low {
-    background-color: #1abc9c; /* Teal */
-}
-
-.badge-default {
-    background-color: #7f8c8d; /* Gray */
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .reclamation-table th,
-    .reclamation-table td {
-        padding: 6px 8px; /* Smaller padding for small screens */
-        font-size: 12px; /* Smaller font size */
-    }
-
-    .show-button,
-    .update-button,
-    .delete-button {
-        padding: 4px 6px; /* Smaller padding */
-        font-size: 12px;
-    }
-
-    h1 {
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 500px) {
-    .reclamation-table {
-        font-size: 12px; /* Smaller font size */
-    }
-
-    .reclamation-table thead {
-        display: none;
-    }
-
-    .reclamation-table tr {
-        display: block;
-        margin-bottom: 8px;
-        background: #fff;
-        border-radius: 6px;
-        padding: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .reclamation-table td {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 8px;
-        border: none;
-        border-bottom: 1px solid #eee;
-    }
-
-    .reclamation-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #333;
-        margin-right: 10px;
-    }
-}
-/* Ensure badges have consistent width */
-.statut-badge, .priorite-badge {
-    display: inline-block;
-    width: 9ch;  /* Fixed width for 7 characters */
-    text-align: center;  /* Center the text inside the badge */
-    padding: 4px 8px;  /* Add padding for better visibility */
-    font-size: 14px;  /* Adjust font size as needed */
-    border-radius: 12px;  /* Rounded corners */
-    white-space: nowrap;  /* Prevent the badge text from wrapping */
-    overflow: hidden;  /* Hide overflow text */
-    text-overflow: ellipsis;  /* Add ellipsis for overflow text */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    margin-top: 20px;
   }
   
-  /* Statut color styling */
+  /* Table Header */
+  .reclamation-table th {
+    padding: 14px 20px;
+    background-color: #f7f9fb;
+    color: #34495e;
+    font-weight: 600;
+    text-align: left;
+  }
   
+  /* Table Data */
+  .reclamation-table td {
+    padding: 14px 20px;
+    text-align: left;
+    word-break: break-word;
+    border-bottom: 1px solid #ecf0f1;
+  }
   
-  /* Optional: make sure table cells have the same alignment */
-  .reclamation-table td[data-label="Statut"],
-  .reclamation-table td[data-label="Priorité"] {
+  /* Table Row Hover Effect */
+  .reclamation-table tr:hover {
+    background-color: #f9fafb;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Action Buttons */
+  .action-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     text-align: center;
+  }
+  
+  /* View Button */
+  .view-btn {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  /* Edit Button */
+  .edit-btn {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  /* Delete Button */
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  /* Button Hover Effects */
+  .action-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  
+  /* Badge Styles */
+  .badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    display: inline-block;
+  }
+  
+  /* Status Badge Colors */
+  .badge-pending {
+    background-color: #f39c12; /* Orange */
+  }
+  
+  .badge-inprogress {
+    background-color: #3498db; /* Blue */
+  }
+  
+  .badge-resolved {
+    background-color: #2ecc71; /* Green */
+  }
+  
+  .badge-escalated {
+    background-color: #9b59b6; /* Purple */
+  }
+  
+  /* Priority Badge Colors */
+  .badge-high {
+    background-color: #e74c3c; /* Red */
+  }
+  
+  .badge-medium {
+    background-color: #f1c40f; /* Yellow */
+  }
+  
+  .badge-low {
+    background-color: #1abc9c; /* Teal */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .reclamation-table th,
+    .reclamation-table td {
+      padding: 12px;
+    }
+  
+    .action-btn {
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+  
+    .page-title {
+      font-size: 24px;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .reclamation-table thead {
+      display: none;
+    }
+  
+    .reclamation-table tr {
+      display: block;
+      margin-bottom: 10px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  
+    .reclamation-table td {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+  
+    .reclamation-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #34495e;
+      margin-right: 10px;
+    }
   }
   

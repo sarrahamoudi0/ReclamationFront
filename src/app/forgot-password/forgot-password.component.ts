@@ -10,6 +10,7 @@ import { AuthenticationService } from '../service/authentication.service';
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
   submissionStatus: { message: string, success: boolean } | null = null;
+  isSubmitting: boolean = false;
 
   constructor(private authService: AuthenticationService) {
     this.forgotPasswordForm = new FormGroup({
@@ -17,21 +18,33 @@ export class ForgotPasswordComponent {
     });
   }
 
+  // Method called on form submission
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.get('email')?.value;
+
+      // Set submitting state to true to show loading indicator
+      this.isSubmitting = true;
+
       this.authService.sendResetPasswordEmail(email).subscribe(
         (response) => {
           this.submissionStatus = {
             message: 'Un email de réinitialisation a été envoyé avec succès !',
             success: true
           };
+
+          // Reset form and submitting state after successful submission
+          this.forgotPasswordForm.reset();
+          this.isSubmitting = false;
         },
         (error) => {
           this.submissionStatus = {
-            message: 'Erreur: ' + error.message,
+            message: 'Erreur: ' + (error?.message || 'Une erreur est survenue'),
             success: false
           };
+
+          // Reset submitting state in case of error
+          this.isSubmitting = false;
         }
       );
     } else {
@@ -40,5 +53,10 @@ export class ForgotPasswordComponent {
         success: false
       };
     }
+  }
+
+  // Getter for easier access to the email form control in template
+  get email() {
+    return this.forgotPasswordForm.get('email');
   }
 }

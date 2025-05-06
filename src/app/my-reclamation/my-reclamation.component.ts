@@ -22,10 +22,10 @@ export class MyReclamationComponent    {
   }
 
   fetchReclamations(): void {
-    this.reclamationService.getAllReclamation().subscribe(
+    this.reclamationService.getMyReclamation().subscribe(
       (reclamations: Reclamation[]) => {
       
-        this.reclamations = reclamations.filter(reclamation => reclamation.userId === 1);
+        this.reclamations = reclamations;
   
         console.log('Fetched Reclamations:', this.reclamations);
       },

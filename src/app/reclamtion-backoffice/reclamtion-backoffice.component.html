@@ -1,54 +1,52 @@
 <div class="table-container">
-    <h1>All Reclamations</h1>
-  
-    <table *ngIf="reclamations.length > 0" class="reclamation-table">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Email</th>
-          <th>Num</th>
-          <th>Titre</th>
-          <th>Description</th>
-          <th>Statut</th>
-          <th>Priorité</th>
-          <th>Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let reclamation of reclamations">
-          <td data-label="Nom">{{ reclamation.nom | slice:0:30 }}</td>
-          <td data-label="Prénom">{{ reclamation.prenom | slice:0:30 }}</td>
-          <td data-label="Email">{{ reclamation.email | slice:0:30 }}</td>
-          <td data-label="Num">{{ reclamation.num | slice:0:30 }}</td>
-          <td data-label="Titre">{{ reclamation.titre | slice:0:30 }}</td>
-          <td data-label="Description">{{ reclamation.description | slice:0:30 }}</td>
-          <td data-label="Statut">
-            <span class="badge statut-badge" [ngClass]="getStatutClass(reclamation.statut)">
-              {{ reclamation.statut }}
-            </span>
-          </td>
-          <td data-label="Priorité">
-            <span class="badge priorite-badge" [ngClass]="getPrioriteClass(reclamation.priorite)">
-              {{ reclamation.priorite }}
-            </span>
-          </td>
-          
-          <td data-label="Date">{{ getFormattedDate(reclamation.createdDate)  }}</td>
-          <td data-label="Action">
-            <button class="action-button show-button" [routerLink]="['/reclamationadmin', reclamation.idReclamation]" title="Show">
-              <i class="fas fa-eye"></i> <!-- Eye icon for Show -->
-            </button>
-           
-            <button class="action-button delete-button" (click)="deleteReclamation(reclamation)" title="Delete">
-                <i class="fas fa-trash-alt"></i> <!-- Trash icon for Delete -->
-              </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <p *ngIf="reclamations.length === 0">Loading or no reclamations found...</p>
+  <h1 class="page-title">Reclamations Management</h1>
+
+  <!-- Message si aucun résultat -->
+  <div *ngIf="reclamations.length === 0" class="loading-message">
+    <p>No reclamations found or loading...</p>
   </div>
-  
+
+  <!-- Table des réclamations -->
+  <table *ngIf="reclamations.length > 0" class="reclamation-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>User Name</th>
+        <th>User Email</th>
+        <th>Description</th>
+        <th>Created Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reclamation of reclamations">
+        <td>{{ reclamation.titre }}</td>
+        <td>
+          <span [ngClass]="getStatutClass(reclamation.statut)" class="badge">
+            {{ reclamation.statut }}
+          </span>
+        </td>
+        <td>
+          <span [ngClass]="getPrioriteClass(reclamation.priorite)" class="badge">
+            {{ reclamation.priorite }}
+          </span>
+        </td>
+        <td>{{ reclamation.user?.firstname }} {{ reclamation.user?.lastname }}</td>
+        <td>{{ reclamation.user?.email }}</td>
+        <td>{{ reclamation.description | slice:0:150 }}...</td>
+        <td>{{ getFormattedDate(reclamation.createdDate) }}</td>
+        <td>
+          <button class="action-btn view-btn" [routerLink]="['/reclamation', reclamation.idReclamation]">
+            View
+          </button>
+         
+          <button class="action-btn delete-btn" (click)="deleteReclamation(reclamation)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

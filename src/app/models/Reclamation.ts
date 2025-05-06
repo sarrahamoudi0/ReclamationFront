@@ -1,12 +1,10 @@
 import { Priorite } from "./Priorite";
 import { Statut } from "./Statut";
+import { User } from "./User";
 
 export class Reclamation {
     idReclamation?: string; 
-    nom!: string;
-    prenom!: string;
-    email!: string;
-    num!: string;
+
     titre!: string;
     description!: string;
     createdDate?: Date | null; 
@@ -14,8 +12,7 @@ export class Reclamation {
     url?: string | ArrayBuffer;
     statut!: Statut;
     priorite!: Priorite;
-    userId?:number;
-
+    user?: User;
 
     
   }

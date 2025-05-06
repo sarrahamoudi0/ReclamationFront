@@ -18,9 +18,16 @@ export class ReclamationService {
     return this.http.post<Reclamation>(`${this.apiUrl}/addReclamation`, formData);
   }
 
-  getAllReclamation(): Observable<Reclamation[]> {
-    return this.http.get<Reclamation[]>(`${this.apiUrl}/getAllReclamation`);
 
+  
+
+  getMyReclamation(): Observable<Reclamation[]> {
+    return this.http.get<Reclamation[]>(`${this.apiUrl}/getMyReclamations`);
+
+  }
+
+  getAllReclamations(): Observable<Reclamation[]> {
+    return this.http.get<Reclamation[]>(`${this.apiUrl}/getAllReclamations`);
   }
 
   deleteReclamation(reclamation: Reclamation): Observable<any> {

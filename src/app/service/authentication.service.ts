@@ -66,37 +66,56 @@ export class AuthenticationService {
   
   
 
-  // Send Reset Password Email
-  sendResetPasswordEmail(email: string): Observable<string> {
-    return this.http.post(`${this.apiUrl}/forgot-password?email=${encodeURIComponent(email)}`, {}, { responseType: 'text' }).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Erreur lors de l\'envoi de l\'email de réinitialisation :', error);
+ // Send Reset Password Email
+ sendResetPasswordEmail(email: string): Observable<string> {
+  return this.http.post(`${this.apiUrl}/forgot-password?email=${encodeURIComponent(email)}`, {}, { responseType: 'text' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('Erreur lors de l\'envoi de l\'email de réinitialisation :', error);
 
-        if (error.status === 400 && typeof error.error === 'string') {
-          return throwError(() => new Error(error.error));
-        }
+      // Check if the error message is a string from the backend
+      if (error.status === 400 && typeof error.error === 'string') {
+        return throwError(() => new Error(error.error));
+      }
 
-        return throwError(() => new Error('Une erreur est survenue pendant l\'envoi de l\'email.'));
-      })
-    );
+      // Generic error message
+      return throwError(() => new Error('Une erreur est survenue pendant l\'envoi de l\'email.'));
+    })
+  );
+}
+
+// Reset Password
+resetPassword(payload: { token: string, newPassword: string, confirmPassword: string }): Observable<string> {
+  // Ensure the token is not empty
+  if (!payload.token) {
+    return throwError(() => new Error('Token is required'));
   }
-  resetPassword(payload: { token: string, newPassword: string, confirmPassword: string }): Observable<string> {
-    // Ensure the token is not empty
-    if (!payload.token) {
-      throw new Error('Token is required');
-    }
 
-    // Prepare the request body
-    const body: ResetPassword = {
-      newPassword: payload.newPassword,
-      confirmPassword: payload.confirmPassword,
-      token: payload.token // Add the token to the request body
-    };
+  // Ensure the passwords match
+  if (payload.newPassword !== payload.confirmPassword) {
+    return throwError(() => new Error('Les mots de passe ne correspondent pas.'));
+  }
 
-    // Call the API endpoint to reset the password
-    return this.http.post('http://localhost:8083/auth/reset-password?token=' + payload.token, body, { responseType: 'text' });
+  // Prepare the request body for resetting password
+  const body: ResetPassword = {
+    newPassword: payload.newPassword,
+    confirmPassword: payload.confirmPassword,
+    token: payload.token
+  };
 
+  // Send request to reset password API endpoint
+  return this.http.post(`${this.apiUrl}/reset-password?token=${payload.token}`, body, { responseType: 'text' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('Erreur lors de la réinitialisation du mot de passe :', error);
 
+      // Check for different HTTP error codes
+      if (error.status === 400 && typeof error.error === 'string') {
+        return throwError(() => new Error(error.error));
+      }
+
+      // Generic error message
+      return throwError(() => new Error('Une erreur est survenue lors de la réinitialisation du mot de passe.'));
+    })
+  );
 }
 
   

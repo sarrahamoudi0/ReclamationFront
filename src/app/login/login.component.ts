@@ -38,7 +38,7 @@ export class LoginComponent {
         this.isLoading = false;
 
         // Navigate to the dashboard (or other protected route)
-        this.router.navigate(['/myreclamation']);
+        this.router.navigate(['/reclamation']);
       },
       (error) => {
         this.isLoading = false;

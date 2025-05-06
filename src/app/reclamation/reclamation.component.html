@@ -5,41 +5,7 @@
 
   <form (ngSubmit)="submitReclamation()" #reclamationForm="ngForm" enctype="multipart/form-data" class="reclamation-form" novalidate>
 
-    <!-- NOM -->
-    <div class="form-group">
-      <label for="nom"><i class="fa fa-user"></i> Nom * :</label>
-      <input type="text" id="nom" name="nom" [(ngModel)]="newReclamation.nom" required minlength="2" class="form-control" #nom="ngModel">
-    </div>
-    <div class="text-danger" *ngIf="nom.invalid && nom.touched">
-      Le nom est requis.
-    </div>
-
-    <!-- PRENOM -->
-    <div class="form-group">
-      <label for="prenom"><i class="fa fa-user-circle"></i> Prénom * :</label>
-      <input type="text" id="prenom" name="prenom" [(ngModel)]="newReclamation.prenom" required minlength="2" class="form-control" #prenom="ngModel">
-    </div>
-    <div class="text-danger" *ngIf="prenom.invalid && prenom.touched">
-      Le prénom est requis.
-    </div>
-
-    <!-- EMAIL -->
-    <div class="form-group">
-      <label for="email"><i class="fa fa-envelope"></i> Email * :</label>
-      <input type="email" id="email" name="email" [(ngModel)]="newReclamation.email" required email class="form-control" #email="ngModel">
-    </div>
-    <div class="text-danger" *ngIf="email.invalid && email.touched">
-      Un email valide est requis.
-    </div>
-
-    <!-- NUMERO -->
-    <div class="form-group">
-      <label for="num"><i class="fa fa-phone"></i> Numéro * :</label>
-      <input type="text" id="num" name="num" [(ngModel)]="newReclamation.num" required pattern="^[0-9]{8,15}$" class="form-control" #num="ngModel">
-    </div>
-    <div class="text-danger" *ngIf="num.invalid && num.touched">
-      Numéro requis (entre 8 et 15 chiffres).
-    </div>
+  
 
     <!-- TITRE -->
     <div class="form-group">

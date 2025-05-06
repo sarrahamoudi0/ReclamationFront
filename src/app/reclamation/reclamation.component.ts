@@ -23,10 +23,7 @@ export class ReclamationComponent implements OnInit {
 
   newReclamation: Reclamation = {
     idReclamation:"",
-    nom: "",
-    prenom: "",
-    email:"",
-    num:"",
+   
     titre:"",
     description:"",
     image_reclamation:null,
@@ -44,10 +41,7 @@ export class ReclamationComponent implements OnInit {
   submitReclamation(): void {
     const formData = new FormData();
 
-    formData.append('nom', this.newReclamation.nom);
-    formData.append('prenom', this.newReclamation.prenom);
-    formData.append('email', this.newReclamation.email);
-    formData.append('num', this.newReclamation.num);
+
     formData.append('titre', this.newReclamation.titre);
     formData.append('description', this.newReclamation.description);
 
