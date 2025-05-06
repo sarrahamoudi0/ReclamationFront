@@ -95,7 +95,16 @@ public class AuthenticationController {
                     .body("Error resetting password: " + e.getMessage());
         }
     }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
+        // Strip "Bearer " prefix from the token
+        String jwtToken = token.replace("Bearer ", "");
 
+        // Call the logout method from AuthenticationService to blacklist or invalidate the token
+        service.logout(jwtToken);
+
+        return ResponseEntity.ok().build(); // Return a success response
+    }
 
 
 

@@ -28,7 +28,6 @@ public class Token {
     private LocalDateTime expiresAt;
     private LocalDateTime validatedAt;
 
-
     private TokenType tokenType = TokenType.BEARER;
 
     private boolean revoked;
@@ -37,4 +36,15 @@ public class Token {
 
     @DBRef
     private User user;
+
+    // Add a custom constructor for blacklisting a token
+    public Token(String token, LocalDateTime createdAt) {
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = null;  // You may want to leave expiresAt as null for blacklisted tokens
+        this.validatedAt = null; // Set validatedAt to null if you're invalidating the token
+        this.revoked = true;    // Mark it as revoked since it is blacklisted
+        this.expired = true;    // Mark it as expired if needed
+    }
 }
+

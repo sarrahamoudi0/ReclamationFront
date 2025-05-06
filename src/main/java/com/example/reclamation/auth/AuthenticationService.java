@@ -222,6 +222,18 @@ public class AuthenticationService {
 
 
 
+    public void logout(String token) {
+        // Create a blacklisted token using the builder
+        Token blacklistedToken = Token.builder()
+                .token(token)
+                .createdAt(LocalDateTime.now())
+                .revoked(true)    // Mark it as revoked
+                .expired(true)    // Mark it as expired
+                .build();
+
+        tokenRepository.save(blacklistedToken);
+    }
+
 
 
 
