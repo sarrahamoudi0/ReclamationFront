@@ -4,16 +4,22 @@ package com.example.reclamation.auth;
 
 import com.example.reclamation.token.Token;
 import com.example.reclamation.token.TokenRepository;
+import com.example.reclamation.user.AdminCreateUserRequest;
 import com.example.reclamation.user.ResetPasswordRequest;
+import com.example.reclamation.user.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -108,7 +114,40 @@ public class AuthenticationController {
 
 
 
+    @PostMapping("/create-user")
+   /// @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> createUserByAdmin(@RequestBody AdminCreateUserRequest request) {
+        // Call the service layer to create the user
+        String responseMessage = service.createUserByAdmin(request);
 
+        // Return success or failure message based on service response
+        if ("User created successfully.".equals(responseMessage)) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        } else {
+            return ResponseEntity.badRequest().body(responseMessage); // Error message
+        }
+    }
+
+    @GetMapping("users")
+    public List<User> getAllUsers() {
+        return service.getAllUsers();
+    }
+
+    @PutMapping("/update-user/{id}")
+    public ResponseEntity<Map<String, String>> updateUser(@PathVariable String id, @RequestBody AdminCreateUserRequest request) {
+        String responseMessage = service.updateUser(id, request);  // Update user logic
+        Map<String, String> response = new HashMap<>();
+        response.put("message", responseMessage); // Add message to map
+        return ResponseEntity.ok(response);  // Return the message as part of a JSON object
+    }
+
+
+    // Endpoint to delete a user
+    @DeleteMapping("/delete-user/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        String responseMessage = service.deleteUser(id);
+        return ResponseEntity.ok(responseMessage);
+    }
 
 }
 

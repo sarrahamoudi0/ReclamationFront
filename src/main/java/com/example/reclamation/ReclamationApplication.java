@@ -1,7 +1,6 @@
 package com.example.reclamation;
 
 import com.example.reclamation.role.Role;
-import com.example.reclamation.role.RoleRepository;
 import com.example.reclamation.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -31,15 +30,6 @@ public class ReclamationApplication {
     }
 
 
-    @Bean
-    public CommandLineRunner Runner (RoleRepository roleRepository) {
-        return args -> {
-            if (roleRepository.findByName("USER").isEmpty()) {
-                roleRepository.save(
-                        Role.builder().name("USER").build()
-                );
-            }
-        };
-    }}
+}
 
 

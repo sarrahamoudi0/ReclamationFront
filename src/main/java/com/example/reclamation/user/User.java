@@ -1,6 +1,8 @@
 package com.example.reclamation.user;
 
 import com.example.reclamation.role.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Document(collection = "users")
 public class User implements UserDetails {
 
+
     @Id
     private String id;
 
@@ -39,7 +42,7 @@ public class User implements UserDetails {
     private boolean accountLocked;
     private boolean enabled;
 
-    private List<String> roles;
+    private Role role;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -49,9 +52,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
 

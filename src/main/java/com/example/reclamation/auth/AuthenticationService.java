@@ -4,10 +4,11 @@ package com.example.reclamation.auth;
 
 import com.example.reclamation.email.EmailService;
 import com.example.reclamation.email.EmailTemplateName;
-import com.example.reclamation.role.RoleRepository;
+import com.example.reclamation.role.Role;
 import com.example.reclamation.security.JwtService;
 import com.example.reclamation.token.Token;
 import com.example.reclamation.token.TokenRepository;
+import com.example.reclamation.user.AdminCreateUserRequest;
 import com.example.reclamation.user.ResetPasswordRequest;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserRepository;
@@ -24,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +38,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
 
@@ -46,27 +47,90 @@ public class AuthenticationService {
     private String resetPasswordUrl;
 
 
+
     public void register(RegistrationRequest request) throws MessagingException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Cette adresse email existe déjà !");
         }
 
-        var userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-
+        var userRole = Role.ROLE_USER; // Enum
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
+                .phone(request.getPhone())
+
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .roles(List.of(userRole.getName()))
+                .role(userRole)
                 .build();
 
         userRepository.save(user);
         sendValidationEmail(user);
     }
+
+
+
+
+    public String createUserByAdmin(AdminCreateUserRequest request) {
+        // Validate the role is not null
+        if (request.getRole() == null) {
+            return "Role is required.";
+        }
+
+        // Ensure the role is valid
+        Role role;
+        try {
+            role = Role.valueOf(request.getRole().name());  // Ensures role is a valid enum
+        } catch (IllegalArgumentException e) {
+            return "Invalid role.";
+        }
+
+        // Encrypt the password
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        // Create new User object with the provided details and role
+        User newUser = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .password(encodedPassword)
+                .role(role)  // Set role to the user
+                .enabled(true)  // Enable the user by default
+                .accountLocked(false)  // Account is not locked initially
+                .build();
+
+        // Save the new user to the database
+        userRepository.save(newUser);
+
+        // Return success message
+        return "User created successfully.";
+    }
+
+    public String updateUser(String id, AdminCreateUserRequest request) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Update fields
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setPhone(request.getPhone());
+        user.setRole(request.getRole());
+
+        userRepository.save(user);
+
+        return "User updated successfully.";
+    }
+
+    public String deleteUser(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        userRepository.delete(user);
+
+        return "User deleted successfully.";
+    }
+
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -235,7 +299,9 @@ public class AuthenticationService {
     }
 
 
-
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
 }
 

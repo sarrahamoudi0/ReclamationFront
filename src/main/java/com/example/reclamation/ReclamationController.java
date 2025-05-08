@@ -1,5 +1,6 @@
 package com.example.reclamation;
 
+import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserService;
 import lombok.AllArgsConstructor;
@@ -77,9 +78,16 @@ public class ReclamationController {
 
     @GetMapping("/getAllReclamations")
     public List<Reclamation> getAllReclamations() {
-        // You could optionally check if the current user has an ADMIN role
-        return reclamationService.getAllReclamations();
+        User currentUser = getCurrentUser();
+
+        // Vérifier si l'utilisateur a le rôle ADMIN ou AGENT
+        if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+            return reclamationService.getAllReclamations();  // Retourner toutes les réclamations
+        } else {
+            throw new RuntimeException("Accès interdit. L'utilisateur n'a pas les droits nécessaires.");
+        }
     }
+
 
 
 
