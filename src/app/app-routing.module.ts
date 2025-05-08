@@ -13,25 +13,35 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { authGuard } from './guards/auth.guard';
+import { UserRole } from './models/role';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 
 const routes: Routes = [
-  {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard]},
-  {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard]},
-  {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard]},
-  {path:"reclamation/:id",component:ShowReclamationComponent,canActivate: [authGuard]},
-  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard]},
-  {path:"categorie",component:CategorieComponent,canActivate: [authGuard]},
+  {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
+  {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
+  {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
+  {path:"reclamation/:id",component:ShowReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.USER]}},
+  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.ADMIN]}},
+  {path:"categorie",component:CategorieComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
+  {path:"register",component:RegisterComponent}, 
   { path: 'activate', component: ActivationComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgotpass', component: ForgotPasswordComponent },
   { path: 'navbar', component: NavbarComponent },
+  {path:"user",component:UserListComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
+
 
 
   { path: '', redirectTo: 'login', pathMatch: 'full' }, 
 
   { path: 'login', component: LoginComponent },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', component: NotFoundComponent },
+  { path: 'admin-dashboard', component: CategorieComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
+  { path: 'reclamationclient', component: ReclamationComponent, canActivate: [authGuard],data: { roles: [UserRole.USER] }},
+  { path: 'reclamationagnet', component: ReclamtionBackofficeComponent, canActivate: [authGuard],data: { roles: [UserRole.AGENT] }}
+
 
 
 

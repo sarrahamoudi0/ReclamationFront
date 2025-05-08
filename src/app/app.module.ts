@@ -21,6 +21,8 @@ import { AuthInterceptor } from './AuthInterceptor';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     ActivationComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    NavbarComponent
+    NavbarComponent,
+    NotFoundComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,91 @@
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<!-- Bootstrap 5 for styling -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Add User Button -->
+<div class="d-flex justify-content-end mb-3">
+  <button class="btn btn-success" (click)="openAddUserForm()" title="Ajouter un utilisateur">
+    <i class="fas fa-user-plus"></i> Ajouter un utilisateur
+  </button>
+</div>
+
+<!-- Table -->
+<div class="table-responsive mt-4">
+  <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">Email</th>
+        <th scope="col">Téléphone</th>
+        <th scope="col">Rôle</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.lastname }}</td>
+        <td>{{ user.firstname }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone || '—' }}</td>
+        <td>
+          <span *ngFor="let role of user.roles" class="badge bg-info text-dark me-1">
+            {{ getRole(user.roles) }}
+          </span>
+        </td>
+        <td>
+          <!-- Show update button only if the role is either ADMIN or AGENT -->
+          <button *ngIf="user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_AGENT')" 
+                  class="btn btn-outline-primary btn-sm me-2 rounded-pill shadow-sm" 
+                  (click)="openUpdateModal(user)" title="Modifier">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="btn btn-outline-danger btn-sm rounded-pill shadow-sm" (click)="deleteUser(user)" title="Supprimer">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal for updating user -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateUserModalLabel">Modifier un utilisateur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="updateUser()">
+          <div class="mb-3">
+            <label for="firstname" class="form-label">Prénom</label>
+            <input type="text" class="form-control" id="firstname" [(ngModel)]="selectedUser.firstname" name="firstname" required>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="lastname" [(ngModel)]="selectedUser.lastname" name="lastname" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="selectedUser.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Téléphone</label>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="selectedUser.phone" name="phone">
+          </div>
+          <div class="mb-3">
+            <label for="roles" class="form-label">Rôle</label>
+            <input type="text" class="form-control" id="roles" [(ngModel)]="selectedUser.roles" name="roles">
+          </div>
+          <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: Add Bootstrap 5 JS for dynamic effects -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
