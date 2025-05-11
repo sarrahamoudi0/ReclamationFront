@@ -1,165 +1,168 @@
+/* General Wrapper */
+.form-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 50px; /* increased padding for more spacious feel */
+  margin: 100px auto; /* vertically center with auto horizontal centering */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  width: 80%; /* make it responsive instead of fixed width */
+  max-width: 1000px; /* control the max width */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+ 
+  margin-left: 20%;
+}
 
-  /* Wrapper for Image and Form */
+
+
+.reclamation-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Form Group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+/* Label */
+label {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #e47429;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+
+/* Inputs and Textareas */
+input[type="text"],
+input[type="email"],
+input[type="file"],
+textarea {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Textarea Specific */
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* File Input */
+.form-control-file {
+  padding: 6px;
+  font-size: 1rem;
+  border: none;
+}
+
+/* Validation Message */
+.text-danger {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* Submit Button */
+.btn-submit {
+  padding: 10px 16px;
+  background-color: #34495e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  align-self: flex-end; /* move button to the right */
+}
+
+
+.btn-submit:hover {
+  background-color: #e47429;
+}
+
+/* Global Form Error */
+.global-error {
+  margin-top: 16px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: red;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .form-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;  /* Increase max-width for a larger form */
-
-    padding: 30px;  /* Add padding inside the wrapper */
-    margin-top: 70px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;  /* Ensure that the content wraps on smaller screens */
+    flex-direction: column;
+    padding: 20px;
   }
 
-  /* Image Container */
-  .image-container {
-    width: 45%;  /* Increase image container width */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .form-image {
-    width: 85%;  /* Increase image size */
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  /* Form Styles */
+  .image-container,
   .reclamation-form {
-    width: 50%;  /* Increase form container width */
-    display: flex;
-    flex-direction: column;
-    padding-left: 10px;
+    width: 100%;
   }
 
-  .form-group {
-    margin-bottom: 12px;  /* Increased space between each label/input group */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  label {
-    font-weight: bold;
-    font-size: 12px;  /* Increased label font size */
-    color: #e47429;
-    width: 30%;
-    margin-right: 10px;
-  }
-
-  input[type="text"], input[type="email"], textarea, input[type="file"] {
-    padding: 6px 10px;  /* Slightly increased padding */
-    font-size: 12px;  /* Increased font size for inputs */
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-    width: 65%;  /* Increased width for input fields */
-  }
-
-  input[type="text"]:focus, input[type="email"]:focus, textarea:focus, input[type="file"]:focus {
-    border-color: #4CAF50;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 60px;  /* Increased height for textarea */
-  }
-
-  .form-control-file {
-    border: none;
-    padding: 6px;
-    font-size: 12px;
-    margin-top: 5px;
-  }
-
-  /* Submit Button */
   .btn-submit {
-    padding: 8px 16px;  /* Increased button size */
-    background-color: #716c69;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;  /* Increased font size for the button */
-    transition: background-color 0.3s ease;
-    margin-top: 12px;
+    width: 100%;
   }
+}
 
-  .btn-submit:hover {
-    background-color: #e47429;
-  }
-
-  /* Make form more responsive on smaller screens */
-  @media (max-width: 768px) {
-    .form-wrapper {
-      flex-direction: column;
-      width: 90%;  /* Ensure form and image take up 90% of screen width on smaller devices */
-      padding: 20px;  /* Ensure padding remains consistent */
-    }
-
-    .image-container, .reclamation-form {
-      width: 100%;  /* Make both containers full width on small screens */
-      padding: 0;
-    }
-    label {
-      width: auto;
-      margin-bottom: 6px;
-    }
-
-    input[type="text"], input[type="email"], textarea {
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .form-group label {
-      font-size: 10px;  /* Further reduced font size on very small screens */
-    }
-
-    input[type="text"], input[type="email"], textarea {
-      font-size: 11px;  /* Smaller input text size for very small screens */
-    }
-  }
-  .form-group {
-    margin-bottom: 0.5rem;
-  }
-
-  .field-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .text-danger {
-    color: red;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-    margin-left: 12rem;
-  }
-
-
-
-
-
-
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-3px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Optionnel : améliore l'espacement général entre les groupes */
-  .form-group {
-    margin-bottom: 1.2rem;
-  }
-
-  .global-error {
-    margin-top: 10px;
-    text-align: center;
-    font-weight: 500;
+@media (max-width: 480px) {
+  label,
+  input,
+  textarea {
     font-size: 0.9rem;
   }
+
+  .btn-submit {
+    font-size: 1rem;
+  }
+}
+
+/* Page Margin Adjustment */
+.reclamation-page {
+  transition: margin-left 0.3s ease;
+  margin-left: 80px;
+}
+
+.reclamation-page.sidebar-open {
+  margin-left: 250px;
+}
+
+@media (max-width: 768px) {
+  .reclamation-page {
+    margin-left: 0 !important;
+  }
+}
+
+/* Optional Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

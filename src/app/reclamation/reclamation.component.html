@@ -1,45 +1,48 @@
+<app-navbar></app-navbar>
 <div class="form-wrapper">
-  <div class="image-container">
-    <img src="assets/img/reclamation.png" alt="rec" class="form-image">
-  </div>
-
   <form (ngSubmit)="submitReclamation()" #reclamationForm="ngForm" enctype="multipart/form-data" class="reclamation-form" novalidate>
 
   
 
     <!-- TITRE -->
     <div class="form-group">
-      <label for="titre"><i class="fa fa-pencil-alt"></i> Titre * :</label>
+      <label for="titre">
+  <i class="fa fa-pencil-alt icon-label" aria-hidden="true"></i>
+  <span class="label-title">&nbsp;&nbsp;Titre <span class="required">*</span> :</span>
+</label>
+
+      <br>
       <input type="text" id="titre" name="titre" [(ngModel)]="newReclamation.titre" required minlength="5" class="form-control" #titre="ngModel">
     </div>
-    <div class="text-danger" *ngIf="titre.invalid && titre.touched">
+    <div class="error-message global-error" *ngIf="titre.invalid && titre.touched">
       Le titre est requis (min 5 caractères).
     </div>
-
+<br>
+<br>
     <!-- DESCRIPTION -->
     <div class="form-group">
-      <label for="description"><i class="fa fa-pencil-alt"></i> Description * :</label>
+      <label for="description"><i class="fa fa-file-alt icon-label"></i>&nbsp;&nbsp; Description * :</label>
+      <br>
       <textarea id="description" name="description" [(ngModel)]="newReclamation.description" required minlength="10" class="form-control" #description="ngModel"></textarea>
     </div>
-    <div class="text-danger" *ngIf="description.invalid && description.touched">
+    <div class="error-message global-error" *ngIf="description.invalid && description.touched">
       La description est requise (min 10 caractères).
     </div>
-
+<br>
+<br>
     <!-- IMAGE -->
     <div class="form-group">
-      <label for="image_reclamation"><i class="fa fa-image"></i> Image :</label>
-      <input type="file" id="image_reclamation" (change)="onFileSelected($event)" accept="image/*" class="form-control-file">
-    </div>
+  <label for="image_reclamation"><i class="fa fa-image"></i>&nbsp;&nbsp; Upload Image:</label>
+  <br>
+  <input type="file" id="image_reclamation" (change)="onFileSelected($event)" accept="image/*" class="image-input">
+</div>
+
+<br>
 
     <!-- BOUTON -->
     <button type="submit" [disabled]="reclamationForm.invalid" class="btn-submit">
       Envoyer la réclamation
     </button>
-
-    <!-- ERREUR GLOBALE -->
-    <div class="error-message global-error" *ngIf="reclamationForm.invalid && reclamationForm.touched">
-      ⚠️ Veuillez remplir tous les champs obligatoires correctement.
-    </div>
 
   </form>
 </div>

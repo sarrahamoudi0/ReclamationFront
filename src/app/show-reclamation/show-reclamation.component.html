@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="container" *ngIf="reclamation">
   <div class="reclamation-card">
     <!-- Statut -->
@@ -26,12 +27,15 @@
       </span>
       
       
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
-        <i class="fas fa-edit"></i>
-      </button>
-      <button class="action-button delete-button" (click)="deleteReclamation(reclamation)" title="Delete">
-        <i class="fas fa-trash-alt"></i> <!-- Trash icon for Delete -->
-      </button>
+      <div class="action-buttons">
+  <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
+    <i class="fas fa-edit"></i>
+  </button>
+  <button class="delete-button" (click)="deleteReclamation(reclamation)" title="Supprimer">
+    <i class="fas fa-trash-alt"></i>
+  </button>
+</div>
+
     </div>
   </div>
 </div>

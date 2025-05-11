@@ -1,66 +1,59 @@
-<div class="login-container">
-  <div class="card login-card">
-    <h2 class="login-title">Connexion à votre compte</h2>
-
-    <form (ngSubmit)="onLogin()">
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Adresse email</label>
-        <input
-          type="email"
-          id="email"
-          [(ngModel)]="email"
-          name="email"
-          placeholder="Entrez votre email"
-          class="form-control"
-          [ngClass]="{'input-error': emailInvalid}"
-        />
-        <div *ngIf="emailInvalid" class="error-message">Email invalide !</div>
-      </div>
-
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input
-          type="password"
-          id="password"
-          [(ngModel)]="password"
-          name="password"
-          placeholder="Entrez votre mot de passe"
-          class="form-control"
-          [ngClass]="{'input-error': passwordInvalid}"
-        />
-        <div *ngIf="passwordInvalid" class="error-message">Mot de passe requis !</div>
-      </div>
-
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Submit Button -->
-      <button
-        type="submit"
-        class="btn btn-primary btn-lg w-100"
-        [disabled]="isLoading"
-      >
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
-        Se connecter
-      </button>
-
-      <!-- Forgot Password Link -->
-      <div class="forgot-password-link text-center mt-3">
-        <p class="text-muted">
-          <a routerLink="/forgotpass" class="forgot-password-text">Mot de passe oublié ?</a>
-        </p>
-      </div>
-
-      <!-- Link to Register Page -->
-      <div class="register-link text-center mt-2">
-        <p class="text-muted">
-          Pas encore inscrit ? <a routerLink="/register" class="register-text">Créer un compte</a>
-        </p>
-      </div>
-    </form>
+<!-- Login form -->
+<form (ngSubmit)="onLogin()" id="Login">
+  <!-- Left section of the form -->
+  <div class="left">
+    <div>
+      <!-- Welcome message and registration link -->
+      <p>Hello, Welcome!</p>
+      <a>Don't have an account?</a>
+      <input routerLink="/register" type="submit" value="Register" />
+    </div>
   </div>
-</div>
+
+  <!-- Right section of the form -->
+  <div class="right">
+    <div>
+      <!-- Login heading -->
+       <br>
+       <br>
+      <h1>Login</h1>
+      <br>
+    <br>
+
+      <!-- Email input field -->
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Email"
+        class="form-control"
+        [ngClass]="{'input-error': emailInvalid}"
+      />
+
+      <!-- Password input field -->
+      <input
+        type="password"
+        id="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Password"
+        class="form-control"
+        [ngClass]="{'input-error': passwordInvalid}"
+      />
+
+      <!-- Error message for email or password -->
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+      <!-- Forgot password link -->
+      <br>
+      <a routerLink="/forgotpass" class="forgot-password-text">Forgot Password?</a>
+
+      <!-- Login button -->
+      <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+        Login
+      </button>
+    </div>
+  </div>
+</form>

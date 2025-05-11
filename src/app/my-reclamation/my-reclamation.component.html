@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="reclamations-container">
   <h1 class="page-title">Mes réclamations</h1>
 
@@ -18,7 +19,7 @@
       <!-- Contenu à droite -->
       <div class="reclamation-content">
         <div class="reclamation-header-row">
-          <h3 class="reclamation-title">{{ reclamation.titre | slice:0:28  }}...</h3>
+          <h3 class="reclamation-title">{{ reclamation.titre | slice:0:50  }}</h3>
           <span class="statut-button" [ngClass]="getStatutClass(reclamation.statut)">
             {{ reclamation.statut }}
           </span>
@@ -28,14 +29,14 @@
 <br>
 
   <p class="reclamation-description">
-    {{ reclamation.description | slice:0:150}}...
+    {{ reclamation.description | slice:0:150}}
   </p>
         <div class="created-date-container">
 
 <br>
 <br>
           <p class="created-date">
-            🕒  {{ getFormattedDate(reclamation.createdDate) }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            🕒  {{ getFormattedDate(reclamation.createdDate) }} 
             <button class="arrow-btn" [routerLink]="['/reclamation', reclamation.idReclamation]">
               <i class="fa fa-arrow-right"></i>
               

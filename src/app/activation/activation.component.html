@@ -1,30 +1,52 @@
-<div class="activation-container">
-    <h2>Activation de votre compte</h2>
-    <p class="instructions">Veuillez entrer le code d'activation envoyé à votre adresse e-mail.</p>
-  
-    <div class="activation-form">
-      <input
-        type="text"
-        [(ngModel)]="activationCode"
-        (input)="onCodeInput()"
-        placeholder="Entrez votre code d'activation"
-        maxlength="6"
-        [ngClass]="{'invalid-input': isInvalid}"
-      />
-      <button 
-        class="btn-activate"
-        [disabled]="isLoading || activationCode.length !== 6"
-        (click)="onActivate()">
-        {{ isLoading ? 'Activation en cours...' : 'Activer le compte' }}
-      </button>
-  
-      <div *ngIf="message" class="message" [ngClass]="{'success': isSuccess, 'error': isInvalid}">
-        {{ message }}
+<!-- Activation Form Layout -->
+<form (ngSubmit)="onActivate()" id="ActivationForm">
+  <!-- Left section -->
+   <div class="left">
+      <div>
+        <p>Activation de votre compte</p>
+        <a>Vous avez déjà un compte ?</a>
+        <input routerLink="/login" type="submit" value="Se connecter" />
       </div>
     </div>
-  
-    <div class="back-to-login">
-      <p><a routerLink="/register">Retour à la page d'inscription</a></p>
+
+  <!-- Right section (Activation) -->
+  <div class="right"> 
+      <h1 style="display: inline;">Activation de votre compte</h1>
+
+      
+      <div class="activation-form">
+        <br>
+         <br>
+          <br>
+           <br>
+            <br>
+             <br>
+        <input
+          type="text"
+          [(ngModel)]="activationCode"
+          name="activationCode"
+          (input)="onCodeInput()"
+          placeholder="Entrez le code d'activation"
+          maxlength="6"
+          [ngClass]="{ 'invalid-input': isInvalid }"
+          class="form-control"
+        />
+  <br>
+  <br>
+        <button 
+          type="submit"
+          class="btn-activate"
+          [disabled]="isLoading || activationCode.length !== 6"
+        >
+          {{ isLoading ? 'Activation en cours...' : 'Activer le compte' }}
+        </button>
+
+        <div *ngIf="message" class="message" [ngClass]="{ 'success': isSuccess, 'error': isInvalid }">
+          {{ message }}
+        </div>
+      </div>
+
+      
     </div>
-  </div>
   
+</form>

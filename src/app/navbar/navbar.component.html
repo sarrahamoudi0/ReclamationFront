@@ -1,4 +1,37 @@
-<nav>
-    <button *ngIf="isLoggedIn()" (click)="logout()">Se déconnecter</button>
-  </nav>
-  
+<nav class="navbar" [class.collapsed]="collapsed">
+  <div class="toggle-btn" (click)="toggleSidebar()">
+    ☰
+  </div>
+  <div class="logo">Menu</div>
+  <ul class="nav-links">
+    <li>
+      <a href="#">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span class="text">Home</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/reclamation">
+        <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+        <span class="text">Reclamation</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/myreclamation">
+        <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
+        <span class="text">My Reclamations</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <span class="icon"><i class="fa-solid fa-circle-info"></i></span>
+        <span class="text">About</span>
+      </a>
+    </li>
+
+    <button class="logout" *ngIf="isLoggedIn()" (click)="logout()">
+      <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+      <span class="text">Logout</span>
+    </button>
+  </ul>
+</nav>

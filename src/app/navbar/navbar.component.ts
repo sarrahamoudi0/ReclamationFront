@@ -6,13 +6,23 @@ import { AuthenticationService } from '../service/authentication.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-
 export class NavbarComponent {
+
+  collapsed: boolean = false;
 
   constructor(private authService: AuthenticationService) {}
 
+  // Method to toggle sidebar state
+  toggleSidebar(): void {
+    this.collapsed = !this.collapsed;
+  }
+
+  // Method for logging out with confirmation
   logout(): void {
-    this.authService.logout();
+    const confirmation = window.confirm('Are you sure you want to log out?');  // Confirmation dialog
+    if (confirmation) {
+      this.authService.logout();  // Log out if confirmed
+    }
   }
 
   isLoggedIn(): boolean {

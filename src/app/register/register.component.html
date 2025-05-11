@@ -1,110 +1,90 @@
-<div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow-lg p-4 rounded-lg">
-          <h2 class="text-center text-primary mb-4">Créer un compte</h2>
-  
-          <!-- Affichage du message d'erreur si l'email existe déjà -->
-          <div *ngIf="errorMessage" class="alert alert-danger mt-2">
-            {{ errorMessage }}
-          </div>
-  
-          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <!-- Prénom -->
-            <div class="form-group">
-              <label for="firstname">Prénom</label>
-              <input
-                id="firstname"
-                formControlName="firstname"
-                type="text"
-                class="form-control form-control-lg"
-                [ngClass]="{ 'is-invalid': f['firstname'].touched && f['firstname'].invalid }"
-                placeholder="Jean"
-              />
-              <div *ngIf="f['firstname'].touched && f['firstname'].invalid" class="invalid-feedback">
-                Le prénom est requis.
-              </div>
-            </div>
-  
-            <!-- Nom -->
-            <div class="form-group">
-              <label for="lastname">Nom</label>
-              <input
-                id="lastname"
-                formControlName="lastname"
-                type="text"
-                class="form-control form-control-lg"
-                [ngClass]="{ 'is-invalid': f['lastname'].touched && f['lastname'].invalid }"
-                placeholder="Dupont"
-              />
-              <div *ngIf="f['lastname'].touched && f['lastname'].invalid" class="invalid-feedback">
-                Le nom est requis.
-              </div>
-            </div>
-  
-            <!-- Email -->
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                id="email"
-                formControlName="email"
-                type="email"
-                class="form-control form-control-lg"
-                [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].invalid }"
-                placeholder="vous@exemple.com"
-              />
-              <div *ngIf="f['email'].touched && f['email'].invalid" class="invalid-feedback">
-                <div *ngIf="f['email'].errors?.['required']">L'email est requis.</div>
-                <div *ngIf="f['email'].errors?.['email']">Format d'email invalide.</div>
-              </div>
-            </div>
-  
-            <!-- Mot de passe -->
-            <div class="form-group">
-              <label for="password">Mot de passe</label>
-              <input
-                id="password"
-                formControlName="password"
-                type="password"
-                class="form-control form-control-lg"
-                [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].invalid }"
-                placeholder="********"
-              />
-              <div *ngIf="f['password'].touched && f['password'].invalid" class="invalid-feedback">
-                <div *ngIf="f['password'].errors?.['required']">Le mot de passe est requis.</div>
-                <div *ngIf="f['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 8 caractères.</div>
-              </div>
-            </div>
-  
-            <!-- Téléphone -->
-            <div class="form-group">
-              <label for="phone">Téléphone</label>
-              <input
-                id="phone"
-                formControlName="phone"
-                type="text"
-                class="form-control form-control-lg"
-                [ngClass]="{ 'is-invalid': f['phone'].touched && f['phone'].invalid }"
-                placeholder="(01) 23 45 67 89"
-              />
-              <div *ngIf="f['phone'].touched && f['phone'].invalid" class="invalid-feedback">
-                Le numéro de téléphone est requis.
-              </div>
-            </div>
-  
-            <!-- Bouton d'enregistrement -->
-            <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="registerForm.invalid">
-              S'inscrire
-            </button>
-          </form>
-  
-          <!-- Lien pour ceux qui ont déjà un compte -->
-          <div class="text-center mt-3">
-            <p>Vous avez déjà un compte ?</p>
-            <a routerLink="/login" class="btn btn-outline-secondary btn-sm">Se connecter</a>
-          </div>
-        </div>
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="left">
+      <div>
+        <p>Créer un compte</p>
+        <a>Vous avez déjà un compte ?</a>
+        <input routerLink="/login" type="submit" value="Se connecter" />
       </div>
     </div>
-  </div>
-  
+    <div class="right">
+      <div>
+        <br>
+        <br>
+
+        <div *ngIf="errorMessage" class="error-message mt-2">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Prénom -->
+        <input
+          type="text"
+          formControlName="firstname"
+          placeholder="Prénom"
+          [ngClass]="{ 'input-error': f['firstname'].touched && f['firstname'].invalid }"
+        />
+        <div *ngIf="f['firstname'].touched && f['firstname'].invalid" class="error-message">
+          Le prénom est requis.
+        </div>
+
+        <!-- Nom -->
+        <input
+          type="text"
+          formControlName="lastname"
+          placeholder="Nom"
+          [ngClass]="{ 'input-error': f['lastname'].touched && f['lastname'].invalid }"
+        />
+        <div *ngIf="f['lastname'].touched && f['lastname'].invalid" class="error-message">
+          Le nom est requis.
+        </div>
+
+        <!-- Email -->
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="E-mail"
+          [ngClass]="{ 'input-error': f['email'].touched && f['email'].invalid }"
+        />
+        <div *ngIf="f['email'].touched && f['email'].invalid" class="error-message">
+          <ng-container *ngIf="f['email'].errors?.['required']">
+            L'adresse e-mail est requise.
+          </ng-container>
+          <ng-container *ngIf="f['email'].errors?.['email']">
+            Format d'adresse e-mail invalide.
+          </ng-container>
+        </div>
+
+        <!-- Mot de passe -->
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Mot de passe"
+          [ngClass]="{ 'input-error': f['password'].touched && f['password'].invalid }"
+        />
+        <div *ngIf="f['password'].touched && f['password'].invalid" class="error-message">
+          <ng-container *ngIf="f['password'].errors?.['required']">
+            Le mot de passe est requis.
+          </ng-container>
+          <ng-container *ngIf="f['password'].errors?.['minlength']">
+            Le mot de passe doit contenir au moins 8 caractères.
+          </ng-container>
+        </div>
+
+        <!-- Téléphone -->
+        <input
+          type="text"
+          formControlName="phone"
+          placeholder="Numéro de téléphone"
+          [ngClass]="{ 'input-error': f['phone'].touched && f['phone'].invalid }"
+        />
+        <div *ngIf="f['phone'].touched && f['phone'].invalid" class="error-message">
+          Le numéro de téléphone est requis.
+        </div>
+
+        <br><br>
+        <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
+
+      </div>
+    </div>
+  </form>
+</div>

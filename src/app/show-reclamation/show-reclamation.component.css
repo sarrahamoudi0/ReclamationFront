@@ -1,125 +1,135 @@
 /* Container principal */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* Carte de réclamation */
-  .reclamation-card {
-    position: relative;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 25px 25px 60px 25px; /* Padding en bas augmenté pour le footer */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-    min-height: 400px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .reclamation-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  }
-  
-  /* Statut */
-  .statut-container {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-  }
-  
-  .statut-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #fff;
-    white-space: nowrap;
-  }
-  
-  .statut-nouveau {
-    background-color: #f39c12; /* Orange */
-  }
-  
-  .statut-en-cours {
-    background-color: #3498db; /* Blue */
-  }
-  
-  .statut-escalé {
-    background-color: #9b59b6; /* Purple */
-  }
-  
-  .statut-resolu {
-    background-color: #2ecc71; /* Green */
-  }
-  
-  /* Titre et description */
-  .reclamation-info {
-    margin-top: 40px; /* Laisser de l'espace pour le badge */
-    margin-bottom: 20px;
-  }
-  
-  .reclamation-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 10px 0;
-    word-break: break-word;
-  }
-  
-  .reclamation-description {
-    font-size: 1rem;
-    color: #555;
-    line-height: 1.5;
-    margin: 0;
-  }
-  
-  /* Image */
-  .reclamation-image {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-  }
-  
-  .reclamation-image img {
-    width: 120px;  /* Image petite */
-    height: auto;
-    border-radius: 6px;
-    object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Footer : date et bouton */
-  .reclamation-footer {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .created-date {
-    font-style: italic;
-  }
-  
-  
-  
-  /* Message de chargement */
-  .loading-message {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #666;
-    margin-top: 30px;
-  }
-  
-  /* Fullscreen overlay */
+  max-width: 1000px;
+  margin: 40px auto; /* Center the container with margin */
+  padding: 20px;
+  padding-top: 50px;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+}
+
+/* Carte de réclamation */
+.reclamation-card {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 25px 25px 60px 25px; /* Padding en bas augmenté pour le footer */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  min-height: 400px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* Ensure the card takes up full width of container */
+  max-width: 750px; /* Limit max width for larger screens */
+}
+
+.reclamation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Statut */
+.statut-container {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+
+.statut-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.statut-nouveau {
+  background-color: #f39c12; /* Orange */
+}
+
+.statut-en-cours {
+  background-color: #3498db; /* Blue */
+}
+
+.statut-escalé {
+  background-color: #9b59b6; /* Purple */
+}
+
+.statut-resolu {
+  background-color: #2ecc71; /* Green */
+}
+
+/* Titre et description */
+.reclamation-info {
+  margin-top: 40px; /* Laisser de l'espace pour le badge */
+  margin-bottom: 20px;
+}
+
+.reclamation-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 10px 0;
+  word-break: break-word;
+}
+
+.reclamation-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Image */
+.reclamation-image {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.reclamation-image img {
+  width: 120px; /* Image petite */
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Smooth transition for zoom */
+}
+
+.reclamation-image.zoomed img {
+  transform: scale(5); /* Increased zoom to 5x */
+  cursor: zoom-out; /* Change cursor to indicate the zoom out action */
+}
+
+/* Footer : date et bouton */
+.reclamation-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.created-date {
+  font-style: italic;
+}
+
+/* Message de chargement */
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 30px;
+}
+
+/* Fullscreen overlay */
 .popup-modal {
   position: fixed;
   top: 0;
@@ -156,136 +166,148 @@
   margin-bottom: 25px;
   color: #222;
 }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  /* For textarea fields */
-  .form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    height: 150px; /* Increased height for textarea */
-    resize: vertical; /* Allows resizing vertically */
-  }
-  
-  .popup-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .popup-actions button {
-    padding: 8px 14px;
-    font-size: 0.9rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .btn-save {
-    background-color: #4CAF50;
-    color: #fff;
-  }
-  
-  .btn-save:hover {
-    background-color: #45a049;
-  }
-  
-  .btn-cancel {
-    background-color: #ccc;
-    color: #333;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #b3b3b3;
-  }
-  
-  
-  .reclamation-image img {
-    width: 120px;
-    height: auto;
-    border-radius: 6px;
-    object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease; /* Smooth transition for zoom */
-  }
-  
-  .reclamation-image.zoomed img {
-    transform: scale(5); /* Increased zoom to 5x */
-    cursor: zoom-out; /* Change cursor to indicate the zoom out action */
-  }
-  .update-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.3s ease;
-  }
-  
-  .update-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Bouton Supprimer (rouge) */
-  .delete-button {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.3s ease;
-  }
-  
-  .delete-button:hover {
-    background-color: #a71d2a;
-  }
-  
-  /* Icônes dans les boutons */
-  .update-button i,
-  .delete-button i {
-    border-radius: 20%;
-    border-color: rgb(247, 216, 216);
-    font-size: 12px;
-  }
-  .created-date {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .created-date i {
-    color: #888;
-  }
-  
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* For textarea fields */
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  height: 150px; /* Increased height for textarea */
+  resize: vertical; /* Allows resizing vertically */
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.popup-actions button {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-save {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.btn-save:hover {
+  background-color: #45a049;
+}
+
+.btn-cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #b3b3b3;
+}
+
+.update-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.update-button:hover {
+  background-color: #0056b3;
+}
+
+/* Bouton Supprimer (rouge) */
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #a71d2a;
+}
+
+/* Icônes dans les boutons */
+.update-button i,
+.delete-button i {
+  border-radius: 20%;
+  border-color: rgb(247, 216, 216);
+  font-size: 12px;
+}
+
+.created-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.created-date i {
+  color: #888;
+}
+/* Align the buttons to the right with a little space between them */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Little space between the buttons */
+}
+
+.update-button, .delete-button {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color  0.3s ease;
+}
+
+/* Hover effects for the buttons */
+.update-button:hover {
+  background-color: #e47429;
+}
+
+.delete-button:hover {
+  background-color: #e47429;
+}
