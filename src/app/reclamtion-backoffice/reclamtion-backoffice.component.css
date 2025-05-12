@@ -1,185 +1,195 @@
-/* Overall Table Container */
+/* Empêche le défilement de la page */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;  /* Désactive tout défilement sur la page */
+}
+
+/* Container */
 .table-container {
-    padding: 30px;
-    background-color: #f4f6f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', sans-serif;
-    color: #2f3b52;
-    margin-top: 20px;
+  padding: 30px;
+  background-color: transparent;  /* Fond transparent */
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+  color: #2f3b52;
+  margin: 30px auto;
+  max-width: calc(100% - 250px);  /* Réduit la largeur du tableau pour faire de la place pour le sidebar */
+  margin-left: 250px; /* Décale le tableau vers la droite */
+  margin-top: 100px;  /* Décale le tableau plus bas */
+  height: calc(100vh - 60px); /* Ajuste la hauteur disponible pour le tableau */
+  overflow: visible;  /* Retire le scroll horizontal du container */
+}
+
+/* Table */
+.reclamation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  font-size: 15px;
+  table-layout: fixed;  /* Garantit que les colonnes auront une largeur fixe */
+  max-height: 500px;  /* Limite la hauteur du tableau */
+  overflow-y: auto;  /* Permet uniquement le scroll vertical */
+  overflow-x: hidden;  /* Empêche le scroll horizontal */
+}
+
+/* Table Header */
+.reclamation-table th {
+  padding: 16px 20px;
+  background-color: #f7f9fb;
+  color: #2f3b52;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid #dfe6ec;
+  white-space: nowrap;  /* Empêche le retour à la ligne dans les en-têtes */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ajoute des "..." si le texte est trop long */
+  max-width: 200px;  /* Limite la largeur des colonnes */
+}
+
+/* Table Body */
+.reclamation-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #ecf0f1;
+  word-break: break-word;
+  vertical-align: top;
+  white-space: nowrap;  /* Empêche le retour à la ligne dans les cellules */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ajoute des "..." si le texte est trop long */
+  max-width: 200px;  /* Limite la largeur des colonnes */
+}
+
+/* Hover Row */
+.reclamation-table tr:hover {
+  background-color: #f9fafc;
+  transition: background-color 0.3s ease;
+}
+
+/* Action Buttons Container */
+.action-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap; /* Évite le retour à la ligne des boutons */
+}
+
+/* Action Buttons */
+.action-btn {
+  padding: 8px 14px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn i {
+  margin-right: 5px; /* Espace entre l'icône et le texte */
+}
+
+/* View Button */
+.view-btn {
+  background-color: #2980b9;
+}
+
+/* Delete Button */
+.delete-btn {
+  background-color: #c0392b;
+}
+
+.action-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #fff;
+  text-transform: capitalize;
+  transition: background-color 0.3s ease;
+}
+
+/* Status Badge Colors */
+.badge-pending {
+  background-color: #f39c12;
+}
+
+.badge-inprogress {
+  background-color: #3498db;
+}
+
+.badge-resolved {
+  background-color: #2ecc71;
+}
+
+.badge-escalated {
+  background-color: #9b59b6;
+}
+
+/* Priority Badge Colors */
+.badge-high {
+  background-color: #e74c3c;
+}
+
+.badge-medium {
+  background-color: #f1c40f;
+  color: #2f3b52;
+}
+
+.badge-low {
+  background-color: #1abc9c;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .table-container {
+    max-width: 100%;
   }
-  
-  /* Title */
-  .page-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 600;
-    color: #34495e;
-    margin-bottom: 20px;
-  }
-  
-  /* Loading Message */
-  .loading-message {
-    text-align: center;
-    font-size: 16px;
-    color: #7f8c8d;
-    padding: 30px;
-    background-color: #ecf0f1;
-    border-radius: 6px;
-  }
-  
-  /* Table Styling */
+
   .reclamation-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-    margin-top: 20px;
+    min-width: 100%;
   }
-  
-  /* Table Header */
-  .reclamation-table th {
-    padding: 14px 20px;
-    background-color: #f7f9fb;
-    color: #34495e;
-    font-weight: 600;
-    text-align: left;
-  }
-  
-  /* Table Data */
+
+  .reclamation-table th,
   .reclamation-table td {
-    padding: 14px 20px;
-    text-align: left;
-    word-break: break-word;
-    border-bottom: 1px solid #ecf0f1;
+    padding: 12px;
+    font-size: 13px;
   }
-  
-  /* Table Row Hover Effect */
-  .reclamation-table tr:hover {
-    background-color: #f9fafb;
-    transition: background-color 0.3s ease;
-  }
-  
-  /* Action Buttons */
+
   .action-btn {
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    text-align: center;
-  }
-  
-  /* View Button */
-  .view-btn {
-    background-color: #3498db;
-    color: white;
-  }
-  
-  /* Edit Button */
-  .edit-btn {
-    background-color: #f39c12;
-    color: white;
-  }
-  
-  /* Delete Button */
-  .delete-btn {
-    background-color: #e74c3c;
-    color: white;
-  }
-  
-  /* Button Hover Effects */
-  .action-btn:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-  }
-  
-  /* Badge Styles */
-  .badge {
-    padding: 6px 14px;
-    border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
-    color: white;
-    display: inline-block;
+    padding: 6px 10px;
   }
-  
-  /* Status Badge Colors */
-  .badge-pending {
-    background-color: #f39c12; /* Orange */
+
+  .page-title {
+    font-size: 24px;
   }
-  
-  .badge-inprogress {
-    background-color: #3498db; /* Blue */
+
+  .reclamation-table {
+    font-size: 14px;
   }
-  
-  .badge-resolved {
-    background-color: #2ecc71; /* Green */
+}
+
+@media (max-width: 500px) {
+  .reclamation-table {
+    min-width: 700px; /* Conserve la structure sans retour à la ligne */
   }
-  
-  .badge-escalated {
-    background-color: #9b59b6; /* Purple */
+
+  .table-container {
+    overflow-x: visible; /* Retire le scroll horizontal */
   }
-  
-  /* Priority Badge Colors */
-  .badge-high {
-    background-color: #e74c3c; /* Red */
-  }
-  
-  .badge-medium {
-    background-color: #f1c40f; /* Yellow */
-  }
-  
-  .badge-low {
-    background-color: #1abc9c; /* Teal */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .reclamation-table th,
-    .reclamation-table td {
-      padding: 12px;
-    }
-  
-    .action-btn {
-      font-size: 12px;
-      padding: 8px 12px;
-    }
-  
-    .page-title {
-      font-size: 24px;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .reclamation-table thead {
-      display: none;
-    }
-  
-    .reclamation-table tr {
-      display: block;
-      margin-bottom: 10px;
-      background-color: #ffffff;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-  
-    .reclamation-table td {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-    }
-  
-    .reclamation-table td::before {
-      content: attr(data-label);
-      font-weight: bold;
-      color: #34495e;
-      margin-right: 10px;
-    }
-  }
-  
+}

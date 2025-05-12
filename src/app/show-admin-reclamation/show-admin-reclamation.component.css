@@ -246,3 +246,58 @@ body, html {
 .badge-default {
     background-color: #7f8c8d; /* Gray */
 }
+.categorie-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly more shadow for depth */
+  border-radius: 6px; /* Softer border radius */
+  width: 300px; /* Further increased width */
+}
+
+.categorie-list li {
+  padding: 10px 12px; /* Increased padding for a more comfortable click */
+  cursor: pointer;
+  font-size: 1rem; /* Slightly larger font size */
+  color: #555;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.categorie-list li:hover {
+  background-color: #f7f7f7;
+  color: #007bff;
+}
+
+.categorie-badge {
+  background-color: #6c757d; /* Medium gray */
+  border: none;
+  padding: 4px 20px; /* Reduced height */
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  width: 300px;
+  text-align: left;
+  color: #ffffff; /* White text */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.categorie-badge:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+  transform: translateY(-1px);
+}
+
+.categorie-badge:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.5);
+}
+
+
+
+

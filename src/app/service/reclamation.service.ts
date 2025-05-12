@@ -55,4 +55,8 @@ export class ReclamationService {
     return this.http.put<Reclamation>(`${this.apiUrl}/${id}/priority?priority=${priority}`, {});
   }
 
+    assignCategorieToReclamation(idReclamation: string, idCategorie: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${idReclamation}/assign-categorie/${idCategorie}`, {});
+  }
+
 }

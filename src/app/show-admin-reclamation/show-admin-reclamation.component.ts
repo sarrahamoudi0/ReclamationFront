@@ -4,6 +4,8 @@ import { ReclamationService } from '../service/reclamation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
+import { CategorieService } from '../service/categorie.service'; 
+import { Categorie } from "../models/Categorie";
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -12,15 +14,16 @@ import { Priorite } from '../models/Priorite';
 })
 export class ShowAdminReclamationComponent implements OnInit {
   reclamation!: Reclamation;
+    categories: Categorie[] = []; 
+   selectedCategorie: Categorie | undefined;
+  showCategorieList = false;
   isImageZoomed = false;
 
-  // Statut handling
   statutValues: Statut[] = Object.values(Statut);
   selectedStatut: Statut = Statut.Nouveau;
   showStatutList = false;
   statuts: Statut[] = this.statutValues;
 
-  // Priorité handling
   prioriteValues: Priorite[] = Object.values(Priorite);
   selectedPriorite: Priorite = Priorite.Faible;
   showPrioriteList = false;
@@ -28,6 +31,7 @@ export class ShowAdminReclamationComponent implements OnInit {
   constructor(
     private reclamationService: ReclamationService,
     private route: ActivatedRoute,
+     private categorieService: CategorieService,
     private router: Router
   ) {}
 
@@ -38,6 +42,7 @@ export class ShowAdminReclamationComponent implements OnInit {
         this.getReclamation(idReclamation);
       }
     });
+      this.getCategories();
   }
 
   getReclamation(idReclamation: string): void {
@@ -50,6 +55,42 @@ export class ShowAdminReclamationComponent implements OnInit {
       error: (error) => console.error('Erreur de récupération:', error)
     });
   }
+
+    getCategories(): void {
+    this.categorieService.getAllCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories; 
+      },
+      error: (error) => console.error('Error fetching categories:', error)
+    });
+  }
+affecterCategorie(): void {
+  if (this.selectedCategorie && this.reclamation) {
+    const payload = {
+      idReclamation: this.reclamation.idReclamation || '',
+      idCategorie: this.selectedCategorie.idCategorie || ''
+    };
+
+    this.reclamationService.assignCategorieToReclamation(payload.idReclamation, payload.idCategorie).subscribe({
+      next: () => console.log('Catégorie affectée avec succès'),
+      error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
+    });
+  }
+}
+
+
+selectCategorie(categorie: Categorie): void {
+  this.selectedCategorie = categorie;
+  this.affecterCategorie(); // Assign the category
+  this.showCategorieList = false; // Close the category list
+}
+
+toggleCategorieList(event: MouseEvent): void {
+  this.showCategorieList = !this.showCategorieList;
+  event.stopPropagation(); // Prevent click from closing the dropdown immediately
+}
+
+
 
   getStatutClass(statut: Statut) {
     return {
@@ -139,20 +180,28 @@ export class ShowAdminReclamationComponent implements OnInit {
   }
 
   // HostListener to detect clicks outside and close the dropdown
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent): void {
-    const statutDropdown = document.querySelector('.statut-list');
-    const prioriteDropdown = document.querySelector('.priorite-list');
-    const statutContainer = document.querySelector('.statut-priorite-container');
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent): void {
+  const statutDropdown = document.querySelector('.statut-list');
+  const prioriteDropdown = document.querySelector('.priorite-list');
+  const statutContainer = document.querySelector('.statut-priorite-container');
+  const categorieDropdown = document.querySelector('.categorie-list');
+  const categorieButton = document.querySelector('.categorie-badge');
 
-    // Close dropdown if clicked outside
-    if (
-      statutDropdown && !statutDropdown.contains(event.target as Node) &&
-      prioriteDropdown && !prioriteDropdown.contains(event.target as Node) &&
-      statutContainer && !statutContainer.contains(event.target as Node)
-    ) {
-      this.showStatutList = false;
-      this.showPrioriteList = false;
-    }
+  // Close dropdown if clicked outside
+  if (
+    statutDropdown && !statutDropdown.contains(event.target as Node) &&
+    prioriteDropdown && !prioriteDropdown.contains(event.target as Node) &&
+    statutContainer && !statutContainer.contains(event.target as Node) &&
+    categorieDropdown && !categorieDropdown.contains(event.target as Node) &&
+    categorieButton && !categorieButton.contains(event.target as Node)
+  ) {
+    this.showStatutList = false;
+    this.showPrioriteList = false;
+    this.showCategorieList = false; // Close the category list when clicked outside
   }
+}
+
+ 
+
 }

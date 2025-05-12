@@ -41,6 +41,17 @@
           </li>
         </ul>
       </div>
+       <div class="dropdown">
+  <button (click)="toggleCategorieList($event)" class="btn categorie-badge">
+    {{ selectedCategorie ? selectedCategorie.nomCategorie : 'Select Category' }}
+  </button>
+  <ul *ngIf="showCategorieList" class="categorie-list">
+    <li *ngFor="let categorie of categories" (click)="selectCategorie(categorie)">
+      <span class="category-icon"><i class="fas fa-tag"></i></span>
+      {{ categorie.nomCategorie }}
+    </li>
+  </ul>
+</div>
   
       <!-- Infos -->
       <div class="reclamation-info">

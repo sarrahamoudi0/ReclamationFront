@@ -1,6 +1,7 @@
 import { Priorite } from "./Priorite";
 import { Statut } from "./Statut";
 import { User } from "./User";
+import { Categorie } from "./Categorie";
 
 export class Reclamation {
     idReclamation?: string; 
@@ -13,6 +14,7 @@ export class Reclamation {
     statut!: Statut;
     priorite!: Priorite;
     user?: User;
+    categorie?: Categorie;
 
     
   }

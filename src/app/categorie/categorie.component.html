@@ -1,52 +1,97 @@
 <div class="main-card">
-    <!-- En-tête avec titre -->
-    <div class="card-header">
-      <h2 class="title-animate">Les Catégories des réclamations</h2>
+  <!-- En-tête avec titre -->
+  <div class="card-header">
+    <h2 class="title-animate">Les Catégories des réclamations</h2>
+  </div>
+
+  <!-- Section contenant le bouton Ajouter et la liste des catégories -->
+  <div class="category-section">
+    <div class="add-button-container">
+      <button class="add-category-btn" (click)="openModal(false)">➕ Ajouter</button>
     </div>
-  
-    <!-- Section contenant le bouton Ajouter et la liste des catégories -->
-    <div class="category-section">
-      <div class="add-button-container">
-        <button class="add-category-btn" (click)="openModal(false)">➕ Ajouter</button>
-      </div>
-  
-      <!-- Liste des catégories -->
-      <div class="category-list">
-        <div *ngFor="let category of categories" class="category-card">
-          <div class="category-info">
-            {{ category.nomCategorie }}
-          </div>
-          <div class="action-icons">
-            <button class="edit-icon" (click)="editCategorie(category)" title="Modifier">✏️</button>
-            <button class="delete-icon" (click)="deleteCategorie(category.idCategorie)" title="Supprimer">🗑️</button>
-          </div>
+
+    <!-- Liste des catégories -->
+    <div class="category-list">
+      <div *ngFor="let category of categories" class="category-card" (click)="openViewModal(category)">
+        <div class="category-info">
+          {{ category.nomCategorie }}
+        </div>
+        <div class="action-icons">
+          <!-- Bouton pour ouvrir le pop-up sous-catégorie -->
+          <button class="add-sub-icon" (click)="openSubModal(category, $event)" title="Ajouter sous-catégorie">➕</button>
+          <button class="edit-icon" (click)="editCategorie(category); $event.stopPropagation()" title="Modifier">✏️</button>
+          <button class="delete-icon" (click)="deleteCategorie(category.idCategorie); $event.stopPropagation()" title="Supprimer">🗑️</button>
         </div>
       </div>
     </div>
-  
-    <!-- Modal Ajouter / Modifier -->
-    <div class="modal-overlay" *ngIf="isModalOpen">
-      <div class="modal modal-animate">
-        <h3>{{ editMode ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h3>
-  
-        <form (ngSubmit)="editMode ? updateCategorie() : addCategorie()">
-          <input
-            type="text"
-            [(ngModel)]="categorieName"
-            name="nomCategorie"
-            placeholder="Nom de la catégorie"
-            required
-            autofocus
-          />
-  
-          <div class="modal-actions">
-            <button type="button" class="cancel-btn" (click)="closeModal()">Annuler</button>
-            <button type="submit" class="update-btn">
-              {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
-            </button>
+  </div>
+
+  <!-- Modal Ajouter / Modifier Catégorie -->
+  <div class="modal-overlay" *ngIf="isModalOpen">
+    <div class="modal modal-animate">
+      <h3>{{ editMode ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h3>
+
+      <form (ngSubmit)="editMode ? updateCategorie() : addCategorie()">
+        <input
+          type="text"
+          [(ngModel)]="categorieName"
+          name="nomCategorie"
+          placeholder="Nom de la catégorie"
+          required
+          autofocus
+        />
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="update-btn">
+            {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Sous-catégorie -->
+  <div class="modal-overlay" *ngIf="isSubModalOpen">
+    <div class="modal modal-animate">
+      <h3>Ajouter une sous-catégorie à « {{ selectedCategory?.nomCategorie }} »</h3>
+
+      <form (ngSubmit)="confirmAddSubCategorie()">
+        <div class="add-sous-categorie">
+          <div class="sous-input-group">
+            <input
+              type="text"
+              [(ngModel)]="sousCategorieName"
+              name="newSousCategorie"
+              placeholder="Nom de la sous-catégorie"
+              required
+              autofocus
+            />
+            <button type="submit">➕</button>
           </div>
-        </form>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeSubModal()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Affichage Sous-catégories -->
+  <div class="modal-overlay" *ngIf="isViewModalOpen">
+    <div class="modal modal-animate">
+      <h3>Sous-catégories de « {{ selectedCategory?.nomCategorie }} »</h3>
+      <ul class="sous-categorie-list">
+        <li *ngFor="let sous of selectedCategory?.sousCategories">
+          {{ sous.nomCategorie }}
+        </li>
+        <li *ngIf="!selectedCategory?.sousCategories?.length">
+          (Aucune sous-catégorie)
+        </li>
+      </ul>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeViewModal()">Fermer</button>
       </div>
     </div>
   </div>
-  
+</div>

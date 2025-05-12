@@ -31,5 +31,10 @@ export class CategorieService {
   deleteCategorie(idCategorie: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove/${idCategorie}`);
   }
+
+   ajouterSousCategorie(idCategorieParent: string, nomSousCategorie: string): Observable<any> {
+    const url = `${this.apiUrl}/${idCategorieParent}/sous-categorie`;
+    return this.http.post<any>(url, { nomSousCategorie });
+  }
     
   }
