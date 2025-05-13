@@ -4,7 +4,7 @@ import { ReclamationService } from '../service/reclamation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
-import { CategorieService } from '../service/categorie.service';
+import { CategorieService } from '../service/categorie.service'; 
 import { Categorie } from "../models/Categorie";
 
 @Component({
@@ -14,14 +14,15 @@ import { Categorie } from "../models/Categorie";
 })
 export class ShowAdminReclamationComponent implements OnInit {
   reclamation!: Reclamation;
-  categories: Categorie[] = [];
-  selectedCategorie: Categorie | undefined;
-  selectedSousCategorie: Categorie | null | undefined;  showCategorieList = false;
+    categories: Categorie[] = []; 
+   selectedCategorie: Categorie | undefined;
+  showCategorieList = false;
   isImageZoomed = false;
 
   statutValues: Statut[] = Object.values(Statut);
   selectedStatut: Statut = Statut.Nouveau;
   showStatutList = false;
+  statuts: Statut[] = this.statutValues;
 
   prioriteValues: Priorite[] = Object.values(Priorite);
   selectedPriorite: Priorite = Priorite.Faible;
@@ -30,7 +31,7 @@ export class ShowAdminReclamationComponent implements OnInit {
   constructor(
     private reclamationService: ReclamationService,
     private route: ActivatedRoute,
-    private categorieService: CategorieService,
+     private categorieService: CategorieService,
     private router: Router
   ) {}
 
@@ -41,7 +42,7 @@ export class ShowAdminReclamationComponent implements OnInit {
         this.getReclamation(idReclamation);
       }
     });
-    this.getCategories();
+      this.getCategories();
   }
 
   getReclamation(idReclamation: string): void {
@@ -55,61 +56,42 @@ export class ShowAdminReclamationComponent implements OnInit {
     });
   }
 
-  getCategories(): void {
+    getCategories(): void {
     this.categorieService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        this.categories = categories; 
       },
-      error: (error) => console.error('Erreur lors de la récupération des catégories :', error)
+      error: (error) => console.error('Error fetching categories:', error)
     });
   }
+affecterCategorie(): void {
+  if (this.selectedCategorie && this.reclamation) {
+    const payload = {
+      idReclamation: this.reclamation.idReclamation || '',
+      idCategorie: this.selectedCategorie.idCategorie || ''
+    };
 
-  toggleCategorieList(event: MouseEvent): void {
-    this.showCategorieList = !this.showCategorieList;
-    event.stopPropagation();
+    this.reclamationService.assignCategorieToReclamation(payload.idReclamation, payload.idCategorie).subscribe({
+      next: () => console.log('Catégorie affectée avec succès'),
+      error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
+    });
   }
+}
 
-  selectMainCategorie(categorie: Categorie, event: MouseEvent): void {
-    this.selectedCategorie = categorie; // Set the selected main category
 
-    // If the selected category has subcategories, select the first one by default
-    if (categorie.sousCategories && categorie.sousCategories.length > 0) {
-      this.selectedSousCategorie = categorie.sousCategories[0]; // Select the first subcategory
-      this.reclamation.sousCategorie = this.selectedSousCategorie; // Assign subcategory to reclamation
-    } else {
-      // If no subcategories exist, set it to null
-      this.selectedSousCategorie = null;
-      this.reclamation.sousCategorie = null;
-    }
+selectCategorie(categorie: Categorie): void {
+  this.selectedCategorie = categorie;
+  this.affecterCategorie(); // Assign the category
+  this.showCategorieList = false; // Close the category list
+}
 
-    // Now, assign the main category to the reclamation
-    this.reclamation.categorie = this.selectedCategorie;
+toggleCategorieList(event: MouseEvent): void {
+  this.showCategorieList = !this.showCategorieList;
+  event.stopPropagation(); // Prevent click from closing the dropdown immediately
+}
 
-    // Call the function to update the backend with the selected category and subcategory
-    this.updateCategorie();
-  }
 
-  selectSousCategorie(sousCategorie: Categorie, event: MouseEvent): void {
-    event.stopPropagation();
 
-    if (this.reclamation && this.selectedCategorie) {
-      const idReclamation = this.reclamation.idReclamation || '';
-      const idCategorie = this.selectedCategorie.idCategorie || '';
-      const idSousCategorie = sousCategorie.idCategorie || '';
-
-      this.reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie).subscribe({
-        next: () => {
-          this.reclamation.categorie = this.selectedCategorie!;
-          this.reclamation.sousCategorie = sousCategorie;
-          this.showCategorieList = false;
-          console.log('Catégorie et sous-catégorie mises à jour avec succès.');
-        },
-        error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
-      });
-    }
-  }
-
-  // Statut / Priorité
   getStatutClass(statut: Statut) {
     return {
       'statut-nouveau': statut === Statut.Nouveau,
@@ -121,98 +103,105 @@ export class ShowAdminReclamationComponent implements OnInit {
 
   getPrioriteClass(priorite: Priorite): string {
     switch (priorite) {
-      case Priorite.Élevé: return 'badge-high';
-      case Priorite.Faible: return 'badge-low';
-      case Priorite.Moyenne: return 'badge-medium';
-      default: return 'badge-default';
+      case Priorite.Élevé:
+        return 'badge-high';
+      case Priorite.Faible:
+        return 'badge-low';
+      case Priorite.Moyenne:
+        return 'badge-medium';
+      default:
+        return 'badge-default';
     }
-  }
-
-  updateStatut(): void {
-    if (!this.selectedStatut || !this.reclamation?.idReclamation) {
-      console.error('Statut invalide ou réclamation non trouvée.');
-      return;
-    }
-
-    this.reclamationService.updateReclamationStatut(this.reclamation.idReclamation, this.selectedStatut)
-      .subscribe({
-        next: updatedReclamation => this.reclamation = updatedReclamation,
-        error: error => console.error('Erreur lors de la mise à jour du statut :', error)
-      });
-  }
-
-  updatePriorite(): void {
-    if (!this.selectedPriorite || !this.reclamation?.idReclamation) {
-      console.error('Priorité invalide ou réclamation non trouvée.');
-      return;
-    }
-
-    this.reclamationService.updateReclamationPriority(this.reclamation.idReclamation, this.selectedPriorite)
-      .subscribe({
-        next: updatedReclamation => this.reclamation = updatedReclamation,
-        error: error => console.error('Erreur lors de la mise à jour de la priorité :', error)
-      });
-  }
-
-  updateCategorie(): void {
-    if (this.reclamation && this.reclamation.idReclamation) {
-      const idReclamation = this.reclamation.idReclamation;
-      const idCategorie = this.reclamation.categorie?.idCategorie || '';
-      const idSousCategorie = this.reclamation.sousCategorie?.idCategorie || '';
-
-      this.reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie)
-        .subscribe({
-          next: () => {
-            console.log('Catégorie et sous-catégorie mises à jour avec succès.');
-          },
-          error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
-        });
-    }
-  }
-
-  toggleStatutList(event: MouseEvent): void {
-    this.showStatutList = !this.showStatutList;
-    if (this.showStatutList) this.showPrioriteList = false;
-    event.stopPropagation();
-  }
-
-  togglePrioriteList(event: MouseEvent): void {
-    this.showPrioriteList = !this.showPrioriteList;
-    if (this.showPrioriteList) this.showStatutList = false;
-    event.stopPropagation();
-  }
-
-  selectStatut(statut: Statut): void {
-    this.selectedStatut = statut;
-    this.showStatutList = false;
-    this.updateStatut();
-  }
-
-  selectPriorite(priorite: Priorite): void {
-    this.selectedPriorite = priorite;
-    this.showPrioriteList = false;
-    this.updatePriorite();
   }
 
   zoomImage(): void {
     this.isImageZoomed = !this.isImageZoomed;
   }
 
-  // Fermer les dropdowns en cliquant hors des composants
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    const isInsideDropdown =
-      target.closest('.statut-list') ||
-      target.closest('.priorite-list') ||
-      target.closest('.categorie-list') ||
-      target.closest('.categorie-badge') ||
-      target.closest('.statut-priorite-container');
+  updateStatut(): void {
+    if (!this.selectedStatut || !this.reclamation || !this.reclamation.idReclamation) {
+      console.error('Statut invalide ou réclamation non trouvée.');
+      return;
+    }
 
-    if (!isInsideDropdown) {
-      this.showStatutList = false;
-      this.showPrioriteList = false;
-      this.showCategorieList = false;
+    this.reclamationService.updateReclamationStatut(this.reclamation.idReclamation, this.selectedStatut)
+      .subscribe(
+        (updatedReclamation) => {
+          this.reclamation = updatedReclamation;
+        },
+        (error) => {
+          console.error('Erreur lors de la mise à jour du statut :', error);
+        }
+      );
+  }
+
+  updatePriorite(): void {
+    if (!this.selectedPriorite || !this.reclamation || !this.reclamation.idReclamation) {
+      console.error('Priorité invalide ou réclamation non trouvée.');
+      return;
+    }
+
+    this.reclamationService.updateReclamationPriority(this.reclamation.idReclamation, this.selectedPriorite)
+      .subscribe(
+        (updatedReclamation) => {
+          this.reclamation = updatedReclamation;
+        },
+        (error) => {
+          console.error('Erreur lors de la mise à jour de la priorité :', error);
+        }
+      );
+  }
+
+  toggleStatutList(event: MouseEvent): void {
+    this.showStatutList = !this.showStatutList;
+    if (this.showStatutList) {
+      this.showPrioriteList = false; // Masquer le dropdown Priorité si Statut est visible
     }
   }
+  
+  togglePrioriteList(event: MouseEvent): void {
+    this.showPrioriteList = !this.showPrioriteList;
+    if (this.showPrioriteList) {
+      this.showStatutList = false; // Masquer le dropdown Statut si Priorité est visible
+    }
+  }
+  
+
+  selectStatut(statut: Statut) {
+    this.selectedStatut = statut;
+    this.showStatutList = false; // Hide the list after selection
+    this.updateStatut();         // Update the statut
+  }
+
+  selectPriorite(priorite: Priorite) {
+    this.selectedPriorite = priorite;
+    this.showPrioriteList = false; // Hide the list after selection
+    this.updatePriorite();         // Update the priorite
+  }
+
+  // HostListener to detect clicks outside and close the dropdown
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent): void {
+  const statutDropdown = document.querySelector('.statut-list');
+  const prioriteDropdown = document.querySelector('.priorite-list');
+  const statutContainer = document.querySelector('.statut-priorite-container');
+  const categorieDropdown = document.querySelector('.categorie-list');
+  const categorieButton = document.querySelector('.categorie-badge');
+
+  // Close dropdown if clicked outside
+  if (
+    statutDropdown && !statutDropdown.contains(event.target as Node) &&
+    prioriteDropdown && !prioriteDropdown.contains(event.target as Node) &&
+    statutContainer && !statutContainer.contains(event.target as Node) &&
+    categorieDropdown && !categorieDropdown.contains(event.target as Node) &&
+    categorieButton && !categorieButton.contains(event.target as Node)
+  ) {
+    this.showStatutList = false;
+    this.showPrioriteList = false;
+    this.showCategorieList = false; // Close the category list when clicked outside
+  }
+}
+
+ 
+
 }

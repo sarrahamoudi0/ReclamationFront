@@ -1,96 +1,86 @@
 <!-- Card Container -->
 <div class="container" *ngIf="reclamation">
-  <div class="reclamation-card">
+    <div class="reclamation-card">
 
-    <!-- Categorie Container -->
-    <div class="categorie-container">
-      <span class="categorie-badge" (click)="toggleCategorieList($event)">
-        {{ reclamation.categorie?.nomCategorie || 'Sélectionner une catégorie' }}
-        &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomCategorie || 'Sélectionner une sous-catégorie' }}
-      </span>
+      <div class="categorie-container">
+  <span class="categorie-badge">
+    {{ reclamation.categorie?.nomCategorie }}
+      &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
+  </span>
+</div>
 
-      <!-- Category List Dropdown -->
-      <ul *ngIf="showCategorieList" class="categorie-list">
-        <li *ngFor="let categorie of categories" (click)="selectMainCategorie(categorie, $event)">
-          {{ categorie.nomCategorie }}
-        </li>
-      </ul>
 
-      <!-- Sub-Category List (appears after category is selected) -->
-      <ul *ngIf="selectedCategorie && selectedCategorie.sousCategories && selectedCategorie.sousCategories.length > 0" class="sous-categorie-list">
-        <li *ngFor="let sousCategorie of selectedCategorie.sousCategories" (click)="selectSousCategorie(sousCategorie, $event)">
-          {{ sousCategorie.nomCategorie }}
-        </li>
-      </ul>
+
+
+      <!-- Statut and Priorité -->
+      <div class="statut-priorite-container">
+
+        <!-- Statut Badge -->
+        <button
+          [ngClass]="getStatutClass(reclamation.statut)"
+          class="statut-badge"
+          (click)="toggleStatutList($event)">
+          {{ reclamation.statut }}
+        </button>
+
+        <!-- Priorité Badge styled like Statut -->
+        <button
+          [ngClass]="getPrioriteClass(reclamation.priorite)"
+          class="priorite-badge"
+          (click)="togglePrioriteList($event)">
+          {{ reclamation.priorite }}
+        </button>
+
+        <!-- List of Statuts shown when toggled -->
+        <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">
+          <li
+            *ngFor="let statut of statutValues"
+            (click)="selectStatut(statut)"
+            [class.active]="statut === reclamation.statut">
+            {{ statut }}
+          </li>
+        </ul>
+
+        <!-- List of Priorités shown when toggled -->
+        <ul *ngIf="showPrioriteList" class="priorite-list" [ngClass]="{'show': showPrioriteList}">
+          <li
+            *ngFor="let priorite of prioriteValues"
+            (click)="selectPriorite(priorite)"
+            [class.active]="priorite === selectedPriorite">
+            {{ priorite }}
+          </li>
+        </ul>
+      </div>
+
+
+      <!-- Infos -->
+      <div class="reclamation-info">
+        <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
+        <p class="reclamation-description">{{ reclamation.description }}</p>
+      </div>
+
+      <!-- Image -->
+      <div
+        *ngIf="reclamation.image_reclamation"
+        class="reclamation-image"
+        [ngClass]="{'zoomed': isImageZoomed}"
+        (click)="zoomImage()">
+        <img
+          [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation"
+          alt="Image de la réclamation" />
+      </div>
+
+      <!-- Footer -->
+      <div class="reclamation-footer">
+        <span class="created-date">
+          🕒 {{ reclamation.createdDate | date:'mediumDate' }}
+        </span>
+      </div>
+
     </div>
-
-    <!-- Statut and Priorité -->
-    <div class="statut-priorite-container">
-      <!-- Statut Badge -->
-      <button
-        [ngClass]="getStatutClass(reclamation.statut)"
-        class="statut-badge"
-        (click)="toggleStatutList($event)">
-        {{ reclamation.statut }}
-      </button>
-
-      <!-- Priorité Badge styled like Statut -->
-      <button
-        [ngClass]="getPrioriteClass(reclamation.priorite)"
-        class="priorite-badge"
-        (click)="togglePrioriteList($event)">
-        {{ reclamation.priorite }}
-      </button>
-
-      <!-- List of Statuts shown when toggled -->
-      <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">
-        <li
-          *ngFor="let statut of statutValues"
-          (click)="selectStatut(statut)"
-          [class.active]="statut === reclamation.statut">
-          {{ statut }}
-        </li>
-      </ul>
-
-      <!-- List of Priorités shown when toggled -->
-      <ul *ngIf="showPrioriteList" class="priorite-list" [ngClass]="{'show': showPrioriteList}">
-        <li
-          *ngFor="let priorite of prioriteValues"
-          (click)="selectPriorite(priorite)"
-          [class.active]="priorite === selectedPriorite">
-          {{ priorite }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Infos -->
-    <div class="reclamation-info">
-      <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
-      <p class="reclamation-description">{{ reclamation.description }}</p>
-    </div>
-
-    <!-- Image -->
-    <div
-      *ngIf="reclamation.image_reclamation"
-      class="reclamation-image"
-      [ngClass]="{'zoomed': isImageZoomed}"
-      (click)="zoomImage()">
-      <img
-        [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation"
-        alt="Image de la réclamation" />
-    </div>
-
-    <!-- Footer -->
-    <div class="reclamation-footer">
-      <span class="created-date">
-        🕒 {{ reclamation.createdDate | date:'mediumDate' }}
-      </span>
-    </div>
-
   </div>
-</div>
 
-<!-- Loading Message -->
-<div *ngIf="!reclamation" class="loading-message">
-  <p>Chargement des informations de la réclamation...</p>
-</div>
+  <!-- Loading Message -->
+  <div *ngIf="!reclamation" class="loading-message">
+    <p>Chargement des informations de la réclamation...</p>
+  </div>

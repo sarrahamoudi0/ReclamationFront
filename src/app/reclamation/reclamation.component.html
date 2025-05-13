@@ -47,7 +47,7 @@
       <br>
       <select id="sous-categorie" name="sous-categorie" [(ngModel)]="selectedSubCategory" class="form-control" (change)="onSubCategoryChange(selectedSubCategory)">
         <option value="" disabled selected>Sélectionnez une sous-catégorie</option>
-        <option *ngFor="let sousCategorie of selectedCategory.sousCategories" [ngValue]="sousCategorie">{{sousCategorie.nomCategorie}}</option>
+        <option *ngFor="let sousCategorie of selectedCategory.sousCategories" [ngValue]="sousCategorie">{{sousCategorie.nomSousCategorie}}</option>
       </select>
     </div>
 

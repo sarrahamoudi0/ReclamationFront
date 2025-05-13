@@ -83,7 +83,7 @@
       <h3>Sous-catégories de « {{ selectedCategory?.nomCategorie }} »</h3>
       <ul class="sous-categorie-list">
         <li *ngFor="let sous of selectedCategory?.sousCategories">
-          {{ sous.nomCategorie }}
+          {{ sous.nomSousCategorie }}
           <i class="fas fa-trash text-red-500 cursor-pointer ml-4"
            (click)="onDeleteSousCategorie(selectedCategory, sous)"
            title="Supprimer la sous-catégorie"></i>
