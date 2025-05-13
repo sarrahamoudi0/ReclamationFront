@@ -115,7 +115,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/create-user")
-   /// @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> createUserByAdmin(@RequestBody AdminCreateUserRequest request) {
         // Call the service layer to create the user
         String responseMessage = service.createUserByAdmin(request);

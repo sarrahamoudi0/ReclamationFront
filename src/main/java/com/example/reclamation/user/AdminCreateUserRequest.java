@@ -12,5 +12,7 @@ public class AdminCreateUserRequest {
     private String email;
     private String phone;
     private String password;
-    private Role role;  // This is an enum: ADMIN, AGENT, USER
+    private Role role;
+    private boolean accountLocked;
+    private boolean enabled;
 }
