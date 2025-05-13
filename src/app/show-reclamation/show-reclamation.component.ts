@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
 import { Router } from '@angular/router';
+import { CategorieService } from '../service/categorie.service';
+import { Categorie } from '../models/Categorie';
+
 @Component({
   selector: 'app-show-reclamation',
   templateUrl: './show-reclamation.component.html',
@@ -15,31 +18,13 @@ export class ShowReclamationComponent implements OnInit {
   reclamation!: Reclamation;
   reclamations: Reclamation[] = [];
   isImageZoomed = false; 
+  categories: Categorie[] = []; 
 
-  newReclamation: Reclamation = {
-  idReclamation: "",
-  titre: "",
-  description: "",
-  image_reclamation: null,
-  createdDate: null,
-  statut: Statut.Nouveau,
-  priorite: Priorite.Faible,
-  categorie: { 
-    idCategorie: "", 
-    nomCategorie: '', 
-    sousCategories: [] 
-  },
-  sousCategorie: { 
-    idCategorie: "", 
-    nomCategorie: '', 
-    sousCategories: [] 
-  }
-};
+ 
 
   selectedFile: File | null = null;
 
-
-  // Objet partiel pour la mise à jour
+  // Partial object for updating reclamation
   reclamationToUpdate: Partial<Reclamation> = {
     idReclamation: "", 
     titre: '',
@@ -49,10 +34,13 @@ export class ShowReclamationComponent implements OnInit {
     createdDate: new Date(),
   };
 
-  // Contrôle l'affichage du pop-up de mise à jour
   isPopupUpdateVisible: boolean = false;
 
-  constructor(private reclamationService: ReclamationService, private route: ActivatedRoute,private router: Router) { }
+  constructor(
+    private reclamationService: ReclamationService, private categorieService: CategorieService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -65,16 +53,30 @@ export class ShowReclamationComponent implements OnInit {
     });
   }
 
-  getReclamation(idReclamation: string): void {
-    this.reclamationService.getReclamationById(idReclamation).subscribe(
-      (reclamation: Reclamation) => {
-        this.reclamation = reclamation;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération de la réclamation :', error);
+getReclamation(idReclamation: string): void {
+  this.reclamationService.getReclamationById(idReclamation).subscribe(
+    (reclamation: Reclamation) => {
+      console.log('Reclamation fetched:', reclamation);
+      this.reclamation = reclamation;
+      if (this.reclamation.categorie) {
+        console.log('Category:', this.reclamation.categorie.nomCategorie);
+        console.log('Subcategories:', this.reclamation.categorie.sousCategories);
       }
-    );
-  }
+    },
+    (error) => {
+      console.error('Error fetching reclamation:', error);
+    }
+  );
+}
+
+
+  loadCategories(): void {
+  this.categorieService.getAllCategoriesWithSubcategories().subscribe((categories: Categorie[]) => {
+    console.log('Categories with subcategories:', categories);  // Log the categories to ensure subcategories are populated
+    this.categories = categories;
+  });
+}
+
 
   getStatutClass(statut: Statut): string {
     switch (statut) {
@@ -93,8 +95,7 @@ export class ShowReclamationComponent implements OnInit {
 
   openPopupUpdate(r: Reclamation): void {
     this.reclamationToUpdate = { ...r };  // Set all fields
-  
-    // Convert base64 image to URL for preview in popup
+    
     if (r.image_reclamation) {
       const base64Image = 'data:image/jpeg;base64,' + r.image_reclamation;
       this.reclamationToUpdate.url = base64Image; // Set the URL for the preview image
@@ -102,58 +103,45 @@ export class ShowReclamationComponent implements OnInit {
     
     this.isPopupUpdateVisible = true;
   }
-  
 
-  // Fermer le pop-up
   closePopupUpdate(): void {
     this.isPopupUpdateVisible = false;
   }
 
-  // Handle file selection and preview
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.reclamationToUpdate.image_reclamation = file; // Store the file directly
+      this.reclamationToUpdate.image_reclamation = file;
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.reclamationToUpdate.url = e.target.result; // Preview the image
+        this.reclamationToUpdate.url = e.target.result;
       };
-      reader.readAsDataURL(file); // Read the file for preview
+      reader.readAsDataURL(file);
     }
   }
-  
-  
-  
+
   updateReclamation(): void {
-    // Create FormData to include both fields and the file
     const formData = new FormData();
     
-    // Add all the fields that need to be updated
     formData.append('idReclamation', this.reclamationToUpdate.idReclamation || '');
     formData.append('titre', this.reclamationToUpdate.titre || '');
     formData.append('description', this.reclamationToUpdate.description || '');
     
-    // Add the image if it's available (only if it has been changed)
     if (this.reclamationToUpdate.image_reclamation) {
       formData.append('image_reclamation', this.reclamationToUpdate.image_reclamation);
     }
-  
-    // Make the PUT request with the form data
+
     this.reclamationService.updateReclamation(formData).subscribe(
       (updatedReclamation: Reclamation) => {
         console.log('Réclamation mise à jour avec succès :', updatedReclamation);
-        this.closePopupUpdate(); // Close the popup
-        this.getReclamation(updatedReclamation.idReclamation || ''); // Reload updated reclamation
+        this.closePopupUpdate();
+        this.getReclamation(updatedReclamation.idReclamation || '');
       },
       (error) => {
         console.error('Erreur lors de la mise à jour de la réclamation :', error);
       }
     );
   }
-  
-  
-
-
 
   onUpdateClick(): void {
     this.openPopupUpdate(this.reclamation);
@@ -164,14 +152,12 @@ export class ShowReclamationComponent implements OnInit {
   }
 
   deleteReclamation(reclamation: Reclamation): void {
-    // Show confirmation dialog before deletion
     const confirmDelete = confirm('Are you sure you want to delete this reclamation?');
     if (confirmDelete) {
       this.reclamationService.deleteReclamation(reclamation).subscribe(
         () => {
           console.log('Reclamation deleted');
           this.router.navigate(['/myreclamation']);
-           
         },
         (error) => {
           console.error('Error deleting reclamation:', error);
@@ -179,5 +165,5 @@ export class ShowReclamationComponent implements OnInit {
       );
     }
   }
-  
+
 }

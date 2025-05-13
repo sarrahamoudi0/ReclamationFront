@@ -311,3 +311,50 @@
 .delete-button:hover {
   background-color: #e47429;
 }
+/* Catégorie & Sous-catégorie badges */
+/* Catégorie & Sous-catégorie in one badge */
+/* Categorie container positioned top-left */
+.categorie-container {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+
+/* Unified badge for category and subcategory */
+/* Categorie container positioned top-left */
+.categorie-container {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+
+/* Unified badge for category and subcategory */
+/* Categorie container positioned top-left */
+.categorie-container {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+
+/* Unified badge for category and subcategory */
+.categorie-badge {
+  background: linear-gradient(135deg, #0a1827, #9ca3af); /* gray gradient */
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect with orange */
+.categorie-badge:hover {
+  background: linear-gradient(135deg, #ff7f32, #ff9f4f); /* Orange gradient */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+

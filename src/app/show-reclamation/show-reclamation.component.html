@@ -1,6 +1,16 @@
 <app-navbar></app-navbar>
 <div class="container" *ngIf="reclamation">
   <div class="reclamation-card">
+    <!-- Category (on the opposite side of Statut) -->
+<div class="categorie-container">
+  <span class="categorie-badge">
+    {{ reclamation.categorie?.nomCategorie }}
+      &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomCategorie }}
+  </span>
+</div>
+
+
+
     <!-- Statut -->
     <div class="statut-container">
       <span [ngClass]="getStatutClass(reclamation.statut)" class="statut-badge">
@@ -26,16 +36,14 @@
         {{ reclamation.createdDate | date:'mediumDate' }}
       </span>
       
-      
       <div class="action-buttons">
-  <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
-    <i class="fas fa-edit"></i>
-  </button>
-  <button class="delete-button" (click)="deleteReclamation(reclamation)" title="Supprimer">
-    <i class="fas fa-trash-alt"></i>
-  </button>
-</div>
-
+        <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="delete-button" (click)="deleteReclamation(reclamation)" title="Supprimer">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -63,7 +71,6 @@
         <input type="file" id="popup-image" (change)="onFileSelected($event)" accept="image/*" placeholder="Choose an image">
       </div>
       <!-- Image Preview -->
-      
       <div class="popup-actions">
         <button type="submit" class="btn-save">Enregistrer</button>
         <button type="button" class="btn-cancel" (click)="closePopupUpdate()">Annuler</button>
