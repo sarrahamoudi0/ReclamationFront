@@ -36,9 +36,10 @@ public class Reclamation {
 
     @DBRef
     private Categorie categorie;
+
     @DBRef
     private User user;
     @DBRef
-    private Categorie sousCategorie;
+    private SousCategorie sousCategorie;
 }
 

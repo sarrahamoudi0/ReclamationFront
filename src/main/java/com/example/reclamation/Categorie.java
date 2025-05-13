@@ -18,7 +18,7 @@ public class Categorie {
     @Id
     private String idCategorie;
     private String nomCategorie;
-    @DBRef(lazy = false)
-    private List<Categorie> sousCategories;
 
+    @DBRef(lazy = false)
+    private List<SousCategorie> sousCategories; // List of references to SousCategorie documents
 }
