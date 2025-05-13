@@ -36,5 +36,19 @@ export class CategorieService {
     const url = `${this.apiUrl}/${idCategorieParent}/sous-categorie`;
     return this.http.post<any>(url, { nomSousCategorie });
   }
+
+  getSousCategories(id: string): Observable<Categorie[]> {
+  return this.http.get<Categorie[]>(`${this.apiUrl}/${id}/sous-categories`);
+}
+
+deleteSousCategorie(idParent: string, idSousCategorie: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${idParent}/sous-categorie/${idSousCategorie}`);
+}
+
+
+getAllCategoriesWithSubcategories() {
+  return this.http.get<Categorie[]>(`${this.apiUrl}/getAllCategoriesWithSubcategories`);
+}
+
     
   }

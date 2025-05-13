@@ -17,17 +17,25 @@ export class ShowReclamationComponent implements OnInit {
   isImageZoomed = false; 
 
   newReclamation: Reclamation = {
-    idReclamation:"",
-   
-    titre:"",
-    description:"",
-    image_reclamation:null,
-    createdDate:null,
-    statut: Statut.Nouveau,
-    priorite: Priorite.Faible
+  idReclamation: "",
+  titre: "",
+  description: "",
+  image_reclamation: null,
+  createdDate: null,
+  statut: Statut.Nouveau,
+  priorite: Priorite.Faible,
+  categorie: { 
+    idCategorie: "", 
+    nomCategorie: '', 
+    sousCategories: [] 
+  },
+  sousCategorie: { 
+    idCategorie: "", 
+    nomCategorie: '', 
+    sousCategories: [] 
+  }
+};
 
-
-  };
   selectedFile: File | null = null;
 
 

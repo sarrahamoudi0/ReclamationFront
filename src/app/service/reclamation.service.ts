@@ -59,4 +59,7 @@ export class ReclamationService {
     return this.http.put<any>(`${this.apiUrl}/${idReclamation}/assign-categorie/${idCategorie}`, {});
   }
 
+   assignOneCategorieToReclamation(idReclamation: string, idCategorie: string, idSousCategorie: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${idReclamation}/assign-categorie?idCategorie=${idCategorie}&idSousCategorie=${idSousCategorie}`, {});
+  }
 }

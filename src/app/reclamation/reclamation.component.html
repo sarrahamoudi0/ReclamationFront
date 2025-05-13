@@ -2,23 +2,20 @@
 <div class="form-wrapper">
   <form (ngSubmit)="submitReclamation()" #reclamationForm="ngForm" enctype="multipart/form-data" class="reclamation-form" novalidate>
 
-  
-
     <!-- TITRE -->
     <div class="form-group">
       <label for="titre">
-  <i class="fa fa-pencil-alt icon-label" aria-hidden="true"></i>
-  <span class="label-title">&nbsp;&nbsp;Titre <span class="required">*</span> :</span>
-</label>
-
+        <i class="fa fa-pencil-alt icon-label" aria-hidden="true"></i>
+        <span class="label-title">&nbsp;&nbsp;Titre <span class="required">*</span> :</span>
+      </label>
       <br>
       <input type="text" id="titre" name="titre" [(ngModel)]="newReclamation.titre" required minlength="5" class="form-control" #titre="ngModel">
     </div>
     <div class="error-message global-error" *ngIf="titre.invalid && titre.touched">
       Le titre est requis (min 5 caractères).
     </div>
-<br>
-<br>
+    <br><br>
+
     <!-- DESCRIPTION -->
     <div class="form-group">
       <label for="description"><i class="fa fa-file-alt icon-label"></i>&nbsp;&nbsp; Description * :</label>
@@ -28,18 +25,43 @@
     <div class="error-message global-error" *ngIf="description.invalid && description.touched">
       La description est requise (min 10 caractères).
     </div>
-<br>
-<br>
+    <br><br>
+
+    <!-- CATEGORY SELECTION -->
+    <div class="form-group">
+      <label for="categorie"><i class="fa fa-list"></i>&nbsp;&nbsp; Catégorie * :</label>
+      <br>
+      <select id="categorie" name="categorie" [(ngModel)]="selectedCategory" class="form-control" (change)="onCategoryChange(selectedCategory)">
+        <option value="" disabled selected>Sélectionnez une catégorie</option>
+        <option *ngFor="let categorie of categories" [ngValue]="categorie">{{categorie.nomCategorie}}</option>
+      </select>
+    </div>
+    <div class="error-message global-error" *ngIf="!selectedCategory">
+      La catégorie est requise.
+    </div>
+    <br><br>
+
+    <!-- SUBCATEGORY SELECTION -->
+    <div *ngIf="selectedCategory && selectedCategory.sousCategories && selectedCategory.sousCategories.length > 0" class="form-group">
+      <label for="sous-categorie"><i class="fa fa-list"></i>&nbsp;&nbsp; Sous-Catégorie * :</label>
+      <br>
+      <select id="sous-categorie" name="sous-categorie" [(ngModel)]="selectedSubCategory" class="form-control" (change)="onSubCategoryChange(selectedSubCategory)">
+        <option value="" disabled selected>Sélectionnez une sous-catégorie</option>
+        <option *ngFor="let sousCategorie of selectedCategory.sousCategories" [ngValue]="sousCategorie">{{sousCategorie.nomCategorie}}</option>
+      </select>
+    </div>
+
+    <br><br>
+
     <!-- IMAGE -->
     <div class="form-group">
-  <label for="image_reclamation"><i class="fa fa-image"></i>&nbsp;&nbsp; Upload Image:</label>
-  <br>
-  <input type="file" id="image_reclamation" (change)="onFileSelected($event)" accept="image/*" class="image-input">
-</div>
+      <label for="image_reclamation"><i class="fa fa-image"></i>&nbsp;&nbsp; Upload Image:</label>
+      <br>
+      <input type="file" id="image_reclamation" (change)="onFileSelected($event)" accept="image/*" class="image-input">
+    </div>
+    <br>
 
-<br>
-
-    <!-- BOUTON -->
+    <!-- SUBMIT BUTTON -->
     <button type="submit" [disabled]="reclamationForm.invalid" class="btn-submit">
       Envoyer la réclamation
     </button>

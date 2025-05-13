@@ -4,6 +4,8 @@ import { ReclamationService } from '../service/reclamation.service';
 import { Router } from '@angular/router';
 import { Statut } from 'src/app/models/Statut';
 import { Priorite } from '../models/Priorite';
+import { Categorie } from '../models/Categorie';
+import { CategorieService } from '../service/categorie.service';
 
 @Component({
   selector: 'app-reclamation',
@@ -12,56 +14,95 @@ import { Priorite } from '../models/Priorite';
 })
 export class ReclamationComponent implements OnInit {
 
-  reclamations : Reclamation [] = [];
+  reclamations: Reclamation[] = [];
   selectedFile: File | null = null;
 
-  constructor(private reclamationservice: ReclamationService, private router: Router) { }
-
-  ngOnInit(): void {
-    console.log(' test');
-  }
+  categories: Categorie[] = [];
+  selectedCategory: Categorie = { idCategorie: "", nomCategorie: '', sousCategories: [] };
+  selectedSubCategory: Categorie | null = null;
 
   newReclamation: Reclamation = {
-    idReclamation:"",
-   
-    titre:"",
-    description:"",
-    image_reclamation:null,
-    createdDate:null,
+    idReclamation: "",
+    titre: "",
+    description: "",
+    image_reclamation: null,
+    createdDate: null,
     statut: Statut.Nouveau,
-    priorite: Priorite.Faible
-
-
+    priorite: Priorite.Faible,
+    categorie: { 
+      idCategorie: "", 
+      nomCategorie: '', 
+      sousCategories: [] 
+    },
+    sousCategorie: { 
+      idCategorie: "", 
+      nomCategorie: '', 
+      sousCategories: [] 
+    }
   };
+
+  constructor(private reclamationService: ReclamationService,
+              private categorieService: CategorieService, 
+              private router: Router) { }
+
+  ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categorieService.getAllCategoriesWithSubcategories().subscribe((categories: Categorie[]) => {
+      this.categories = categories;
+    });
+  }
+
+  onCategoryChange(category: Categorie): void {
+    if (category) {
+      this.selectedCategory = category;
+      this.selectedSubCategory = null;
+    }
+  }
+
+  onSubCategoryChange(subCategory: Categorie | null): void {
+    this.selectedSubCategory = subCategory;
+  }
 
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
   }
 
-  submitReclamation(): void {
-    const formData = new FormData();
+submitReclamation(): void {
+  const formData = new FormData();
+  formData.append('titre', this.newReclamation.titre);
+  formData.append('description', this.newReclamation.description);
+  
+  if (this.selectedCategory && this.selectedCategory.idCategorie) {
+    formData.append('idCategorie', this.selectedCategory.idCategorie);
+  }
 
+  if (this.selectedSubCategory && this.selectedSubCategory.idCategorie) {
+    formData.append('idSousCategorie', this.selectedSubCategory.idCategorie);
+  }
 
-    formData.append('titre', this.newReclamation.titre);
-    formData.append('description', this.newReclamation.description);
+  if (this.selectedFile) {
+    formData.append('image_reclamation', this.selectedFile, this.selectedFile.name);
+  }
 
-    if (this.selectedFile) {
-      formData.append('image_reclamation', this.selectedFile);
+  // Log FormData content
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`);
+  });
+
+  // Envoi de la réclamation
+  this.reclamationService.addReclamation(formData).subscribe({
+    next: (res) => {
+      console.log('Réclamation envoyée avec succès :', res);
+      this.router.navigate(['/myreclamation']);
+    },
+    error: (err) => {
+      console.error('Erreur lors de l’envoi de la réclamation :', err);
+      alert("Une erreur s'est produite. Veuillez réessayer.");
     }
+  });
+}
 
-    this.reclamationservice.addReclamation(formData).subscribe({
-      next: (res) => {
-        console.log('Réclamation envoyée avec succès :', res);
-        this.newReclamation = new Reclamation(); // Reset the form data
-        this.selectedFile = null; // Clear the file selection
-
-        // Navigate to "My Reclamations" page after successful submission
-        this.router.navigate(['/myreclamation']); // Navigates to the "MyReclamationComponent"
-      },
-      error: (err) => {
-        console.error('Erreur lors de l’envoi de la réclamation :', err);
-      }
-    });
-  }
-
-  }
+}

@@ -84,6 +84,10 @@
       <ul class="sous-categorie-list">
         <li *ngFor="let sous of selectedCategory?.sousCategories">
           {{ sous.nomCategorie }}
+          <i class="fas fa-trash text-red-500 cursor-pointer ml-4"
+           (click)="onDeleteSousCategorie(selectedCategory, sous)"
+           title="Supprimer la sous-catégorie"></i>
+
         </li>
         <li *ngIf="!selectedCategory?.sousCategories?.length">
           (Aucune sous-catégorie)

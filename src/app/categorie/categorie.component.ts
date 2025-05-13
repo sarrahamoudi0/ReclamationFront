@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CategorieService } from '../service/categorie.service';
 import { Categorie } from '../models/Categorie';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-categorie',
@@ -19,21 +21,16 @@ export class CategorieComponent implements OnInit {
   isViewModalOpen = false;
 
   // Sélections
-  currentCategorie: Categorie = { idCategorie: '', nomCategorie: '', sousCategories: [] };
+  currentCategorie: Categorie = {  nomCategorie: '', sousCategories: [] };
   selectedCategory?: Categorie;
 
-  constructor(private categorieService: CategorieService) {}
+  constructor(private categorieService: CategorieService,) {}
 
   ngOnInit(): void {
     this.loadCategories();
   }
 
-  loadCategories(): void {
-    this.categorieService.getAllCategories().subscribe({
-      next: data => this.categories = data,
-      error: err => console.error('Erreur chargement catégories', err)
-    });
-  }
+ 
 
   // === Modal Catégorie ===
   openModal(editing: boolean, categorie?: Categorie): void {
@@ -43,7 +40,7 @@ export class CategorieComponent implements OnInit {
       this.currentCategorie = { ...categorie };
       this.categorieName = categorie.nomCategorie;
     } else {
-      this.currentCategorie = { idCategorie: '', nomCategorie: '', sousCategories: [] };
+      this.currentCategorie = { nomCategorie: '', sousCategories: [] };
       this.categorieName = '';
     }
   }
@@ -51,7 +48,7 @@ export class CategorieComponent implements OnInit {
   closeModal(): void {
     this.isModalOpen = false;
     this.editMode = false;
-    this.currentCategorie = { idCategorie: '', nomCategorie: '', sousCategories: [] };
+    this.currentCategorie = { nomCategorie: '', sousCategories: [] };
     this.categorieName = '';
     this.sousCategorieName = '';
   }
@@ -59,7 +56,7 @@ export class CategorieComponent implements OnInit {
   addCategorie(): void {
     const name = this.categorieName.trim();
     if (!name) return;
-    const newCat: Categorie = { idCategorie: '', nomCategorie: name, sousCategories: [] };
+    const newCat: Categorie = {  nomCategorie: name, sousCategories: [] };
     this.categorieService.addCategorie(newCat).subscribe({
       next: cat => {
         this.categories.push(cat);
@@ -68,9 +65,12 @@ export class CategorieComponent implements OnInit {
     });
   }
 
-  editCategorie(categorie: Categorie): void {
-    this.openModal(true, categorie);
-  }
+editCategorie(categorie: Categorie): void {
+  console.log('Editing category:', categorie);
+  this.openModal(true, categorie);
+}
+
+
 
   updateCategorie(): void {
     const name = this.categorieName.trim();
@@ -90,14 +90,23 @@ export class CategorieComponent implements OnInit {
       }, error: err => console.error('Erreur mise à jour', err)
     });
   }
+deleteCategorie(idCategorie?: string): void {
+  if (!idCategorie) return;
 
-  deleteCategorie(idCategorie?: string): void {
-    if (!idCategorie) return;
-    this.categorieService.deleteCategorie(idCategorie).subscribe({
-      next: () => this.categories = this.categories.filter(cat => cat.idCategorie !== idCategorie),
-      error: err => console.error('Erreur suppression catégorie', err)
-    });
+  const isTopLevel = this.categories.some(cat => cat.idCategorie === idCategorie);
+  if (!isTopLevel) {
+    console.warn('Tried to delete a subcategory using category deletion method.');
+    return;
   }
+
+  this.categorieService.deleteCategorie(idCategorie).subscribe({
+    next: () => {
+      this.categories = this.categories.filter(cat => cat.idCategorie !== idCategorie);
+    },
+    error: err => console.error('Erreur suppression catégorie', err)
+  });
+}
+
 
   // === Modal Sous-catégorie ===
   openSubModal(category: Categorie, event?: MouseEvent): void {
@@ -137,4 +146,57 @@ export class CategorieComponent implements OnInit {
     this.selectedCategory = undefined;
     this.isViewModalOpen = false;
   }
+
+
+
+onDeleteSousCategorie(category: Categorie | undefined, sousCategory: Categorie | undefined): void {
+  if (category?.idCategorie && sousCategory?.idCategorie) {
+    this.deleteSousCategorie(category.idCategorie, sousCategory.idCategorie); // Passing valid strings
+  } else {
+    console.warn('Invalid IDs for deletion. category or sousCategory ID is missing.');
+  }
+}
+
+deleteSousCategorie(idParent: string, idSousCategorie: string): void {
+  if (!idParent || !idSousCategorie) {
+    console.warn('Invalid category or subcategory ID.');
+    return;
+  }
+
+  this.categorieService.deleteSousCategorie(idParent, idSousCategorie)
+    .subscribe({
+      next: () => {
+        alert('Sous-catégorie supprimée avec succès');
+        // Optionally remove the subcategory from the UI without refreshing
+        const category = this.categories.find(cat => cat.idCategorie === idParent);
+        if (category) {
+          category.sousCategories = category.sousCategories.filter(sous => sous.idCategorie !== idSousCategorie);
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la suppression:', error);
+        alert('Erreur lors de la suppression');
+      }
+    });
+}
+
+
+
+loadCategories(): void {
+  this.categorieService.getAllCategories().subscribe(
+    (data) => {
+      this.categories = data;  // Assuming 'categories' is your list in the component
+    },
+    (error) => {
+      console.error('Erreur de récupération des catégories:', error);
+    }
+  );
+}
+
+
+
+
+
+
+
 }

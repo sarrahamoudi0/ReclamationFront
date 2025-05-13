@@ -14,7 +14,8 @@ export class Reclamation {
     statut!: Statut;
     priorite!: Priorite;
     user?: User;
-    categorie?: Categorie;
+     categorie!: Categorie | null;  // Allow null for category
+  sousCategorie!: Categorie | null;
 
     
   }
