@@ -11,15 +11,28 @@ public class ReclamationImpService implements IReclamationService{
     @Autowired
     private ReclamationRepository reclamationRepository;
     @Autowired
-    private CommentaireRepository commentaireRepository;
+    private  CategorieRepository categorieRepository;
 
 
-    @Override
-    public Reclamation createReclamation(Reclamation reclamation) {
+@Override
+    public Reclamation createReclamation(Reclamation reclamation, String idCategorie, String idSousCategorie) {
+        // Get the category and sub-category
+        Categorie categorie = categorieRepository.findById(idCategorie)
+                .orElseThrow(() -> new RuntimeException("Categorie not found"));
+        Categorie sousCategorie = categorie.getSousCategories().stream()
+                .filter(sub -> sub.getIdCategorie().equals(idSousCategorie))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Sous-Categorie not found"));
+
+        // Assign the category and sub-category to the reclamation
+        reclamation.setCategorie(categorie);
+        reclamation.setSousCategorie(sousCategorie);
+
+        // Save the reclamation
         return reclamationRepository.save(reclamation);
     }
 
-@Override
+    @Override
 public List<Reclamation> getAllReclamations() {
 
     return reclamationRepository.findAll();
@@ -67,6 +80,56 @@ public List<Reclamation> getAllReclamations() {
     public List<Reclamation> getReclamationsByUser(User user) {
         return reclamationRepository.findByUser(user);
     }
+    @Override
+    public Reclamation assignCategorieToReclamation(String idReclamation, String idCategorie) {
+        Reclamation reclamation = reclamationRepository.findById(idReclamation)
+                .orElseThrow(() -> new RuntimeException("Reclamation not found"));
+
+        Categorie categorie = categorieRepository.findById(idCategorie)
+                .orElseThrow(() -> new RuntimeException("Categorie not found"));
+
+        reclamation.setCategorie(categorie);
+
+        return reclamationRepository.save(reclamation);
+    }
+
+
+    @Override
+    public Reclamation assignOneCategorieToReclamation(String idReclamation, String idCategorie, String idSousCategorie) {
+        if (idReclamation == null || idCategorie == null || idSousCategorie == null) {
+            throw new IllegalArgumentException("Les identifiants ne doivent pas être null");
+        }
+
+        // Récupération de la réclamation
+        Reclamation reclamation = reclamationRepository.findById(idReclamation)
+                .orElseThrow(() -> new RuntimeException("Réclamation non trouvée"));
+
+        // Récupération de la catégorie principale
+        Categorie categoriePrincipale = categorieRepository.findById(idCategorie)
+                .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
+
+        // Récupération de la sous-catégorie
+        Categorie sousCategorie = categorieRepository.findById(idSousCategorie)
+                .orElseThrow(() -> new RuntimeException("Sous-catégorie non trouvée"));
+
+        // Vérifie si la sous-catégorie est bien incluse dans la catégorie principale
+        boolean isValidSousCategorie = categoriePrincipale.getSousCategories()
+                .stream()
+                .anyMatch(sc -> sc.getIdCategorie().equals(idSousCategorie));
+
+        if (!isValidSousCategorie) {
+            throw new RuntimeException("La sous-catégorie ne correspond pas à la catégorie fournie");
+        }
+
+        // Affectation
+        reclamation.setCategorie(sousCategorie); // tu assignes la sous-catégorie directement ici, selon ton design
+
+        return reclamationRepository.save(reclamation);
+    }
+
+
+
+
 
 
 

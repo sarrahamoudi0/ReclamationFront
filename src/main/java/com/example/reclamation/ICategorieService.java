@@ -9,4 +9,7 @@ public interface ICategorieService {
     Categorie updateCategorie(Categorie categorie);
     void deleteCategorie(String id);
     Categorie getCategorieById(String id);
+    Categorie ajouterSousCategorie(String idCategorieParent, String nomSousCategorie);
+    Categorie supprimerSousCategorie(String idCategorieParent, String idSousCategorie);
+    List<Categorie> getAllCategoriesWithSubcategories();
 }

@@ -46,30 +46,35 @@ public class ReclamationController {
 
     @PostMapping("/addReclamation")
     public ResponseEntity<Reclamation> createReclamation(
-
             @RequestParam("titre") String titre,
             @RequestParam("description") String description,
-            @RequestParam(value = "image_reclamation", required = false) MultipartFile fileReclamation) throws IOException {
+            @RequestParam(value = "image_reclamation", required = false) MultipartFile fileReclamation,
+            @RequestParam("idCategorie") String idCategorie,
+            @RequestParam("idSousCategorie") String idSousCategorie) throws IOException {
 
-        // Fetch the current authenticated user
+        // Récupérer l'utilisateur authentifié
         User currentUser = getCurrentUser();
 
+        // Créer l'objet réclamation
         Reclamation reclamation = new Reclamation();
-
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
-
-        // Associate the reclamation with the authenticated user
-        reclamation.setUser(currentUser); // Assuming 'user' is the field that references User
+        reclamation.setUser(currentUser);
+        reclamation.setStatut(Statut.Nouveau);
+        reclamation.setPriorite(Priorite.Faible);
 
         if (fileReclamation != null) {
             reclamation.setImage_reclamation(fileReclamation.getBytes());
         }
 
-        // Save the reclamation with the associated user
-        Reclamation savedReclamation = reclamationService.createReclamation(reclamation);
-        return ResponseEntity.ok(savedReclamation);
+        // Créer et enregistrer la réclamation avec catégorie
+        Reclamation createdReclamation = reclamationService.createReclamation(reclamation, idCategorie, idSousCategorie);
+
+        return ResponseEntity.ok(createdReclamation);
     }
+
+
+
     @GetMapping("/getMyReclamations")
     public List<Reclamation> getMyReclamations() {
         User currentUser = userService.getCurrentUser();
@@ -156,5 +161,21 @@ public class ReclamationController {
         } else {
             return ResponseEntity.notFound().build(); // Return 404 if reclamation is not found
         }
+    }
+
+    @PutMapping("/{idReclamation}/assign-categorie/{idCategorie}")
+    public ResponseEntity<Reclamation> assignCategorie(
+            @PathVariable String idReclamation,
+            @PathVariable String idCategorie) {
+        Reclamation updated = reclamationService.assignCategorieToReclamation(idReclamation, idCategorie);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/{idReclamation}/assign-categorie")
+    public Reclamation assignCategorieToReclamation(
+            @PathVariable String idReclamation,
+            @RequestParam String idCategorie,
+            @RequestParam String idSousCategorie) {
+        return reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie);
     }
 }
