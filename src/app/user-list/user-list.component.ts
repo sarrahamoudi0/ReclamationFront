@@ -3,6 +3,8 @@ import { User } from '../models/User';
 import { AuthenticationService } from '../service/authentication.service';
 import { Router } from '@angular/router';
 import * as bootstrap from 'bootstrap';
+import { UserRole } from '../models/role';
+import { AdminCreateUserRequest } from '../models/AdminCreateUser';
 
 @Component({
   selector: 'app-user-list',
@@ -11,9 +13,19 @@ import * as bootstrap from 'bootstrap';
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];  // Holds the list of users
-  errorMessage: string = '';  // Holds any error message
-  selectedUser: User = {} as User;  // Holds the user data for the modal
-  newUser: User = {} as User;  // Holds the data for the new user to be added
+  errorMessage: string = '';  
+
+  selectedUser: User = {} as User;  
+  newUser: AdminCreateUserRequest = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: UserRole.USER, 
+    enabled: true,
+    accountLocked: false,
+  };
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -59,38 +71,31 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  addUser(): void {
-    if (!this.newUser.firstname || !this.newUser.lastname || !this.newUser.email || !this.newUser.roles) {
-      this.errorMessage = 'Please fill out all fields.';
-      return;
+addUser(): void {
+  const updatedUser: AdminCreateUserRequest = {
+    ...this.newUser,
+    role: this.newUser.role
+  };
+
+  this.authenticationService.createUser(updatedUser).subscribe({
+    next: (response) => {
+      console.log('User added successfully', response);
+
+      // Optional: if you want to show a success message before reload, you can use setTimeout.
+
+      // Force full page reload
+      window.location.reload();
+    },
+    error: (err) => {
+      console.error('Error creating user', err);
+      this.errorMessage = 'Failed to create user. Please try again later.';
     }
+  });
+}
 
-    this.authenticationService.createUser(this.newUser).subscribe({
-      next: (response) => {
-        console.log('User added successfully', response);
 
-        // Add the new user to the list
-        this.users.push({ ...this.newUser });
 
-        // Reset the newUser object
-        this.newUser = {} as User;
 
-        // Optionally, trigger change detection manually
-        this.cdr.detectChanges();
-
-        // Close the modal
-        const modalElement = document.getElementById('addUserModal');
-        if (modalElement) {
-          const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
-          modal?.hide(); // Close the modal
-        }
-      },
-      error: (err) => {
-        console.error('Error adding user', err);
-        this.errorMessage = 'Failed to add user. Please try again later.';
-      }
-    });
-  }
 
   openUpdateModal(user: User): void {
     this.selectedUser = { ...user };  // Clone the user to avoid directly modifying the original
@@ -130,25 +135,32 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  deleteUser(user: User): void {
-    if (confirm(`Are you sure you want to delete user: ${user.firstname} ${user.lastname}?`)) {
-      if (!user.id) {
-        console.error('User ID is undefined');
-        this.errorMessage = 'User ID is missing for deletion.';
-        return;
-      }
-      this.authenticationService.deleteUser(user.id).subscribe({
-        next: (response) => {
-          console.log('User deleted successfully', response);
-          this.loadUsers();  // Reload users after deletion
-        },
-        error: (err) => {
-          console.error('Error deleting user', err);
-          this.errorMessage = 'Failed to delete user. Please try again later.';
-        }
-      });
+deleteUser(user: User): void {
+  if (confirm(`Are you sure you want to delete user: ${user.firstname} ${user.lastname}?`)) {
+    if (!user.id) {
+      console.error('User ID is undefined');
+      this.errorMessage = 'User ID is missing for deletion.';
+      return;
     }
+
+    this.authenticationService.deleteUser(user.id).subscribe({
+      next: (response) => {
+        console.log('User deleted successfully', response);
+
+        // Remove the user from the local list
+        this.users = this.users.filter(u => u.id !== user.id);
+
+        // Clear error if any
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        console.error('Error deleting user', err);
+        this.errorMessage = 'Failed to delete user. Please try again later.';
+      }
+    });
   }
+}
+
 
   displayError(): string {
     return this.errorMessage;

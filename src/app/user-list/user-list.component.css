@@ -1,32 +1,229 @@
+/* General Body and Table Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f7;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px; /* Fixed sidebar width */
+  height: 100vh;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  margin: 10px 0;
+}
+
+.sidebar-menu li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  display: block;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-menu li a:hover {
+  background-color: #575757;
+}
+
+/* Main Content Area */
+.main-content {
+  margin-left: 250px; /* Sidebar width */
+  padding: 20px;
+  flex: 1;
+}
+
+/* Add User Button Styles */
+.d-flex .btn {
+  background-color: #f39c12;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 14px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.d-flex .btn:hover {
+  background-color: #e67e22;
+  cursor: pointer;
+}
+
+/* Table Styles */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+}
+
+thead {
+  background-color: #5a6268;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 13px;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #e2e6ea;
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  font-size: 80%;
+  color: white;
+  background-color: #2980b9;
+  border-radius: 0.25rem;
+}
+
+.badge.admin {
+  background-color: #e67e22;
+}
+
+.badge.agent {
+  background-color: #f39c12;
+}
+
+/* Pop-up Modal Styles */
+.modal-content {
+  width: 90%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  background-color: white;
+}
+
+.modal-header {
+  background-color: #5a6268;
+  color: white;
+  border-bottom: 1px solid #ddd;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 10px 12px;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+
+.btn-close {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+}
+
+.modal-body {
+  padding: 12px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #f39c12;
+  color: white;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 50px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #e67e22;
+  cursor: pointer;
+}
+
+button[type="button"] {
+  background-color: #2980b9;
+  color: white;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 50px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"]:hover {
+  background-color: #1f5987;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
   }
-  
-  thead {
-    background-color: #343a40;
-    color: white;
+
+  table {
+    width: 95%;
   }
-  
+
   th, td {
+    padding: 6px;
+  }
+
+  .modal-content {
     padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
   }
-  
-  tr:nth-child(even) {
-    background-color: #f8f9fa;
+
+  button[type="submit"], button[type="button"] {
+    font-size: 12px;
+    padding: 6px 12px;
   }
-  
-  .badge {
-    display: inline-block;
-    padding: 0.35em 0.65em;
-    font-size: 90%;
-    color: #fff;
-    background-color: #007bff;
-    border-radius: 0.25rem;
-  }
-  
+}

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { UserRole } from '../models/role'; 
 import { User } from '../models/User';
+import { AdminCreateUserRequest } from '../models/AdminCreateUser';
 
 @Injectable({
   providedIn: 'root'
@@ -171,35 +172,35 @@ export class AuthenticationService {
     if (!token) return [];
   
     const decodedToken = jwtDecode<any>(token);
-    console.log('Decoded token:', decodedToken); // Log the decoded token to check the structure
+    console.log('Decoded token:', decodedToken); 
   
-    const authorities = decodedToken?.authorities || []; // Now we are extracting from 'authorities'
-    console.log('Authorities:', authorities); // Log the authorities to check
+    const authorities = decodedToken?.authorities || []; 
+    console.log('Authorities:', authorities); 
   
-    // Convert "ROLE_USER" → "USER", "ROLE_ADMIN" → "ADMIN", etc.
     return authorities.map((authority: string) => authority.replace('ROLE_', '') as UserRole);
   }
   
 
-  // Check if the user is authenticated
   isAuthenticated(): boolean {
     return this.getToken() !== null;
   }
 
-  // Log out and clear the token and roles
   logout(): void {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('roles'); // Clear roles on logout
+    localStorage.removeItem('roles'); 
     this.router.navigate(['/login']);
   }
-  createUser(request: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/create-user`, request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Erreur lors de la création de l\'utilisateur :', error);
-        return throwError(() => new Error('Une erreur s\'est produite pendant la création de l\'utilisateur.'));
-      })
-    );
-  }
+ createUser(request: AdminCreateUserRequest): Observable<any> {
+  return this.http.post(`${this.apiUrl}/create-user`, request, {
+    responseType: 'text' as 'json' 
+  }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('Erreur lors de la création de l\'utilisateur :', error);
+      return throwError(() => new Error('Une erreur s\'est produite pendant la création de l\'utilisateur.'));
+    })
+  );
+}
+
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/users`).pipe(
@@ -215,10 +216,12 @@ updateUser(id: string, userData: any): Observable<any> {
   return this.http.put(`${this.apiUrl}/update-user/${id}`, userData);
 }
 
-// Method to delete a user
-deleteUser(id: string): Observable<any> {
-  return this.http.delete(`${this.apiUrl}/delete-user/${id}`);
+deleteUser(userId: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/delete-user/${userId}`, {
+    responseType: 'text' as 'json'  // 👈 This prevents JSON parsing error
+  });
 }
+
 
 
 

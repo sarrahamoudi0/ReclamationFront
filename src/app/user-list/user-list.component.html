@@ -35,7 +35,6 @@
           </span>
         </td>
         <td>
-          <!-- Show update button only if the role is either ADMIN or AGENT -->
           <button *ngIf="user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_AGENT')" 
                   class="btn btn-outline-primary btn-sm me-2 rounded-pill shadow-sm" 
                   (click)="openUpdateModal(user)" title="Modifier">
@@ -78,9 +77,53 @@
           </div>
           <div class="mb-3">
             <label for="roles" class="form-label">Rôle</label>
-            <input type="text" class="form-control" id="roles" [(ngModel)]="selectedUser.roles" name="roles">
+            <input type="text" class="form-control" id="roles" [(ngModel)]="selectedUser.roles" name="roles" readonly>
           </div>
           <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for adding user -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addUser()">
+          <div class="mb-3">
+            <label for="firstname" class="form-label">Prénom</label>
+            <input type="text" class="form-control" id="firstname" [(ngModel)]="newUser.firstname" name="firstname" required>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="lastname" [(ngModel)]="newUser.lastname" name="lastname" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="newUser.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Téléphone</label>
+            <input type="text" class="form-control" id="phone" [(ngModel)]="newUser.phone" name="phone">
+          </div>
+          <div class="mb-3">
+            <label for="roles" class="form-label">Rôle</label>
+            <select class="form-select" [(ngModel)]="newUser.role" name="role" id="roles" required>
+              <option [ngValue]="'ROLE_ADMIN'">Admin</option>
+              <option [ngValue]="'ROLE_AGENT'">Agent</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="newUser.password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Ajouter</button>
         </form>
       </div>
     </div>
