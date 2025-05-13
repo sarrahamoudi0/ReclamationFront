@@ -32,13 +32,23 @@ public class ReclamationImpService implements IReclamationService{
         return reclamationRepository.save(reclamation);
     }
 
+    public List<Reclamation> getAllReclamations() {
+        List<Reclamation> reclamations = reclamationRepository.findAll();
+        for (Reclamation reclamation : reclamations) {
+            if (reclamation.getCategorie() != null) {
+                // Manually load subcategories if not automatically populated
+                Categorie categorie = reclamation.getCategorie();
+                if (categorie.getSousCategories() == null || categorie.getSousCategories().isEmpty()) {
+                    // Load subcategories manually using the repository method
+                    categorie.setSousCategories(categorieRepository.findByIdCategorie(categorie.getIdCategorie()));
+                }
+            }
+        }
+        return reclamations;
+    }
+
+
     @Override
-public List<Reclamation> getAllReclamations() {
-
-    return reclamationRepository.findAll();
-}
-
-@Override
     public Reclamation updateReclamation(Reclamation reclamation){
         return reclamationRepository.save(reclamation);
 }

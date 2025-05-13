@@ -18,6 +18,7 @@ public class Categorie {
     @Id
     private String idCategorie;
     private String nomCategorie;
-    @DBRef
+    @DBRef(lazy = false)
     private List<Categorie> sousCategories;
+
 }
