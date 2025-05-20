@@ -1,13 +1,28 @@
 <!-- Card Container -->
 <div class="container" *ngIf="reclamation">
     <div class="reclamation-card">
-
-      <div class="categorie-container">
-  <span class="categorie-badge">
+<div class="categorie-container">
+  <span class="categorie-badge" (click)="toggleCategorieList($event)">
     {{ reclamation.categorie?.nomCategorie }}
-      &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
+    &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
   </span>
+
+  <!-- Category List -->
+  <ul *ngIf="showCategorieList" class="categorie-list">
+    <li *ngFor="let cat of categories" (click)="selectCategorie(cat)">
+      {{ cat.nomCategorie }}
+    </li>
+  </ul>
+
+  <!-- Subcategory List (displayed next to the category list) -->
+  <ul *ngIf="selectedCategorie && showSousCategorieList" class="sous-categorie-list">
+    <li *ngFor="let sous of selectedCategorie.sousCategories" (click)="selectSousCategorie(sous)">
+      {{ sous.nomSousCategorie }}
+    </li>
+  </ul>
 </div>
+
+
 
 
 

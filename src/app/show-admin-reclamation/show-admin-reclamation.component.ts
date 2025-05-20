@@ -6,6 +6,7 @@ import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
 import { CategorieService } from '../service/categorie.service'; 
 import { Categorie } from "../models/Categorie";
+import { SousCategorie } from '../models/SousCategorie';
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -15,9 +16,15 @@ import { Categorie } from "../models/Categorie";
 export class ShowAdminReclamationComponent implements OnInit {
   reclamation!: Reclamation;
     categories: Categorie[] = []; 
-   selectedCategorie: Categorie | undefined;
-  showCategorieList = false;
   isImageZoomed = false;
+  selectedCategorie: Categorie | undefined;
+selectedSousCategorie: SousCategorie | undefined;
+showCategorieList = false;
+showSousCategorieList = false;
+filteredSousCategories: SousCategorie[] = [];
+sousCategoriePosition = {};
+
+
 
   statutValues: Statut[] = Object.values(Statut);
   selectedStatut: Statut = Statut.Nouveau;
@@ -78,18 +85,35 @@ affecterCategorie(): void {
   }
 }
 
+toggleCategorieList(event: MouseEvent): void {
+  this.showCategorieList = !this.showCategorieList;
+  this.showSousCategorieList = false;
+  this.selectedCategorie = undefined;
+  event.stopPropagation();
+}
 
 selectCategorie(categorie: Categorie): void {
   this.selectedCategorie = categorie;
-  this.affecterCategorie(); // Assign the category
-  this.showCategorieList = false; // Close the category list
+  this.showSousCategorieList = true;
 }
 
-toggleCategorieList(event: MouseEvent): void {
-  this.showCategorieList = !this.showCategorieList;
-  event.stopPropagation(); // Prevent click from closing the dropdown immediately
-}
+selectSousCategorie(sousCategorie: SousCategorie): void {
+  if (!this.reclamation || !this.selectedCategorie) return;
 
+  this.reclamationService.updateCategorieToReclamation(
+    this.reclamation.idReclamation!,
+    this.selectedCategorie.idCategorie!,
+    sousCategorie.idSousCategorie!
+  ).subscribe({
+    next: (updatedReclamation) => {
+      this.reclamation = updatedReclamation;
+      this.showCategorieList = false;
+      this.showSousCategorieList = false;
+      this.selectedCategorie = undefined;
+    },
+    error: (err) => console.error('Erreur mise à jour:', err)
+  });
+}
 
 
   getStatutClass(statut: Statut) {
