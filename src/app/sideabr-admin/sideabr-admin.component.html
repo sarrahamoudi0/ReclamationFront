@@ -1,0 +1,38 @@
+<nav class="navbar" [class.collapsed]="collapsed">
+  <div class="toggle-btn" (click)="toggleSidebar()">
+    ☰
+  </div>
+  <div class="logo">Menu</div>
+  <ul class="nav-links">
+    <li>
+      <a href="#">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span class="text">Dashboared</span>
+      </a>
+    </li>
+    <li>
+   <a routerLink="/user">
+  <span class="icon"><i class="fa-solid fa-user"></i></span>
+  <span class="text">Users</span>
+</a>
+
+    </li>
+    <li>
+      <a routerLink="/admin">
+        <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
+        <span class="text">Reclamations</span>
+      </a>
+    </li>
+    <li>
+    <a routerLink="/categorie">
+  <span class="icon"><i class="fa-solid fa-list"></i></span>
+  <span class="text">Categorie</span>
+</a>
+    </li>
+
+    <button class="logout" *ngIf="isLoggedIn()" (click)="logout()">
+      <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+      <span class="text">Logout</span>
+    </button>
+  </ul>
+</nav>

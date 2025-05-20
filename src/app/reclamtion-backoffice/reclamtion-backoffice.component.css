@@ -1,10 +1,3 @@
-/* Empêche le défilement de la page */
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;  /* Désactive tout défilement sur la page */
-}
-
 /* Container */
 .table-container {
   padding: 30px;
@@ -16,100 +9,160 @@ html, body {
   margin: 30px auto;
   max-width: calc(100% - 250px);  /* Réduit la largeur du tableau pour faire de la place pour le sidebar */
   margin-left: 250px; /* Décale le tableau vers la droite */
-  margin-top: 100px;  /* Décale le tableau plus bas */
+  margin-top: 50px;  /* Décale le tableau plus bas */
   height: calc(100vh - 60px); /* Ajuste la hauteur disponible pour le tableau */
   overflow: visible;  /* Retire le scroll horizontal du container */
 }
 
 /* Table */
 .reclamation-table {
+   font-weight: 600;
   width: 100%;
   border-collapse: collapse;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  font-size: 15px;
-  table-layout: fixed;  /* Garantit que les colonnes auront une largeur fixe */
-  max-height: 500px;  /* Limite la hauteur du tableau */
-  overflow-y: auto;  /* Permet uniquement le scroll vertical */
-  overflow-x: hidden;  /* Empêche le scroll horizontal */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  table-layout: fixed;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
 }
 
 /* Table Header */
 .reclamation-table th {
-  padding: 16px 20px;
-  background-color: #f7f9fb;
-  color: #2f3b52;
+  padding: 12px 18px;
+  background-color: #0a1827;
+  color: #ffffff;
   font-weight: 600;
   text-align: left;
-  border-bottom: 1px solid #dfe6ec;
-  white-space: nowrap;  /* Empêche le retour à la ligne dans les en-têtes */
+  border-bottom: 2px solid #0a1827;
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Ajoute des "..." si le texte est trop long */
-  max-width: 200px;  /* Limite la largeur des colonnes */
+  text-overflow: ellipsis;
+  max-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease;
+}
+
+/* Table Header Hover */
+.reclamation-table th:hover {
+  background-color: #444444;
 }
 
 /* Table Body */
 .reclamation-table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid #ecf0f1;
+  padding: 10px 16px;
+  border-bottom: 1px solid #000000;
   word-break: break-word;
   vertical-align: top;
-  white-space: nowrap;  /* Empêche le retour à la ligne dans les cellules */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Ajoute des "..." si le texte est trop long */
-  max-width: 200px;  /* Limite la largeur des colonnes */
-}
-
-/* Hover Row */
-.reclamation-table tr:hover {
-  background-color: #f9fafc;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  color: #333;
   transition: background-color 0.3s ease;
 }
+
+/* Hover Effect on Table Row */
+.reclamation-table tr:hover {
+  background-color: #e9e9e9;
+  transform: scale(1.01); /* Slight zoom effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Zebra Striping for Table Rows */
+.reclamation-table tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reclamation-table th, .reclamation-table td {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}
+
 
 /* Action Buttons Container */
 .action-group {
   display: flex;
   gap: 8px;
-  flex-wrap: nowrap; /* Évite le retour à la ligne des boutons */
+  flex-wrap: nowrap; /* Keeps buttons on the same line */
+  justify-content: center; /* Centers the buttons horizontally */
+  align-items: center;
 }
 
 /* Action Buttons */
 .action-btn {
-  padding: 8px 14px;
-  font-size: 16px;
-  border-radius: 6px;
+  padding: 4px 8px;           /* Tighter padding for a smaller footprint */
+  font-size: 12px;            /* Slightly smaller font */
+  border-radius: 8px;         /* Softer, smaller corners */
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.3s ease;
   color: white;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;           /* Slightly lighter weight for a friendlier feel */
   white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;                   /* Small space between icon and text */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .action-btn i {
-  margin-right: 5px; /* Espace entre l'icône et le texte */
+  font-size: 14px;            /* Smaller icon size to match button scale */
 }
+.small-column {
+  width: 80px; /* or any value you feel fits your layout */
+  text-align: center;
+}
+.small-column2 {
+  width: 140px; /* or any value you feel fits your layout */
+  text-align: center;
+}
+
 
 /* View Button */
 .view-btn {
-  background-color: #2980b9;
+  background-color: #3498db;  /* Lighter, more compatible blue */
+  border: 2px solid transparent;
+}
+
+.view-btn:hover {
+  background-color: #2980b9;  /* Darker blue on hover */
+  border-color: #2980b9;
 }
 
 /* Delete Button */
 .delete-btn {
-  background-color: #c0392b;
+  background-color: #e74c3c;  /* Lighter, more compatible red */
+  border: 2px solid transparent;
 }
 
+.delete-btn:hover {
+  background-color: #c0392b;  /* Darker red on hover */
+  border-color: #c0392b;
+}
+
+/* Hover Effect on Action Buttons */
 .action-btn:hover {
   transform: scale(1.05);
-  opacity: 0.9;
+  opacity: 0.85;
 }
+
+/* Focus Effect for Buttons */
+.action-btn:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
 
 /* Badge */
 .badge {
@@ -121,7 +174,13 @@ html, body {
   color: #fff;
   text-transform: capitalize;
   transition: background-color 0.3s ease;
+  width: 9ch;                 /* Fixed width for 9 characters */
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
 
 /* Status Badge Colors */
 .badge-pending {
@@ -175,9 +234,35 @@ html, body {
     padding: 6px 10px;
   }
 
-  .page-title {
-    font-size: 24px;
-  }
+ .page-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0 30px;
+}
+
+.page-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: #34495e;
+  text-align: center;
+  position: relative;
+  padding-bottom: 12px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.page-title::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 4px;
+  background-color: #3498db;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  border-radius: 2px;
+}
+
 
   .reclamation-table {
     font-size: 14px;

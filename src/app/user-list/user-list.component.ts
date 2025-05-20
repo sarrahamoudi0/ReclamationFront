@@ -14,6 +14,8 @@ import { AdminCreateUserRequest } from '../models/AdminCreateUser';
 export class UserListComponent implements OnInit {
   users: User[] = [];  // Holds the list of users
   errorMessage: string = '';  
+  sortColumn = 'lastname'; // default sort column
+sortDirection: 'asc' | 'desc' = 'asc';
 
   selectedUser: User = {} as User;  
   newUser: AdminCreateUserRequest = {
@@ -165,4 +167,36 @@ deleteUser(user: User): void {
   displayError(): string {
     return this.errorMessage;
   }
+
+  // Add this inside your UserListComponent class, e.g. just after your existing properties
+
+get sortedUsers(): User[] {
+  // Return a sorted copy of users
+  return [...this.users].sort((a, b) => {
+    const col = this.sortColumn as keyof User;
+    const valA = (a[col] || '').toString().toLowerCase();
+    const valB = (b[col] || '').toString().toLowerCase();
+
+    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+sortBy(column: string): void {
+  if (this.sortColumn === column) {
+    // toggle sort direction
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.sortColumn = column;
+    this.sortDirection = 'asc';
+  }
+}
+
+selectUser(user: User): void {
+  this.selectedUser = user;
+}
+
+
+  
 }
