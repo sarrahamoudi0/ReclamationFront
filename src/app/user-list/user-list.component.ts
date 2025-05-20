@@ -16,6 +16,8 @@ export class UserListComponent implements OnInit {
   errorMessage: string = '';  
   sortColumn = 'lastname'; // default sort column
 sortDirection: 'asc' | 'desc' = 'asc';
+expandedIndex: number | null = null;
+editingEmailIndex: number | null = null;
 
   selectedUser: User = {} as User;  
   newUser: AdminCreateUserRequest = {
@@ -197,6 +199,31 @@ selectUser(user: User): void {
   this.selectedUser = user;
 }
 
+getRoleBadgeInfo(role: string): { label: string, cssClass: string, icon: string } {
+  switch (role) {
+    case 'ROLE_ADMIN':
+      return { label: 'Admin', cssClass: 'admin', icon: 'fas fa-user-shield' };
+    case 'ROLE_AGENT':
+      return { label: 'Agent', cssClass: 'agent', icon: 'fas fa-user-tie' };
+    case 'ROLE_USER':
+      return { label: 'User', cssClass: 'user', icon: 'fas fa-user' };
+    default:
+      return { label: role.replace('ROLE_', ''), cssClass: 'user', icon: 'fas fa-user' };
+  }
+}
+
+toggleExpanded(index: number) {
+  this.expandedIndex = this.expandedIndex === index ? null : index;
+}
+
+startEditingEmail(index: number) {
+  this.editingEmailIndex = index;
+}
+
+stopEditingEmail() {
+  this.editingEmailIndex = null;
+  // Here you could call a service to update the user email live
+}
 
   
 }

@@ -1,22 +1,19 @@
-<!-- Font Awesome for icons -->
+<!-- Sidebar Component -->
 <app-sideabr-admin></app-sideabr-admin>
 
-<!-- Bootstrap CSS -->
+<!-- External CSS Libraries -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Font Awesome CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<!-- Add User Button -->
-<div class="d-flex justify-content-end mb-3">
-  <button class="btn btn-success btn-lg shadow-sm" (click)="openAddUserForm()" title="Ajouter un utilisateur">
-    <i class="fas fa-user-plus me-2"></i> Ajouter un utilisateur
-  </button>
-</div>
-
-<!-- Table Wrapper for centering and width control -->
-<div class="table-wrapper">
+<!-- Add User Button & Table Wrapper -->
+<div class="table-wrapper position-relative">
   <div class="table-responsive mt-4">
+    <div class="d-flex justify-content-end mb-2">
+      <button class="btn-add-user" (click)="openAddUserForm()" title="Ajouter un utilisateur">
+        <i class="fas fa-user-plus"></i> Ajouter
+      </button>
+    </div>
+
     <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
       <thead class="table-dark">
         <tr>
@@ -35,18 +32,22 @@
           <td>{{ user.email }}</td>
           <td>{{ user.phone || '—' }}</td>
           <td>
-            <span *ngFor="let role of user.roles" class="badge bg-info text-dark me-1">
-              {{ getRole(user.roles) }}
-            </span>
+            <ng-container *ngFor="let role of user.roles">
+              <span
+                class="role-badge"
+                [ngClass]="getRoleBadgeInfo(role).cssClass"
+                [title]="getRoleBadgeInfo(role).label">
+                <i [class]="getRoleBadgeInfo(role).icon"></i>
+                {{ getRoleBadgeInfo(role).label }}
+              </span>
+            </ng-container>
           </td>
           <td>
-            <button *ngIf="user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_AGENT')" 
-                    class="btn btn-outline-primary btn-sm me-2 rounded-pill shadow-sm" 
-                    (click)="openUpdateModal(user)" title="Modifier">
-              <i class="fas fa-pen"></i>
+            <button class="btn-update" title="Modifier" (click)="openUpdateModal(user)">
+              <i class="fas fa-pencil-alt"></i>
             </button>
-            <button class="btn btn-outline-danger btn-sm rounded-pill shadow-sm" (click)="deleteUser(user)" title="Supprimer">
-              <i class="fas fa-trash"></i>
+            <button class="btn-delete" title="Supprimer" (click)="deleteUser(user)">
+              <i class="fas fa-trash-alt"></i>
             </button>
           </td>
         </tr>
@@ -55,16 +56,16 @@
   </div>
 </div>
 
-<!-- Modal for updating user -->
+<!-- Update User Modal -->
 <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateUserModalLabel">Modifier un utilisateur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="updateUser()">
+      <form (ngSubmit)="updateUser()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateUserModalLabel">Modifier un utilisateur</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
           <div class="mb-3">
             <label for="firstname" class="form-label">Prénom</label>
             <input type="text" class="form-control" id="firstname" [(ngModel)]="selectedUser.firstname" name="firstname" required>
@@ -85,23 +86,25 @@
             <label for="roles" class="form-label">Rôle</label>
             <input type="text" class="form-control" id="roles" [(ngModel)]="selectedUser.roles" name="roles" readonly>
           </div>
+        </div>
+        <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Mettre à jour</button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-<!-- Modal for adding user -->
+<!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="addUser()">
+      <form (ngSubmit)="addUser()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
           <div class="mb-3">
             <label for="firstnameAdd" class="form-label">Prénom</label>
             <input type="text" class="form-control" id="firstnameAdd" [(ngModel)]="newUser.firstname" name="firstname" required>
@@ -129,12 +132,14 @@
             <label for="passwordAdd" class="form-label">Mot de passe</label>
             <input type="password" class="form-control" id="passwordAdd" [(ngModel)]="newUser.password" name="password" required>
           </div>
+        </div>
+        <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Ajouter</button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap 5 JS Bundle (includes modal JS) -->
+<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

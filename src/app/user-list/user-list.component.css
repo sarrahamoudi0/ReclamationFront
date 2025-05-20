@@ -1,155 +1,232 @@
-/* Wrapper styling */
+/* ========== Table Wrapper ========== */
 .table-wrapper {
   max-width: 900px;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 1.5rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem 2rem;
+  background: #f9f9f9;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(10, 24, 39, 0.2);
+  padding: 2rem;
+  position: relative;
+  color: #0a1827;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Table base */
+.table-wrapper .table-responsive {
+  margin-top: 3.5rem;
+}
+
+/* ========== Add User Button ========== */
+.btn-add-user {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  background-color: #e47429;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(228, 116, 41, 0.5);
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.btn-add-user:hover {
+  background-color: #ff9a3c;
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(255, 154, 60, 0.6);
+}
+
+/* ========== Table ========== */
 table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 12px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 15px;
+  color: #0a1827;
 }
 
-/* Header styling */
-.table-header tr {
-  background-color: #2467d6;
+/* Header */
+.table-dark {
+  background-color: #0a1827 !important;
   color: white;
-  font-weight: 600;
-  border-radius: 1rem;
 }
 
-.table-header th {
+.table-dark th {
   padding: 16px 20px;
-  position: relative;
-  user-select: none;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.sortable {
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-
-.sortable:hover {
-  color: #d0e6ff;
-}
-
-.sort-icon {
-  font-size: 0.75rem;
-  margin-left: 6px;
-  color: rgba(255, 255, 255, 0.75);
-  transition: transform 0.3s ease;
-}
-
-/* Body rows */
-tbody tr.user-row {
-  background: #f7f9fc;
+/* Rows */
+tbody tr {
+  background: white;
   border-radius: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(74, 90, 106, 0.1);
 }
 
-tbody tr.user-row:hover {
-  background-color: #e4f0ff;
-  transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 12px 24px rgba(36, 103, 214, 0.25);
+tbody tr:hover {
+  background-color: #fff3e6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(228, 116, 41, 0.25);
 }
 
-tbody tr.selected {
-  background-color: #bbd7ff;
-  box-shadow: 0 0 15px rgba(36, 103, 214, 0.5);
-}
-
-/* Cells */
+/* Table cells */
 td {
   padding: 14px 18px;
   vertical-align: middle;
   border: none !important;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: #0a1827;
 }
 
-/* Rounded corners on first/last cells */
-tbody tr.user-row td:first-child {
+tbody tr td:first-child {
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
 }
 
-tbody tr.user-row td:last-child {
+tbody tr td:last-child {
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
 }
 
-/* Role badges */
+/* ========== Role Badges ========== */
 .role-badge {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 13px;
-  padding: 6px 14px;
-  border-radius: 30px;
+  width: 100px;
+  height: 36px;
+  border-radius: 50px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  cursor: default;
   user-select: none;
-  text-transform: capitalize;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.role-badge.admin {
-  background: linear-gradient(135deg, #f2709c 0%, #ff9472 100%);
-  box-shadow: 0 3px 8px rgba(242, 112, 156, 0.7);
-}
-
-.role-badge.agent {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  box-shadow: 0 3px 8px rgba(0, 242, 254, 0.7);
-}
-
-/* Buttons */
-.btn-outline-primary, .btn-outline-danger {
-  border-radius: 50px;
-  padding: 6px 14px;
+.role-badge i {
   font-size: 14px;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.btn-outline-primary:hover {
-  background-color: #2467d6;
+/* Admin */
+.role-badge.admin {
+  background: linear-gradient(135deg, #e47429, #ff9a3c);
+  box-shadow: 0 4px 12px rgba(228, 116, 41, 0.6);
+}
+
+.role-badge.admin:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(255, 154, 60, 0.8);
+}
+
+/* Agent */
+.role-badge.agent {
+  background: linear-gradient(135deg, #0a1827, #1f2a40);
+  box-shadow: 0 4px 12px rgba(10, 24, 39, 0.6);
+}
+
+.role-badge.agent:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(31, 42, 64, 0.8);
+}
+
+/* User */
+.role-badge.user {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.6);
+}
+
+.role-badge.user:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(53, 122, 189, 0.8);
+}
+
+/* ========== Action Buttons ========== */
+.btn-update,
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  gap: 6px;
+}
+
+.btn-update {
+  background-color: #f2c078;
+  color: #0a1827;
+  border: none;
+}
+
+.btn-update:hover {
+  background-color: #e1b85a;
+  color: #081426;
+}
+
+.btn-delete {
+  background-color: #d9534f;
   color: white;
-  transform: scale(1.15);
-  box-shadow: 0 6px 15px rgba(36, 103, 214, 0.5);
+  border: none;
 }
 
-.btn-outline-danger:hover {
-  background-color: #e74c3c;
-  color: white;
-  transform: scale(1.15);
-  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.5);
+.btn-delete:hover {
+  background-color: #c13f3a;
 }
 
-/* Responsive tweaks */
+.btn-update i,
+.btn-delete i {
+  font-size: 16px;
+}
+
+/* Optional Circular Outline Buttons (if reused elsewhere) */
+.btn-outline-primary,
+.btn-outline-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 18px;
+  border-width: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* ========== Responsive Tweaks ========== */
 @media (max-width: 768px) {
   .table-wrapper {
-    padding: 1rem 1rem;
+    padding: 1rem;
   }
-  
+
+  .btn-add-user {
+    top: 0.5rem;
+    right: 1rem;
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
   table {
     font-size: 14px;
-  }
-  
-  .sort-icon {
-    display: none; /* Hide sort icons on small */
-  }
-  
-  tbody tr.user-row:hover {
-    transform: none;
-    box-shadow: none;
   }
 }
