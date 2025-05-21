@@ -141,6 +141,25 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);  // Return the message as part of a JSON object
     }
 
+    @PutMapping("/update-user-role/{id}")
+    public ResponseEntity<String> updateUserRole(@PathVariable String id, @RequestBody Map<String, String> body) {
+        String roleName = body.get("role");
+        if (roleName == null) {
+            return ResponseEntity.badRequest().body("Role must be provided");
+        }
+
+        try {
+            boolean updated = service.updateUserRole(id, roleName);
+            if (!updated) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok("Role updated successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 
     // Endpoint to delete a user
     @DeleteMapping("/delete-user/{id}")

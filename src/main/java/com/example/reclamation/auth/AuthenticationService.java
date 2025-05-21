@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -302,6 +303,30 @@ public class AuthenticationService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public boolean updateUserRole(String userId, String roleName) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return false; // User not found
+        }
+        User user = userOpt.get();
+
+        try {
+            Role newRole = Role.valueOf(roleName);
+
+            // Allow only ROLE_AGENT or ROLE_ADMIN for updates
+            if (newRole != Role.ROLE_AGENT && newRole != Role.ROLE_ADMIN) {
+                throw new IllegalArgumentException("Role must be either ROLE_AGENT or ROLE_ADMIN");
+            }
+
+            user.setRole(newRole);
+            userRepository.save(user);
+            return true;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid or forbidden role: " + roleName);
+        }
+    }
+
 
 }
 

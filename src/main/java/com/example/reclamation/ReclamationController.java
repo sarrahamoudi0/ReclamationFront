@@ -178,4 +178,13 @@ public class ReclamationController {
             @RequestParam String idSousCategorie) {
         return reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie);
     }
+
+    @PutMapping("/{idReclamation}/update-categorie")
+    public Reclamation updateCategorieToReclamation(
+            @PathVariable String idReclamation,
+            @RequestParam String idCategorie,
+            @RequestParam String idSousCategorie) {
+        return reclamationService.updateCategorieOfReclamation(idReclamation, idCategorie, idSousCategorie);
+    }
+
 }

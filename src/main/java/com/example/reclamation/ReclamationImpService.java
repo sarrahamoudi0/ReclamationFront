@@ -14,6 +14,8 @@ public class ReclamationImpService implements IReclamationService {
 
     @Autowired
     private CategorieRepository categorieRepository;
+    @Autowired
+    private SousCategorieRepository sousCategorieRepository;
 
     @Override
     public Reclamation createReclamation(Reclamation reclamation, String idCategorie, String idSousCategorie) {
@@ -133,4 +135,27 @@ public class ReclamationImpService implements IReclamationService {
 
         return reclamationRepository.save(reclamation);
     }
+
+
+@Override
+    public Reclamation updateCategorieOfReclamation(String idReclamation, String idCategorie, String idSousCategorie) {
+        Reclamation reclamation = getReclamationById(idReclamation); // méthode déjà existante
+
+        Categorie categorie = categorieRepository.findById(idCategorie)
+                .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
+        SousCategorie sousCategorie = sousCategorieRepository.findById(idSousCategorie)
+                .orElseThrow(() -> new RuntimeException("Sous-catégorie non trouvée"));
+
+        boolean sousCategorieValide = categorie.getSousCategories().stream()
+                .anyMatch(sc -> sc.getIdSousCategorie().equals(idSousCategorie));
+        if (!sousCategorieValide) {
+            throw new RuntimeException("La sous-catégorie ne correspond pas à cette catégorie");
+        }
+
+        reclamation.setCategorie(categorie);
+        reclamation.setSousCategorie(sousCategorie);
+
+        return reclamationRepository.save(reclamation);
+    }
+
 }

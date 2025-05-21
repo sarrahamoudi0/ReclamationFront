@@ -16,4 +16,5 @@ public interface IReclamationService {
      Reclamation assignCategorieToReclamation(String idReclamation, String idCategorie);
     Reclamation assignOneCategorieToReclamation(String idReclamation, String idCategorie, String idSousCategorie);
 
+    Reclamation updateCategorieOfReclamation(String idReclamation, String idCategorie, String idSousCategorie);
 }
