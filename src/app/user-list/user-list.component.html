@@ -31,17 +31,29 @@
           <td>{{ user.firstname }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone || '—' }}</td>
-          <td>
-            <ng-container *ngFor="let role of user.roles">
-              <span
-                class="role-badge"
-                [ngClass]="getRoleBadgeInfo(role).cssClass"
-                [title]="getRoleBadgeInfo(role).label">
-                <i [class]="getRoleBadgeInfo(role).icon"></i>
-                {{ getRoleBadgeInfo(role).label }}
-              </span>
-            </ng-container>
-          </td>
+         <td>
+<div *ngFor="let role of user.roles; let i = index" class="role-badge-wrapper">
+  <span
+    class="role-badge"
+    [ngClass]="getRoleBadgeInfo(role).cssClass"
+    (click)="toggleRoleDropdown(user, i)">
+    <i [class]="getRoleBadgeInfo(role).icon"></i>
+    {{ getRoleBadgeInfo(role).label }}
+  </span>
+
+  <div *ngIf="isDropdownOpen(user, i) && isUserAdminOrAgent(user)" class="dropdown-menu show">
+    <button 
+      *ngFor="let r of availableRoles"
+      class="dropdown-item"
+      (click)="onRoleClick($event, user.id!, r)">
+      {{ getRoleBadgeInfo(r).label }}
+    </button>
+  </div>
+</div>
+
+ 
+</td>
+
           <td>
             <button class="btn-update" title="Modifier" (click)="openUpdateModal(user)">
               <i class="fas fa-pencil-alt"></i>

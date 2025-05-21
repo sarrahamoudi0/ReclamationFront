@@ -35,6 +35,18 @@ export class AuthenticationService {
     );
   }
 
+  updateUserRole(userId: string, newRole: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/update-user-role/${userId}`, { role: newRole }, {
+    responseType: 'text' as 'json'
+  }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('Error updating role:', error);
+      return throwError(() => new Error('Error occurred while updating the role.'));
+    })
+  );
+}
+
+
   // Connexion de l'utilisateur et récupération du token d'authentification
   login(request: AuthenticationRequest): Observable<AuthenticationResponse> {
     return this.http.post<AuthenticationResponse>(`${this.apiUrl}/authenticate`, request).pipe(

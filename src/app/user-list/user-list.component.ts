@@ -18,6 +18,72 @@ export class UserListComponent implements OnInit {
 sortDirection: 'asc' | 'desc' = 'asc';
 expandedIndex: number | null = null;
 editingEmailIndex: number | null = null;
+availableRoles = [UserRole.ADMIN, UserRole.AGENT]; 
+roleDropdownStates: Map<string, number> = new Map();
+
+
+toggleRoleDropdown(user: User, roleIndex: number) {
+  const userId = user.id!;
+  if (this.roleDropdownStates.get(userId) === roleIndex) {
+    this.roleDropdownStates.delete(userId);
+  } else {
+    this.roleDropdownStates.set(userId, roleIndex);
+  }
+}
+
+isDropdownOpen(user: User, roleIndex: number): boolean {
+  const userId = user.id!;
+  return this.roleDropdownStates.get(userId) === roleIndex;
+}
+
+
+changeUserRole(userId: string, newRole: string): void {
+  let formattedRole = newRole.toUpperCase();
+  if (!formattedRole.startsWith('ROLE_')) {
+    formattedRole = 'ROLE_' + formattedRole;
+  }
+
+  this.authenticationService.updateUserRole(userId, formattedRole).subscribe({
+    next: () => {
+      console.log('Role updated successfully');
+
+      // Update the local users array immediately:
+      const user = this.users.find(u => u.id === userId);
+      if (user) {
+        user.roles = [formattedRole]; // Assuming only one role at a time
+        // Or if your app supports multiple roles, update accordingly
+      }
+      
+      // Clear dropdown state so it closes after update
+      this.roleDropdownStates.delete(userId);
+      
+      // Manually trigger change detection if needed (should happen automatically)
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error updating role:', error);
+      alert('Error updating role. Check console for details.');
+    }
+  });
+}
+
+
+isUserAdminOrAgent(user: User): boolean {
+  return user.roles.some(role => role === 'ROLE_ADMIN' || role === 'ROLE_AGENT');
+}
+
+
+onRoleClick(event: MouseEvent, userId: string, role: string) {
+  event.stopPropagation(); // prevent dropdown from closing prematurely
+  console.log('Role clicked:', userId, role);
+  this.changeUserRole(userId, role);
+}
+
+
+closeDropdown(): void {
+  this.roleDropdownStates.clear();
+}
+
 
   selectedUser: User = {} as User;  
   newUser: AdminCreateUserRequest = {
