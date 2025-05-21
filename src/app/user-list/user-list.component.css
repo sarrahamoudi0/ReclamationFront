@@ -230,3 +230,23 @@ tbody tr td:last-child {
     font-size: 14px;
   }
 }
+
+.status-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;      /* largeur fixe */
+  height: 30px;      /* hauteur fixe */
+  font-size: 1rem;
+  padding: 0;        /* padding à zéro pour ne pas influer */
+  border-radius: 50px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap; /* éviter que le texte saute sur plusieurs lignes */
+  overflow: hidden;
+  text-overflow: ellipsis; /* couper le texte trop long avec ... */
+}
+
+.status-badge:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
+}

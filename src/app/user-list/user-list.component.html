@@ -22,7 +22,7 @@
           <th scope="col">Email</th>
           <th scope="col">Téléphone</th>
           <th scope="col">Rôle</th>
-          <th scope="col">Actions</th>
+          <th scope="col">Statut </th>
         </tr>
       </thead>
       <tbody>
@@ -54,14 +54,29 @@
  
 </td>
 
-          <td>
-            <button class="btn-update" title="Modifier" (click)="openUpdateModal(user)">
-              <i class="fas fa-pencil-alt"></i>
-            </button>
-            <button class="btn-delete" title="Supprimer" (click)="deleteUser(user)">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </td>
+<td>
+  <span
+    *ngIf="user.banned; else activeStatus"
+    class="badge bg-danger status-badge badge-lg rounded-pill"
+    style="cursor: pointer;"
+    (click)="toggleBan(user.id!)"
+    title="Cliquez pour débannir ce compte">
+    <i class="fas fa-user-slash me-1"></i> Banni
+  </span>
+
+  <ng-template #activeStatus>
+    <span
+      class="badge bg-success status-badge badge-lg rounded-pill"
+      style="cursor: pointer;"
+      (click)="toggleBan(user.id!)"
+      title="Cliquez pour bannir ce compte">
+      <i class="fas fa-user-check me-1"></i> Actif
+    </span>
+  </ng-template>
+</td>
+
+
+
         </tr>
       </tbody>
     </table>

@@ -291,5 +291,17 @@ stopEditingEmail() {
   // Here you could call a service to update the user email live
 }
 
+toggleBan(userId: string) {
+  this.authenticationService.banOrUnbanUser(userId).subscribe({
+    next: () => {
+      // rafraîchir la liste après modification
+      this.loadUsers();
+    },
+    error: err => {
+      console.error('Erreur lors du bannissement/débanissement', err);
+    }
+  });
+}
+
   
 }

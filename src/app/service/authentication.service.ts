@@ -46,6 +46,12 @@ export class AuthenticationService {
   );
 }
 
+banOrUnbanUser(userId: string): Observable<any> {
+  console.log('Toggle ban pour userId:', userId);
+  return this.http.put(`${this.apiUrl}/ban-user/${userId}`, {}, { responseType: 'text' as 'json' });
+}
+
+
 
   // Connexion de l'utilisateur et récupération du token d'authentification
   login(request: AuthenticationRequest): Observable<AuthenticationResponse> {
@@ -233,6 +239,8 @@ deleteUser(userId: string): Observable<any> {
     responseType: 'text' as 'json'  // 👈 This prevents JSON parsing error
   });
 }
+
+
 
 
 
