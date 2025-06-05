@@ -284,5 +284,3 @@ getUserImage(comment: any): string {
 
 
 }
-
-

@@ -1,1 +1,130 @@
+<app-navbar></app-navbar>
+<div class="main-container" *ngIf="reclamation">
+  <!-- Left Side: Reclamation Details -->
+  <div class="reclamation-details">
+    <div class="reclamation-card">
+      <!-- Category (on the opposite side of Statut) -->
+      <div class="categorie-container">
+        <span class="categorie-badge">
+          {{ reclamation.categorie?.nomCategorie }}
+          &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
+        </span>
+      </div>
+      <!-- Statut -->
+      <div class="statut-container">
+        <span [ngClass]="getStatutClass(reclamation.statut)" class="statut-badge">
+          {{ reclamation.statut }}
+        </span>
+      </div>
+      <!-- Infos -->
+      <div class="reclamation-info">
+        <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
+        <p class="reclamation-description">{{ reclamation.description }}</p>
+      </div>
+      <!-- Image -->
+      <button *ngIf="reclamation.image_reclamation" class="reclamation-image" [ngClass]="{'zoomed': isImageZoomed}" (click)="zoomImage()">
+        <img [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation" alt="Image de la réclamation" />
+      </button>
+      <!-- Footer -->
+      <div class="reclamation-footer">
+        <span class="created-date">
+          <i class="fas fa-clock"></i>
+          {{ reclamation.createdDate | date:'mediumDate' }}
+        </span>
+        <div class="action-buttons">
+          <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="delete-button" (click)="deleteReclamation(reclamation)" title="Supprimer">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Right Side: Comments Section -->
+  <div class="comments-section">
+    <div class="comments-header">
+      <h3>Commentaires</h3>
+    </div>
+    <div class="comments-container" #commentsContainer>
+      <div
+        *ngFor="let comment of commentaires"
+        [ngClass]="{
+          'comment-agent': comment.user?.roles?.includes('AGENT'),
+          'comment-user': comment.user?.roles?.includes('USER'),
+          'comment-admin': comment.user?.roles?.includes('ADMIN')
+        }"
+        class="comment-bubble"
+      >
+        <div class="comment-header">
+          <div class="user-info">
+            <img 
+              [src]="getUserImage(comment)" 
+              alt="Photo" 
+              class="user-image" 
+            />
+            <div class="user-details">
+              <strong>{{ comment.user?.firstname }} {{ comment.user?.lastname }}</strong>
+              <span class="role-tag">
+                {{ comment.user && comment.user.roles && comment.user.roles.length > 0 ? comment.user.roles[0] : '' }}
+              </span>
+            </div>
+          </div>
+          <span class="comment-time">
+            {{ comment.dateCommentaire | date:'short' }}
+          </span>
+        </div>
+        <p class="comment-content">{{ comment.contenu }}</p>
+      </div>
+    </div>
+    <div class="comment-input-container">
+      <textarea
+        [(ngModel)]="newCommentContent"
+        placeholder="Écrire un commentaire..."
+        rows="2"
+        class="comment-textarea"
+        (keyup.enter)="addComment()"
+      ></textarea>
+      <button 
+        class="send-btn" 
+        (click)="addComment()"
+        [disabled]="!newCommentContent.trim()"
+      >
+        Envoyer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Chargement -->
+<div *ngIf="!reclamation" class="loading-message">
+  <p>Chargement des informations de la réclamation...</p>
+</div>
+
+<!-- Pop-up mise à jour -->
+<div class="popup-modal" *ngIf="isPopupUpdateVisible">
+  <div class="popup-card">
+    <h3 class="popup-title">Modifier la Réclamation</h3>
+    <form (ngSubmit)="updateReclamation()">
+      <div class="form-group">
+        <label for="popup-titre">Titre</label>
+        <input type="text" id="popup-titre" name="titre" [(ngModel)]="reclamationToUpdate.titre" required>
+      </div>
+      <div class="form-group">
+        <label for="popup-description">Description</label>
+        <textarea id="popup-description" name="description" [(ngModel)]="reclamationToUpdate.description" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="popup-image">Nouvelle image (facultatif)</label>
+        <input type="file" id="popup-image" (change)="onFileSelected($event)" accept="image/*" placeholder="Choose an image">
+      </div>
+      <!-- Image Preview -->
+      <div class="popup-actions">
+        <button type="submit" class="btn-save">Enregistrer</button>
+        <button type="button" class="btn-cancel" (click)="closePopupUpdate()">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
