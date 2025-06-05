@@ -1,7 +1,9 @@
 <app-sideabr-admin></app-sideabr-admin>
+
 <div class="page-header">
-  <h1 class="page-title" style="text-align: center;padding-left: 10%;">📑 Les Réclamations</h1>
+  <h1 class="page-title" style="text-align: center; padding-left: 10%;">📑 Les Réclamations</h1>
 </div>
+
 <div class="table-container">
 
   <!-- Message si aucun résultat -->
@@ -13,23 +15,20 @@
   <table *ngIf="reclamations.length > 0" class="reclamation-table">
     <thead>
       <tr>
-                <th>User Name</th>
+        <th>User Name</th>
         <th>Title</th>
-                <th>Categorie</th>
-     <th class="small-column">Status</th>
-<th class="small-column">Priority</th>
-
-
-
-        <th class="small-column2" >Created Date</th>
+        <th>Categorie</th>
+        <th class="small-column">Status</th>
+        <th class="small-column">Priority</th>
+        <th class="small-column2">Created Date</th>
         <th class="small-column">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let reclamation of reclamations">
-               <td>{{ reclamation.user?.firstname }} {{ reclamation.user?.lastname }}</td>
+      <tr *ngFor="let reclamation of pagedReclamations">
+        <td>{{ reclamation.user?.firstname }} {{ reclamation.user?.lastname }}</td>
         <td>{{ reclamation.titre }}</td>
-         <td>{{ reclamation.categorie?.nomCategorie| slice:0:150 }}...</td>
+        <td>{{ reclamation.categorie?.nomCategorie | slice:0:150 }}...</td>
         <td>
           <span [ngClass]="getStatutClass(reclamation.statut)" class="badge">
             {{ reclamation.statut }}
@@ -40,22 +39,46 @@
             {{ reclamation.priorite }}
           </span>
         </td>
-
-
-
         <td>{{ getFormattedDate(reclamation.createdDate) }}</td>
         <td>
           <div class="action-group">
             <button class="action-btn view-btn" [routerLink]="['/reclamationadmin', reclamation.idReclamation]">
-              <i class="fas fa-eye"></i> <!-- Icône pour Voir -->
+              <i class="fas fa-eye"></i>
             </button>
-
             <button class="action-btn delete-btn" (click)="deleteReclamation(reclamation)">
-              <i class="fas fa-trash"></i> <!-- Icône pour Supprimer -->
+              🗑️
             </button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="totalPages > 1" style="text-align:center; margin-top: 20px;">
+  <button
+  (click)="goToPage(currentPage - 1)"
+  [disabled]="currentPage === 1"
+  [class.disabled]="currentPage === 1"
+  aria-label="Page précédente"
+>
+  <i class="fas fa-chevron-left"></i>
+</button>
+
+    <button *ngFor="let page of [].constructor(totalPages); let i = index"
+            (click)="goToPage(i + 1)"
+            [class.active]="currentPage === (i + 1)">
+      {{ i + 1 }}
+    </button>
+<button
+  (click)="goToPage(currentPage + 1)"
+  [disabled]="currentPage === totalPages"
+  [class.disabled]="currentPage === totalPages"
+  aria-label="Page suivante"
+>
+  <i class="fas fa-chevron-right"></i>
+</button>
+
+  </div>
+
 </div>

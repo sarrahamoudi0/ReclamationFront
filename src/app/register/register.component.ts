@@ -11,7 +11,11 @@ import { AuthenticationService } from '../service/authentication.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
-  errorMessage: string = '';  // Variable pour afficher les erreurs
+  errorMessage: string = '';  
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  imageFile?: File
+
 
   constructor(
     private fb: FormBuilder,
@@ -33,20 +37,30 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.controls;
   }
 
-  onSubmit() {
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-    const registrationRequest: RegistrationRequest = this.registerForm.value;
-    this.authService.register(registrationRequest).subscribe(
-      () => {
-        this.router.navigate(['/activate']);
-      },
-      (error) => {
-        this.errorMessage = error.message;  // Affiche l'erreur capturée ici
-        console.error(error);
-      }
-    );
+onFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.imageFile = input.files[0];
   }
+}
+
+onSubmit() {
+  if (this.registerForm.invalid) {
+    return;
+  }
+
+  const registrationRequest: RegistrationRequest = this.registerForm.value;
+
+  this.authService.register(registrationRequest, this.imageFile).subscribe(
+    () => {
+      this.router.navigate(['/activate']);
+    },
+    (error) => {
+      this.errorMessage = error.message;
+      console.error(error);
+    }
+  );
+}
+
+
 }

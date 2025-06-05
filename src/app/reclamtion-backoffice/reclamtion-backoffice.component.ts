@@ -13,6 +13,10 @@ export class ReclamtionBackofficeComponent implements OnInit {
 
   reclamations: Reclamation[] = [];
 
+  // Pagination
+  pageSize = 7;
+  currentPage = 1;
+
   constructor(private reclamationService: ReclamationService) {}
 
   ngOnInit(): void {
@@ -23,11 +27,29 @@ export class ReclamtionBackofficeComponent implements OnInit {
     this.reclamationService.getAllReclamations().subscribe(
       (data: Reclamation[]) => {
         this.reclamations = data;
+        this.currentPage = 1; // reset to first page when data is loaded/refreshed
       },
       (error) => {
         console.error('Error fetching reclamations:', error);
       }
     );
+  }
+
+  // Pagination getter : les reclamations affichées sur la page courante
+  get pagedReclamations(): Reclamation[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.reclamations.slice(start, start + this.pageSize);
+  }
+
+  // Nombre total de pages
+  get totalPages(): number {
+    return Math.ceil(this.reclamations.length / this.pageSize);
+  }
+
+  // Changer de page
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
   }
 
   getFormattedDate(date: Date | string | null | undefined): string {
@@ -41,10 +63,10 @@ export class ReclamtionBackofficeComponent implements OnInit {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false // Use 24-hour time format
+      hour12: false
     };
 
-    return formattedDate.toLocaleString('en-GB', options);  // Use en-GB locale for correct month abbreviations (e.g., "Oct")
+    return formattedDate.toLocaleString('en-GB', options);
   }
 
   getStatutClass(statut: Statut): string {
@@ -76,13 +98,12 @@ export class ReclamtionBackofficeComponent implements OnInit {
   }
 
   deleteReclamation(reclamation: Reclamation): void {
-    // Show confirmation dialog before deletion
     const confirmDelete = confirm('Are you sure you want to delete this reclamation?');
     if (confirmDelete) {
       this.reclamationService.deleteReclamation(reclamation).subscribe(
         () => {
           console.log('Reclamation deleted');
-          this.getAllReclamations(); // Re-fetch the list after deletion
+          this.getAllReclamations();
         },
         (error) => {
           console.error('Error deleting reclamation:', error);
@@ -91,7 +112,6 @@ export class ReclamtionBackofficeComponent implements OnInit {
     }
   }
 
-  // Safe access to user properties (with optional chaining)
   getUserFullName(reclamation: Reclamation): string {
     return `${reclamation.user?.firstname || 'Unknown'} ${reclamation.user?.lastname || 'Unknown'}`;
   }

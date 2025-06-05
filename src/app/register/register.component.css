@@ -218,5 +218,79 @@ div.right div div a {
 
 
 
+/* Container for file upload */
+.file-upload-container {
+  margin: 15px 0 20px 0;
+  text-align: left;
+  font-size: 14px;
+  color: #34495e;
+  position: relative;    /* added: establish positioning context */
+}
 
+/* Hidden actual input */
+.file-upload-input {
+  display: none;
+}
 
+/* Custom upload label - minimal style */
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #34495e;
+  cursor: pointer;
+  font-weight: 600;
+  border-bottom: 1.5px solid #34495e;
+  padding: 0;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.file-upload-label:hover {
+  color: #e47429;
+  border-color: #e47429;
+}
+
+/* Preview container - smaller and neat */
+.image-preview {
+  margin-top: 10px;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-preview.visible {
+  opacity: 1;
+  position: absolute;      /* added: take out of normal flow */
+  bottom: 70px;            /* adjust to sit just above the submit button */
+  left: 0;                 /* align with left edge of container */
+  margin: 0;               /* remove default top margin */
+  transform: none;         /* cancel any translateY */
+  z-index: 1;              /* ensure it sits on top */
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+/* 1) Annule la grosse marge autour de la zone d’upload */
+div.right .file-upload-container {
+  position: relative !important;    /* contexte pour l’aperçu */
+  margin: 0 !important;             /* supprime margin-top / bottom */
+}
+
+/* 2) Remonte la prévisualisation juste sous l’upload, avant le bouton */
+div.right .image-preview.visible {
+  position: relative !important;    /* redevenir “flux normal” */
+  margin-top: -60px !important;     /* remonte de 60px (à ajuster) */
+  margin-bottom: 20px !important;   /* espace vers le bouton */
+  transform: none !important;       /* annule tout translate */
+  z-index: 1 !important;            /* au-dessus si besoin */
+}

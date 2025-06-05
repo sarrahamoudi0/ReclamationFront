@@ -6,8 +6,8 @@
   <ul class="nav-links">
     <li>
       <a href="#">
-        <span class="icon"><i class="fa-solid fa-house"></i></span>
-        <span class="text">Home</span>
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span class="text">Profile</span>
       </a>
     </li>
     <li>
@@ -19,19 +19,19 @@
     <li>
       <a routerLink="/myreclamation">
         <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
-        <span class="text">My Reclamations</span>
+        <span class="text">Mes Reclamations</span>
       </a>
     </li>
     <li>
       <a href="#">
         <span class="icon"><i class="fa-solid fa-circle-info"></i></span>
-        <span class="text">About</span>
+        <span class="text">A propos</span>
       </a>
     </li>
 
     <button class="logout" *ngIf="isLoggedIn()" (click)="logout()">
       <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-      <span class="text">Logout</span>
+      <span class="text">Se déconnecter</span>
     </button>
   </ul>
 </nav>

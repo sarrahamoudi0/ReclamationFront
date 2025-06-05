@@ -1,38 +1,33 @@
-<!-- Card Container -->
+<!-- Main Container -->
 <app-sideabr-admin></app-sideabr-admin>
 
-<div class="container" *ngIf="reclamation">
+<div class="main-container" *ngIf="reclamation">
+  <!-- Left Side: Reclamation Details -->
+  <div class="reclamation-details">
     <div class="reclamation-card">
-<div class="categorie-container">
-  <span class="categorie-badge" (click)="toggleCategorieList($event)">
-    {{ reclamation.categorie?.nomCategorie }}
-    &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
-  </span>
+      <div class="categorie-container">
+        <span class="categorie-badge" (click)="toggleCategorieList($event)">
+          {{ reclamation.categorie?.nomCategorie }}
+          &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
+        </span>
 
-  <!-- Category List -->
-  <ul *ngIf="showCategorieList" class="categorie-list">
-    <li *ngFor="let cat of categories" (click)="selectCategorie(cat)">
-      {{ cat.nomCategorie }}
-    </li>
-  </ul>
+        <!-- Category List -->
+        <ul *ngIf="showCategorieList" class="categorie-list">
+          <li *ngFor="let cat of categories" (click)="selectCategorie(cat)">
+            {{ cat.nomCategorie }}
+          </li>
+        </ul>
 
-  <!-- Subcategory List (displayed next to the category list) -->
-  <ul *ngIf="selectedCategorie && showSousCategorieList" class="sous-categorie-list">
-    <li *ngFor="let sous of selectedCategorie.sousCategories" (click)="selectSousCategorie(sous)">
-      {{ sous.nomSousCategorie }}
-    </li>
-  </ul>
-</div>
-
-
-
-
-
+        <!-- Subcategory List -->
+        <ul *ngIf="selectedCategorie && showSousCategorieList" class="sous-categorie-list">
+          <li *ngFor="let sous of selectedCategorie.sousCategories" (click)="selectSousCategorie(sous)">
+            {{ sous.nomSousCategorie }}
+          </li>
+        </ul>
+      </div>
 
       <!-- Statut and Priorité -->
       <div class="statut-priorite-container">
-
-        <!-- Statut Badge -->
         <button
           [ngClass]="getStatutClass(reclamation.statut)"
           class="statut-badge"
@@ -40,7 +35,6 @@
           {{ reclamation.statut }}
         </button>
 
-        <!-- Priorité Badge styled like Statut -->
         <button
           [ngClass]="getPrioriteClass(reclamation.priorite)"
           class="priorite-badge"
@@ -48,7 +42,7 @@
           {{ reclamation.priorite }}
         </button>
 
-        <!-- List of Statuts shown when toggled -->
+        <!-- Statut List -->
         <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">
           <li
             *ngFor="let statut of statutValues"
@@ -58,7 +52,7 @@
           </li>
         </ul>
 
-        <!-- List of Priorités shown when toggled -->
+        <!-- Priorité List -->
         <ul *ngIf="showPrioriteList" class="priorite-list" [ngClass]="{'show': showPrioriteList}">
           <li
             *ngFor="let priorite of prioriteValues"
@@ -69,8 +63,7 @@
         </ul>
       </div>
 
-
-      <!-- Infos -->
+      <!-- Reclamation Info -->
       <div class="reclamation-info">
         <h3 class="reclamation-title">{{ reclamation.titre }}</h3>
         <p class="reclamation-description">{{ reclamation.description }}</p>
@@ -93,11 +86,63 @@
           🕒 {{ reclamation.createdDate | date:'mediumDate' }}
         </span>
       </div>
-
     </div>
   </div>
 
-  <!-- Loading Message -->
-  <div *ngIf="!reclamation" class="loading-message">
-    <p>Chargement des informations de la réclamation...</p>
+  <!-- Right Side: Comments Section -->
+  <div class="comments-section">
+    <div class="comments-header">
+      <h3>Commentaires</h3>
+      
+    </div>
+
+    <div class="comments-container" #commentsContainer>
+      <div
+        *ngFor="let comment of commentaires"
+        [ngClass]="{
+          'comment-agent': comment.user?.roles?.includes('AGENT'),
+          'comment-user': comment.user?.roles?.includes('USER'),
+          'comment-admin': comment.user?.roles?.includes('ADMIN')
+        }"
+        class="comment-bubble"
+      >
+        <div class="comment-header">
+          <div class="user-info">
+            <img 
+              [src]="getUserImage(comment)" 
+              alt="Photo" 
+              class="user-image" 
+            />
+            <div class="user-details">
+              <strong>{{ comment.user?.firstname }} {{ comment.user?.lastname }}</strong>
+              <span class="role-tag">
+                {{ comment.user && comment.user.roles && comment.user.roles.length > 0 ? comment.user.roles[0] : '' }}
+              </span>
+            </div>
+          </div>
+          <span class="comment-time">
+            {{ comment.dateCommentaire | date:'short' }}
+          </span>
+        </div>
+        <p class="comment-content">{{ comment.contenu }}</p>
+      </div>
+    </div>
+
+    <div class="comment-input-container">
+      <textarea
+        [(ngModel)]="newCommentContent"
+        placeholder="Écrire un commentaire..."
+        rows="2"
+        class="comment-textarea"
+        (keyup.enter)="addComment()"
+      ></textarea>
+      <button 
+        class="send-btn" 
+        (click)="addComment()"
+        [disabled]="!newCommentContent.trim()"
+      >
+        Envoyer
+      </button>
+    </div>
   </div>
+</div>

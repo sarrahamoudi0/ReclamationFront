@@ -10,29 +10,43 @@
         <span class="text">Dashboared</span>
       </a>
     </li>
+      <li>
+  <a routerLink="/categorie">
+    <span class="icon"><i class="fa-solid fa-user"></i></span> <!-- icône Profile -->
+    <span class="text">Profile</span>
+  </a>
+</li>
     <li>
    <a routerLink="/user">
-  <span class="icon"><i class="fa-solid fa-user"></i></span>
-  <span class="text">Users</span>
+  <span class="icon"><i class="fa-solid fa-users"></i></span>
+  <span class="text">Les Utilisateurs</span>
 </a>
 
     </li>
     <li>
       <a routerLink="/admin">
         <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
-        <span class="text">Reclamations</span>
+        <span class="text">Les Reclamations</span>
       </a>
     </li>
     <li>
     <a routerLink="/categorie">
   <span class="icon"><i class="fa-solid fa-list"></i></span>
-  <span class="text">Categorie</span>
+  <span class="text">Catégories</span>
 </a>
     </li>
 
+<li>
+  <a routerLink="/categorie">
+    <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span> <!-- icône Historique -->
+    <span class="text">Historique</span>
+  </a>
+</li>
+
+
     <button class="logout" *ngIf="isLoggedIn()" (click)="logout()">
       <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-      <span class="text">Logout</span>
+      <span class="text">Se déconnecter</span>
     </button>
   </ul>
 </nav>

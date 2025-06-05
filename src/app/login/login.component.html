@@ -1,14 +1,7 @@
 <!-- Login form -->
 <form (ngSubmit)="onLogin()" id="Login">
   <!-- Left section of the form -->
-  <div class="left">
-    <div>
-      <!-- Welcome message and registration link -->
-      <p>Hello, Welcome!</p>
-      <a>Don't have an account?</a>
-      <input routerLink="/register" type="submit" value="Register" />
-    </div>
-  </div>
+ 
 
   <!-- Right section of the form -->
   <div class="right">
@@ -16,7 +9,7 @@
       <!-- Login heading -->
        <br>
        <br>
-      <h1>Login</h1>
+      <h1>Connexion</h1>
       <br>
     <br>
 
@@ -47,13 +40,21 @@
 
       <!-- Forgot password link -->
       <br>
-      <a routerLink="/forgotpass" class="forgot-password-text">Forgot Password?</a>
+      <a routerLink="/forgotpass" class="forgot-password-text">Mot de passe oublié?</a>
 
       <!-- Login button -->
       <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
-        Login
+        Se connecter
       </button>
+    </div>
+  </div>
+  <div class="left">
+    <div>
+      <!-- Welcome message and registration link -->
+      <p>Bonjour, Bienvenue!</p>
+      <a>Vous n'avez pas un compte?</a>
+      <input routerLink="/register" type="submit" value="S'inscrire" />
     </div>
   </div>
 </form>

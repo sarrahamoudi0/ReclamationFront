@@ -80,8 +80,35 @@
         <div *ngIf="f['phone'].touched && f['phone'].invalid" class="error-message">
           Le numéro de téléphone est requis.
         </div>
+                <br><br>
 
-        <br><br>
+
+<div class="file-upload-container">
+  <input
+    id="pictureUpload"
+    type="file"
+    (change)="onFileSelected($event)"
+    accept="image/*"
+    class="file-upload-input"
+  />
+  <label for="pictureUpload" class="file-upload-label">
+    <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle;">
+    </span>
+    Télécharger votre photo
+  </label>
+
+  <div 
+    class="image-preview" 
+    [class.visible]="previewUrl"
+    *ngIf="previewUrl"
+  >
+    <img [src]="previewUrl" alt="Preview de la photo" />
+  </div>
+</div>
+
+<br>
+
+ 
         <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
 
       </div>

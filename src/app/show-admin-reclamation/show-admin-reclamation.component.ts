@@ -1,19 +1,23 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Reclamation } from '../models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
 import { CategorieService } from '../service/categorie.service'; 
+import { CommentaireService } from '../service/commentaire.service'; 
 import { Categorie } from "../models/Categorie";
 import { SousCategorie } from '../models/SousCategorie';
+import { Commentaire } from '../models/Commentaire';
 
 @Component({
   selector: 'app-show-admin-reclamation',
   templateUrl: './show-admin-reclamation.component.html',
   styleUrls: ['./show-admin-reclamation.component.css']
 })
-export class ShowAdminReclamationComponent implements OnInit {
+export class ShowAdminReclamationComponent implements OnInit, AfterViewChecked {
+  @ViewChild('commentsContainer') private commentsContainer!: ElementRef;
+  
   reclamation!: Reclamation;
     categories: Categorie[] = []; 
   isImageZoomed = false;
@@ -23,6 +27,11 @@ showCategorieList = false;
 showSousCategorieList = false;
 filteredSousCategories: SousCategorie[] = [];
 sousCategoriePosition = {};
+newCommentContent: string = '';
+commentaires: Commentaire[] = [];
+showCommentPopup = false;
+
+
 
 
 
@@ -39,6 +48,8 @@ sousCategoriePosition = {};
     private reclamationService: ReclamationService,
     private route: ActivatedRoute,
      private categorieService: CategorieService,
+     private commentaireService: CommentaireService,
+
     private router: Router
   ) {}
 
@@ -47,9 +58,23 @@ sousCategoriePosition = {};
       const idReclamation = params.get('id');
       if (idReclamation) {
         this.getReclamation(idReclamation);
+        this.loadCommentaires(idReclamation);
       }
     });
       this.getCategories();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const element = this.commentsContainer.nativeElement;
+      element.scrollTop = element.scrollHeight;
+    } catch (err) {
+      console.error('Error scrolling to bottom:', err);
+    }
   }
 
   getReclamation(idReclamation: string): void {
@@ -227,5 +252,37 @@ onClickOutside(event: MouseEvent): void {
 }
 
  
+loadCommentaires(idReclamation: string): void {
+  this.commentaireService.getCommentairesByReclamation(idReclamation).subscribe({
+    next: (comments) => {
+      this.commentaires = comments;
+      setTimeout(() => this.scrollToBottom(), 0);
+    },
+    error: (error) => console.error('Erreur chargement commentaires:', error)
+  });
+}
+
+addComment(): void {
+  if (!this.newCommentContent.trim() || !this.reclamation?.idReclamation) return;
+
+  this.commentaireService.addComment(this.reclamation.idReclamation, this.newCommentContent).subscribe({
+    next: (commentaire) => {
+      this.commentaires.push(commentaire);
+      this.newCommentContent = '';
+      setTimeout(() => this.scrollToBottom(), 0);
+    },
+    error: (error) => console.error('Erreur ajout commentaire:', error)
+  });
+}
+
+getUserImage(comment: any): string {
+  return comment.user?.image
+    ? 'data:image/jpeg;base64,' + comment.user.image
+    : 'assets/img/default-avatar.png';
+}
+
+
 
 }
+
+

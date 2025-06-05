@@ -21,19 +21,30 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router) {}
 
   // Enregistrement de l'utilisateur
-  register(request: RegistrationRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/register`, request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Erreur lors de l\'enregistrement :', error);
+// Updated register method to support optional image upload
+register(request: RegistrationRequest, imageFile?: File): Observable<void> {
+  const formData = new FormData();
 
-        if (error.status === 400 && typeof error.error === 'string' && error.error.includes('email')) {
-          return throwError(() => new Error('L\'email que vous avez entré existe déjà.'));
-        }
+  formData.append('user', new Blob([JSON.stringify(request)], { type: 'application/json' }));
 
-        return throwError(() => new Error('Une erreur s\'est produite pendant l\'inscription.'));
-      })
-    );
+  if (imageFile) {
+    formData.append('image', imageFile);
   }
+
+  return this.http.post<void>(`${this.apiUrl}/register`, formData).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('Erreur lors de l\'enregistrement :', error);
+
+      if (error.status === 400 && typeof error.error === 'string' && error.error.includes('email')) {
+        return throwError(() => new Error('L\'email que vous avez entré existe déjà.'));
+      }
+
+      return throwError(() => new Error('Une erreur s\'est produite pendant l\'inscription.'));
+    })
+  );
+}
+
+
 
   updateUserRole(userId: string, newRole: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/update-user-role/${userId}`, { role: newRole }, {

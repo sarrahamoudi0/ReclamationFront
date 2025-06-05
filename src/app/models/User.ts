@@ -11,4 +11,7 @@ export interface User {
     createdDate?: string; // ISO string, e.g., "2024-05-01T13:45:00"
     lastModifiedDate?: string;
      banned: boolean;
+    image?: string;
+
+
 }

@@ -1,18 +1,29 @@
-<!-- Sidebar Component -->
-<app-sideabr-admin></app-sideabr-admin>
+<div class="d-flex">
+  <!-- Sidebar on the left -->
+  <app-sideabr-admin></app-sideabr-admin>
 
-<!-- External CSS Libraries -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Main content on the right -->
+  <div class="flex-grow-1 p-3">
 
-<!-- Add User Button & Table Wrapper -->
-<div class="table-wrapper position-relative">
-  <div class="table-responsive mt-4">
-    <div class="d-flex justify-content-end mb-2">
-      <button class="btn-add-user" (click)="openAddUserForm()" title="Ajouter un utilisateur">
-        <i class="fas fa-user-plus"></i> Ajouter
-      </button>
-    </div>
+    <!-- External CSS Libraries (optional to move to head) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Add User Button & Table Wrapper -->
+    <div class="table-wrapper position-relative">
+
+      <div class="table-responsive mt-4">
+
+        <!-- Page title and Add Button -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="page-title">
+            <i class="fa fa-users me-2" aria-hidden="true"></i> Les Utilisateurs
+          </h2>
+          <button class="btn-add-user" (click)="openAddUserForm()" title="Ajouter un utilisateur">
+            <i class="fas fa-user-plus"></i> Ajouter
+          </button>
+        </div>
+
 
     <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
       <thead class="table-dark">
@@ -26,8 +37,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.lastname }}</td>
+        <tr  *ngFor="let user of pagedUsers">
+
+          <td>    <div class="user-info">
+       <img 
+      [src]="user.image ? 'data:image/jpeg;base64,' + user.image : 'assets/img/default-avatar.png'" 
+      alt="Photo" 
+      class="user-image"
+    />
+
+
+ {{ user.lastname }} </div></td>
           <td>{{ user.firstname }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone || '—' }}</td>
@@ -80,6 +100,31 @@
         </tr>
       </tbody>
     </table>
+    <!-- Pagination -->
+<div class="pagination-container" *ngIf="totalPages > 1" style="text-align: center; margin-top: 20px;">
+  <button
+    (click)="goToPage(currentPage - 1)"
+    [disabled]="currentPage === 1"
+    [class.disabled]="currentPage === 1"
+    aria-label="Previous page">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+
+  <button *ngFor="let page of [].constructor(totalPages); let i = index"
+          (click)="goToPage(i + 1)"
+          [class.active]="currentPage === (i + 1)">
+    {{ i + 1 }}
+  </button>
+
+  <button
+    (click)="goToPage(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+    [class.disabled]="currentPage === totalPages"
+    aria-label="Next page">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+
   </div>
 </div>
 
@@ -123,50 +168,92 @@
 </div>
 
 <!-- Add User Modal -->
+<!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form (ngSubmit)="addUser()">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg = plus large -->
+    <div class="modal-content shadow rounded-3">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="addUserModalLabel">
+          <i class="fas fa-user-plus me-2"></i> Ajouter un nouveau utilisateur
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <form #addUserForm="ngForm" (ngSubmit)="addUser()" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="firstname" class="form-label">Prénom <span class="text-danger">*</span></label>
+              <input type="text" id="firstname" name="firstname" class="form-control" [(ngModel)]="newUser.firstname" required />
+              <div *ngIf="addUserForm.submitted && !newUser.firstname" class="text-danger small mt-1">
+                Le prénom est requis.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="lastname" class="form-label">Nom <span class="text-danger">*</span></label>
+              <input type="text" id="lastname" name="lastname" class="form-control" [(ngModel)]="newUser.lastname" required />
+              <div *ngIf="addUserForm.submitted && !newUser.lastname" class="text-danger small mt-1">
+                Le nom est requis.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" id="email" name="email" class="form-control" [(ngModel)]="newUser.email" required email />
+              <div *ngIf="addUserForm.submitted && !newUser.email" class="text-danger small mt-1">
+                L'email est requis.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="phone" class="form-label">Téléphone</label>
+              <input type="tel" id="phone" name="phone" class="form-control" [(ngModel)]="newUser.phone" />
+            </div>
+
+            <div class="col-md-6">
+              <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
+              <input type="password" id="password" name="password" class="form-control" [(ngModel)]="newUser.password" required minlength="6" />
+              <div *ngIf="addUserForm.submitted && (!newUser.password || newUser.password.length < 6)" class="text-danger small mt-1">
+                Le mot de passe doit contenir au moins 6 caractères.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="role" class="form-label">Rôle</label>
+              <select id="role" name="role" class="form-select" [(ngModel)]="newUser.role">
+                <option [ngValue]="'ROLE_AGENT'">Agent</option>
+                <option [ngValue]="'ROLE_ADMIN'">Admin</option>
+              </select>
+            </div>
+
+            <div class="col-12 d-flex justify-content-between align-items-center mt-3">
+              <div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="enabled" [(ngModel)]="newUser.enabled" name="enabled" />
+                  <label class="form-check-label" for="enabled">Compte activé</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="accountLocked" [(ngModel)]="newUser.accountLocked" name="accountLocked" />
+                  <label class="form-check-label" for="accountLocked">Compte verrouillé</label>
+                </div>
+              </div>
+
+              <div>
+                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+          {{ errorMessage }}
         </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="firstnameAdd" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="firstnameAdd" [(ngModel)]="newUser.firstname" name="firstname" required>
-          </div>
-          <div class="mb-3">
-            <label for="lastnameAdd" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="lastnameAdd" [(ngModel)]="newUser.lastname" name="lastname" required>
-          </div>
-          <div class="mb-3">
-            <label for="emailAdd" class="form-label">Email</label>
-            <input type="email" class="form-control" id="emailAdd" [(ngModel)]="newUser.email" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label for="phoneAdd" class="form-label">Téléphone</label>
-            <input type="text" class="form-control" id="phoneAdd" [(ngModel)]="newUser.phone" name="phone">
-          </div>
-          <div class="mb-3">
-            <label for="rolesAdd" class="form-label">Rôle</label>
-            <select class="form-select" [(ngModel)]="newUser.role" name="role" id="rolesAdd" required>
-              <option [ngValue]="'ROLE_ADMIN'">Admin</option>
-              <option [ngValue]="'ROLE_AGENT'">Agent</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="passwordAdd" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="passwordAdd" [(ngModel)]="newUser.password" name="password" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Ajouter</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
+
 
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

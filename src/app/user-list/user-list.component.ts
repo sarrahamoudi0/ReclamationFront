@@ -6,6 +6,7 @@ import * as bootstrap from 'bootstrap';
 import { UserRole } from '../models/role';
 import { AdminCreateUserRequest } from '../models/AdminCreateUser';
 
+
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -20,6 +21,9 @@ expandedIndex: number | null = null;
 editingEmailIndex: number | null = null;
 availableRoles = [UserRole.ADMIN, UserRole.AGENT]; 
 roleDropdownStates: Map<string, number> = new Map();
+pageSize = 5;
+currentPage = 1;
+
 
 
 toggleRoleDropdown(user: User, roleIndex: number) {
@@ -302,6 +306,21 @@ toggleBan(userId: string) {
     }
   });
 }
+
+get pagedUsers(): User[] {
+  const start = (this.currentPage - 1) * this.pageSize;
+  return this.sortedUsers.slice(start, start + this.pageSize);
+}
+
+get totalPages(): number {
+  return Math.ceil(this.sortedUsers.length / this.pageSize);
+}
+
+goToPage(page: number): void {
+  if (page < 1 || page > this.totalPages) return;
+  this.currentPage = page;
+}
+
 
   
 }

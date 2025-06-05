@@ -1,4 +1,5 @@
 /* Container */
+
 .table-container {
   padding: 30px;
   background-color: transparent;  /* Fond transparent */
@@ -10,7 +11,7 @@
   max-width: calc(100% - 250px);  /* Réduit la largeur du tableau pour faire de la place pour le sidebar */
   margin-left: 250px; /* Décale le tableau vers la droite */
   margin-top: 50px;  /* Décale le tableau plus bas */
-  height: calc(100vh - 60px); /* Ajuste la hauteur disponible pour le tableau */
+
   overflow: visible;  /* Retire le scroll horizontal du container */
 }
 
@@ -98,70 +99,7 @@
   align-items: center;
 }
 
-/* Action Buttons */
-.action-btn {
-  padding: 4px 8px;           /* Tighter padding for a smaller footprint */
-  font-size: 12px;            /* Slightly smaller font */
-  border-radius: 8px;         /* Softer, smaller corners */
-  border: none;
-  cursor: pointer;
-  color: white;
-  text-align: center;
-  font-weight: 500;           /* Slightly lighter weight for a friendlier feel */
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;                   /* Small space between icon and text */
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-.action-btn i {
-  font-size: 14px;            /* Smaller icon size to match button scale */
-}
-.small-column {
-  width: 80px; /* or any value you feel fits your layout */
-  text-align: center;
-}
-.small-column2 {
-  width: 140px; /* or any value you feel fits your layout */
-  text-align: center;
-}
-
-
-/* View Button */
-.view-btn {
-  background-color: #3498db;  /* Lighter, more compatible blue */
-  border: 2px solid transparent;
-}
-
-.view-btn:hover {
-  background-color: #2980b9;  /* Darker blue on hover */
-  border-color: #2980b9;
-}
-
-/* Delete Button */
-.delete-btn {
-  background-color: #e74c3c;  /* Lighter, more compatible red */
-  border: 2px solid transparent;
-}
-
-.delete-btn:hover {
-  background-color: #c0392b;  /* Darker red on hover */
-  border-color: #c0392b;
-}
-
-/* Hover Effect on Action Buttons */
-.action-btn:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-/* Focus Effect for Buttons */
-.action-btn:focus {
-  outline: none;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-}
 
 
 /* Badge */
@@ -229,10 +167,7 @@
     font-size: 13px;
   }
 
-  .action-btn {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
+
 
  .page-header {
   display: flex;
@@ -277,4 +212,124 @@
   .table-container {
     overflow-x: visible; /* Retire le scroll horizontal */
   }
+}
+
+/* Action Buttons */
+.action-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.action-btn i {
+  font-size: 16px;
+}
+
+/* View button - Orange vif */
+.view-btn {
+  background-color: #ff7900;
+}
+
+.view-btn:hover {
+  background-color: #e06600;
+  transform: scale(1.05);
+}
+
+/* Edit button - Orange légèrement plus foncé */
+.edit-btn {
+  background-color: #e06600;
+}
+
+.edit-btn:hover {
+  background-color: #c25500;
+  transform: scale(1.05);
+}
+
+/* Delete button - Rouge classique */
+.delete-btn {
+  background-color: #e10600;
+}
+
+.delete-btn:hover {
+  background-color: #b80000;
+  transform: scale(1.05);
+}
+
+/* Disable button - Gris neutre */
+.disable-btn {
+  background-color: #cccccc;
+  color: #333;
+}
+
+.disable-btn:hover {
+  background-color: #999999;
+  transform: scale(1.05);
+}
+
+/* Focus state - Glow orange */
+.action-btn:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(255, 121, 0, 0.6);
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .action-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .action-btn i {
+    font-size: 14px;
+  }
+}
+.pagination-container {
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+margin-left: 470px;
+  margin-top: 20px;
+  user-select: none;
+}
+
+.pagination-container button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination-container button:hover:not(:disabled) {
+  background-color:rgba(255, 121, 0, 0.6);
+  color: white;
+}
+
+.pagination-container button:disabled {
+  cursor: default;
+  opacity: 0.5;
+  background-color: #e0e0e0;
+  color: #999;
+}
+
+.pagination-container button.active {
+  background-color: rgba(255, 121, 0, 0.6);
+  color: white;
+  font-weight: 700;
+  cursor: default;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.6);
 }
