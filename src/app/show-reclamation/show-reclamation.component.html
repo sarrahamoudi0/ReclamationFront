@@ -22,24 +22,31 @@
         <p class="reclamation-description">{{ reclamation.description }}</p>
       </div>
       <!-- Image -->
-      <button *ngIf="reclamation.image_reclamation" class="reclamation-image" [ngClass]="{'zoomed': isImageZoomed}" (click)="zoomImage()">
-        <img [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation" alt="Image de la réclamation" />
-      </button>
+      <div
+        *ngIf="reclamation.image_reclamation"
+        class="reclamation-image"
+        [ngClass]="{'zoomed': isImageZoomed}"
+        (click)="zoomImage()">
+        <img
+          [src]="'data:image/jpeg;base64,' + reclamation.image_reclamation"
+          alt="Image de la réclamation" />
+      </div>
       <!-- Footer -->
       <div class="reclamation-footer">
         <span class="created-date">
           <i class="fas fa-clock"></i>
           {{ reclamation.createdDate | date:'mediumDate' }}
         </span>
-        <div class="action-buttons">
-          <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="delete-button" (click)="deleteReclamation(reclamation)" title="Supprimer">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
+        
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <button class="update-button" (click)="openPopupUpdate(reclamation)" title="Modifier"    [style.visibility]="reclamation.statut === 'Nouveau' ? 'visible' : 'hidden'">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-button delete-button" (click)="deleteReclamation(reclamation)" title="Delete"   [style.visibility]="reclamation.statut === 'Nouveau' ? 'visible' : 'hidden'">
+          <i class="fas fa-trash-alt"></i> <!-- Trash icon for Delete -->
+        </button>
       </div>
+      
     </div>
   </div>
 
