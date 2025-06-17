@@ -69,21 +69,6 @@
         </ul>
       </div>
 
-      <div *ngIf="reclamation" style="display: flex; align-items: center; gap: 12px;">
-        <img
-          [src]="reclamation.user?.image ? 'data:image/jpeg;base64,' + reclamation?.user?.image : 'assets/img/default-avatar.png'"
-          alt="Photo de l'utilisateur"
-          style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"
-        />
-        <div style="display: flex; flex-direction: column; justify-content: center;">
-          <div style="font-weight: bold; font-size: 1.1em; line-height: 1.2;">
-            {{ reclamation.user?.firstname }} {{ reclamation.user?.lastname }}
-          </div>
-          <div style="font-size: 0.9em; color: #555; margin-top: 4px;">
-            📞 {{ reclamation.user?.phone }}
-          </div>
-        </div>
-      </div>
       
 
       <!-- Reclamation Info -->
@@ -108,6 +93,33 @@
         <span class="created-date">
           🕒 {{ reclamation.createdDate | date:'mediumDate' }}
         </span>
+        <button (click)="openTimelinePopup()">Afficher timeline</button>
+
+        <!-- Timeline Popup -->
+        <div
+          class="timeline-popup-overlay"
+          *ngIf="showTimelinePopup"
+          (click)="closeTimelinePopup()"
+        >
+          <div class="timeline-popup" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="closeTimelinePopup()">✖</button>
+
+            <h3>Timeline de la réclamation</h3>
+
+            <ul *ngIf="timelineEvents && timelineEvents.length > 0" class="timeline-list">
+              <li *ngFor="let event of timelineEvents" class="timeline-item">
+                <span class="timeline-timestamp">{{ event.timestamp | date: 'short' }}</span> -
+                <strong>{{ event.type }}</strong><br />
+                <span>{{ event.description }}</span>
+              </li>
+            </ul>
+
+            <div *ngIf="timelineEvents && timelineEvents.length === 0" class="no-events">
+              Aucun événement.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

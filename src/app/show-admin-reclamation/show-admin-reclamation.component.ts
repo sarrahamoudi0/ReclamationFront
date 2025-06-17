@@ -10,6 +10,7 @@ import { Categorie } from "../models/Categorie";
 import { SousCategorie } from '../models/SousCategorie';
 import { Commentaire } from '../models/Commentaire';
 import { User } from '../models/User';
+import { ReclamationEvent } from '../models/EventType';
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -33,9 +34,9 @@ commentaires: Commentaire[] = [];
 showCommentPopup = false;
 showInternalComments: boolean = false; 
 user?: User;
-
-
-
+timelineEvents: ReclamationEvent[] = [];
+showTimelinePopup: boolean = false;
+hoverBtn = false;
 
 
   statutValues: Statut[] = Object.values(Statut);
@@ -334,6 +335,25 @@ toggleCommentsMode(): void {
   }
 }
 
+loadTimelineEvents(idReclamation: string): void {
+  this.reclamationService.getEventsForReclamation(idReclamation).subscribe({
+    next: (events) => {
+      this.timelineEvents = events;
+    },
+    error: (err) => console.error('Erreur chargement timeline:', err)
+  });
+}
+openTimelinePopup(): void {
+  console.log('openTimelinePopup called');
+  if (this.reclamation?.idReclamation) {
+    this.loadTimelineEvents(this.reclamation.idReclamation);
+    this.showTimelinePopup = true;
+  }
+}
 
+
+closeTimelinePopup(): void {
+  this.showTimelinePopup = false;
+}
 
 }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Reclamation } from '../models/Reclamation';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
+import { ReclamationEvent } from '../models/EventType';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +71,10 @@ export class ReclamationService {
         idSousCategorie
       }
     });
+  }
+
+  getEventsForReclamation(idReclamation: string): Observable<ReclamationEvent[]> {
+    return this.http.get<ReclamationEvent[]>(`${this.apiUrl}/reclamation/${idReclamation}/events`);
   }
 }
 

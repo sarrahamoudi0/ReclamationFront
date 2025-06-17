@@ -811,3 +811,70 @@ background: #a8a8a8;
 }
 
 
+.btn-show-timeline {
+  padding: 6px 12px;
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.btn-show-timeline.btn-hover,
+.btn-show-timeline:hover {
+  background-color: #d48806;
+}
+.timeline-popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.timeline-popup {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.timeline-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.timeline-item {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.timeline-timestamp {
+  color: gray;
+  font-size: 12px;
+}
+
+.no-events {
+  color: gray;
+  font-style: italic;
+}
