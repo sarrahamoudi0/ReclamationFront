@@ -20,9 +20,21 @@
         </div>
         <div class="action-icons">
           <!-- Bouton pour ouvrir le pop-up sous-catégorie -->
+          <button
+  *ngIf="!isCategorieLinkedToReclamation(category)"
+  class="edit-icon"
+  (click)="editCategorie(category); $event.stopPropagation()"
+  title="Modifier"
+>✏️</button>
+<button
+  *ngIf="!isCategorieLinkedToReclamation(category)"
+  class="delete-icon"
+  (click)="deleteCategorie(category.idCategorie); $event.stopPropagation()"
+  title="Supprimer"
+>🗑️</button>
+
           <button class="add-sub-icon" (click)="openSubModal(category, $event)" title="Ajouter sous-catégorie">➕</button>
-          <button class="edit-icon" (click)="editCategorie(category); $event.stopPropagation()" title="Modifier">✏️</button>
-          <button class="delete-icon" (click)="deleteCategorie(category.idCategorie); $event.stopPropagation()" title="Supprimer">🗑️</button>
+         
         </div>
       </div>
     </div>

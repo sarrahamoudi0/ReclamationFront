@@ -14,6 +14,15 @@
   transition: width 0.3s ease; /* Smooth transition for width change */
   overflow: hidden;
 }
+.logo-container {
+  text-align: center;
+  padding: 10px;
+}
+
+.logo-img {
+  max-width: 100px;
+  height: auto;
+}
 
 /* Collapsed Sidebar */
 .navbar.collapsed {

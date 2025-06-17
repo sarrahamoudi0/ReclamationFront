@@ -3,6 +3,8 @@ import { CategorieService } from '../service/categorie.service';
 import { Categorie } from '../models/Categorie';
 import { ChangeDetectorRef } from '@angular/core';
 import { SousCategorie } from '../models/SousCategorie';
+import { Reclamation } from '../models/Reclamation';
+import { ReclamationService } from '../service/reclamation.service';
 
 @Component({
   selector: 'app-categorie',
@@ -13,6 +15,7 @@ export class CategorieComponent implements OnInit {
   categories: Categorie[] = [];
   categorieName: string = '';
   sousCategorieName: string = '';
+  reclamations: Reclamation[] = [];
 
   // Modals état
   isModalOpen = false;
@@ -24,10 +27,12 @@ export class CategorieComponent implements OnInit {
   currentCategorie: Categorie = { nomCategorie: '', sousCategories: [] };
   selectedCategory?: Categorie;
 
-  constructor(private categorieService: CategorieService) {}
+  constructor(private categorieService: CategorieService,   private reclamationService: ReclamationService) {}
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadReclamations();
+
   }
 
   // === Modal Catégorie ===
@@ -185,6 +190,21 @@ export class CategorieComponent implements OnInit {
       (error) => {
         console.error('Erreur de récupération des catégories:', error);
       }
+    );
+  }
+
+  loadReclamations(): void {
+    this.reclamationService.getAllReclamations().subscribe({
+      next: (data) => (this.reclamations = data),
+      error: (err) => console.error('Erreur récupération réclamations', err)
+    });
+  }
+
+  // Vérifie si une catégorie est liée à au moins une réclamation
+  isCategorieLinkedToReclamation(categorie: Categorie): boolean {
+    if (!categorie.idCategorie) return false;
+    return this.reclamations.some(
+      (r) => r.categorie?.idCategorie === categorie.idCategorie
     );
   }
 }

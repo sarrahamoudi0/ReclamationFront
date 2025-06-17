@@ -6,4 +6,8 @@ export class Commentaire {
   contenu!: string;
   dateCommentaire?: Date;
   user?: User;
-  reclamation?: Reclamation;}
+  reclamation?: Reclamation;
+  interne?: boolean;
+
+
+}

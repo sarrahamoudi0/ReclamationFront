@@ -19,6 +19,8 @@ export class CommentaireService {
     return this.http.post<Commentaire>(`${this.apiUrl}/${idReclamation}`, null, { params });
   }
 
+
+
   // Récupérer la liste des commentaires d'une réclamation
   getCommentairesByReclamation(idReclamation: string): Observable<Commentaire[]> {
     return this.http.get<Commentaire[]>(`${this.apiUrl}/commentaire/${idReclamation}`);
@@ -37,5 +39,14 @@ export class CommentaireService {
   // Récupérer un commentaire par son id
   getCommentaireById(id: string): Observable<Commentaire> {
     return this.http.get<Commentaire>(`${this.apiUrl}/getCommentaireById/${id}`);
+  }
+
+  addCommentInterne(idReclamation: string, contenu: string): Observable<Commentaire> {
+    const params = new HttpParams().set('contenu', contenu);
+    return this.http.post<Commentaire>(`${this.apiUrl}/add/interne/${idReclamation}`, null, { params });
+  }
+  
+  getCommentairesInternes(idReclamation: string): Observable<Commentaire[]> {
+    return this.http.get<Commentaire[]>(`${this.apiUrl}/internes/${idReclamation}`);
   }
 }

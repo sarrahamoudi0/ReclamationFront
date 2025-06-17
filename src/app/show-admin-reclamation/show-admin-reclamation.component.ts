@@ -9,6 +9,7 @@ import { CommentaireService } from '../service/commentaire.service';
 import { Categorie } from "../models/Categorie";
 import { SousCategorie } from '../models/SousCategorie';
 import { Commentaire } from '../models/Commentaire';
+import { User } from '../models/User';
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -30,6 +31,8 @@ sousCategoriePosition = {};
 newCommentContent: string = '';
 commentaires: Commentaire[] = [];
 showCommentPopup = false;
+showInternalComments: boolean = false; 
+user?: User;
 
 
 
@@ -265,20 +268,70 @@ loadCommentaires(idReclamation: string): void {
 addComment(): void {
   if (!this.newCommentContent.trim() || !this.reclamation?.idReclamation) return;
 
-  this.commentaireService.addComment(this.reclamation.idReclamation, this.newCommentContent).subscribe({
-    next: (commentaire) => {
-      this.commentaires.push(commentaire);
-      this.newCommentContent = '';
-      setTimeout(() => this.scrollToBottom(), 0);
-    },
-    error: (error) => console.error('Erreur ajout commentaire:', error)
-  });
+  if (this.showInternalComments) {
+    // Ajouter un commentaire interne
+    this.commentaireService.addCommentInterne(this.reclamation.idReclamation, this.newCommentContent).subscribe({
+      next: (commentaire) => {
+        this.commentaires.push(commentaire);
+        this.newCommentContent = '';
+        setTimeout(() => this.scrollToBottom(), 0);
+      },
+      error: (error) => console.error('Erreur ajout commentaire interne:', error)
+    });
+  } else {
+    // Ajouter un commentaire normal
+    this.commentaireService.addComment(this.reclamation.idReclamation, this.newCommentContent).subscribe({
+      next: (commentaire) => {
+        this.commentaires.push(commentaire);
+        this.newCommentContent = '';
+        setTimeout(() => this.scrollToBottom(), 0);
+      },
+      error: (error) => console.error('Erreur ajout commentaire:', error)
+    });
+  }
 }
+showCommentaires(): void {
+  this.showInternalComments = false;
+  if (this.reclamation?.idReclamation) {
+    this.loadCommentaires(this.reclamation.idReclamation);
+  }
+}
+
+showCommentairesInternes(): void {
+  this.showInternalComments = true;
+  if (this.reclamation?.idReclamation) {
+    this.loadCommentairesInternes(this.reclamation.idReclamation);
+  }}
 
 getUserImage(comment: any): string {
   return comment.user?.image
     ? 'data:image/jpeg;base64,' + comment.user.image
     : 'assets/img/default-avatar.png';
+}
+get userdetails() {
+  return this.reclamation?.user;
+}
+
+
+loadCommentairesInternes(idReclamation: string): void {
+  this.commentaireService.getCommentairesInternes(idReclamation).subscribe({
+    next: (comments) => {
+      this.commentaires = comments;
+      setTimeout(() => this.scrollToBottom(), 0);
+    },
+    error: (error) => console.error('Erreur chargement commentaires internes:', error)
+  });
+}
+
+toggleCommentsMode(): void {
+  this.showInternalComments = !this.showInternalComments;
+  if (this.reclamation?.idReclamation) {
+    if (this.showInternalComments) {
+      this.loadCommentairesInternes(this.reclamation.idReclamation);
+    } else {
+      this.loadCommentaires(this.reclamation.idReclamation);
+    }
+  }
 }
 
 

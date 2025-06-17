@@ -682,6 +682,7 @@ color: inherit;
 font-weight: 600;
 }
 
+
 .role-tag {
 font-size: 0.65em;
 padding: 1px 4px;
@@ -780,3 +781,33 @@ border-radius: 2px;
 .comments-container::-webkit-scrollbar-thumb:hover {
 background: #a8a8a8;
 }
+
+.comments-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-btn {
+  background-color: #0a1827;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 130px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.comment-btn:hover {
+  background-color: #f39c12;
+}
+
+.comment-btn.active{
+  background-color: #f39c12;
+  color: white;
+
+}
+
+
