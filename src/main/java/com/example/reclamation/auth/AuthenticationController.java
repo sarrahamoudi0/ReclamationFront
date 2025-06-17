@@ -12,10 +12,13 @@ import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -33,19 +36,25 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final TokenRepository tokenRepository;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> register(
-            @RequestBody @Valid RegistrationRequest request
+            @RequestPart("user") @Valid RegistrationRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
+        System.out.println("Received user: " + request);
+        System.out.println("Received image: " + (image != null ? image.getOriginalFilename() : "No image"));
         try {
-            service.register(request);
+            service.register(request, image);
             return ResponseEntity.accepted().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'envoi de l'email.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du traitement de l'image.");
         }
     }
+
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
@@ -127,6 +136,21 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(responseMessage); // Error message
         }
     }
+
+    @PutMapping("/ban-user/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+        public ResponseEntity<String> toggleUserBan(@PathVariable String userId) {
+            boolean success = service.toggleUserBan(userId);
+            if (success) {
+                return ResponseEntity.ok("User ban status toggled successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+        }
+
+
+
+
 
     @GetMapping("users")
     public List<User> getAllUsers() {

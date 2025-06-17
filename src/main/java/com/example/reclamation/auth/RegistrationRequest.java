@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -40,6 +41,7 @@ public class RegistrationRequest {
     @NotEmpty(message = "Phone is mandatory")
     @NotNull(message = "Phone is mandatory")
     private String phone;
+
 
 
 }

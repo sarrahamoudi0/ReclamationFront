@@ -49,7 +49,11 @@ public class EmailService {
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         properties.put("confirmationUrl", confirmationUrl);
-        properties.put("activation_code", activationCode);
+
+        // Ajouter activation_code seulement s'il n'est pas vide
+        if (activationCode != null && !activationCode.isEmpty()) {
+            properties.put("activation_code", activationCode);
+        }
 
         Context context = new Context();
         context.setVariables(properties);

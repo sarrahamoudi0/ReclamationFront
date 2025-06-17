@@ -1,4 +1,10 @@
 package com.example.reclamation.auth;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 
@@ -49,28 +55,36 @@ public class AuthenticationService {
 
 
 
-    public void register(RegistrationRequest request) throws MessagingException {
+
+    public void register(RegistrationRequest request, MultipartFile image) throws MessagingException, IOException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Cette adresse email existe déjà !");
         }
 
+        byte[] imageData = null;
+
+        if (image != null && !image.isEmpty()) {
+            imageData = image.getBytes();  // Récupérer les bytes de l'image directement
+        }
+
         var userRole = Role.ROLE_USER; // Enum
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .phone(request.getPhone())
-
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
                 .role(userRole)
+                .image(imageData) // Stocke l’image binaire dans la base
                 .build();
 
         userRepository.save(user);
+
         sendValidationEmail(user);
     }
-
 
 
 
@@ -326,6 +340,22 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Invalid or forbidden role: " + roleName);
         }
     }
+
+    public boolean toggleUserBan(String userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            boolean currentlyBanned = user.isBanned(); // attention ici
+            user.setBanned(!currentlyBanned);          // inverse le statut
+            user.setAccountLocked(!currentlyBanned);   // optionnel : pour cohérence
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
+
 
 
 }

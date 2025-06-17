@@ -1,8 +1,10 @@
 package com.example.reclamation.user;
 
 import com.example.reclamation.role.Role;
+import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +41,17 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String phone;
+    @Getter
     private boolean accountLocked;
     private boolean enabled;
+    @Getter
+
+    private boolean banned = false;
+
+    @Lob
+    @Column(length = 209715200)
+    private byte[] image;
+
 
     private Role role;
 
@@ -49,6 +60,7 @@ public class User implements UserDetails {
 
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,6 +83,7 @@ public class User implements UserDetails {
         return !accountLocked;
     }
 
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -84,4 +97,6 @@ public class User implements UserDetails {
     public String getFullName() {
         return firstname + " " + lastname;
     }
+
+
 }
