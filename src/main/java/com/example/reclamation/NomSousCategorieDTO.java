@@ -8,4 +8,14 @@ import lombok.NoArgsConstructor;
 public class NomSousCategorieDTO {
     private String nomSousCategorie;
 
+    // Getter
+    public String getNom() {
+        return nomSousCategorie;
+    }
+
+    // Setter
+    public void setNom(String nom) {
+        this.nomSousCategorie = nom;
+    }
+
 }

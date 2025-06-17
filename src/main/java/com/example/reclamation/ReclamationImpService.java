@@ -1,6 +1,11 @@
 package com.example.reclamation;
 
+import com.example.reclamation.Event.EventType;
+import com.example.reclamation.Event.ReclamationEvent;
+import com.example.reclamation.Event.ReclamationEventRepository;
+import com.example.reclamation.Event.ReclamationEventService;
 import com.example.reclamation.user.User;
+import com.example.reclamation.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +21,42 @@ public class ReclamationImpService implements IReclamationService {
     private CategorieRepository categorieRepository;
     @Autowired
     private SousCategorieRepository sousCategorieRepository;
+    @Autowired
+    private ReclamationEventRepository EventRepo;
+    @Autowired
+    private ReclamationEventService reclamationEventService;
+
 
     @Override
-    public Reclamation createReclamation(Reclamation reclamation, String idCategorie, String idSousCategorie) {
-        // Retrieve category by ID
+    public Reclamation createReclamation(Reclamation reclamation, String idCategorie, String idSousCategorie, User currentUser) {
+        // ► Récupérer la catégorie
         Categorie categorie = categorieRepository.findById(idCategorie)
                 .orElseThrow(() -> new RuntimeException("Category with ID " + idCategorie + " not found"));
 
-        // Find the sub-category by its ID in the list of sub-categories of the retrieved category
+        // ► Récupérer la sous-catégorie
         SousCategorie sousCategorie = categorie.getSousCategories().stream()
-                .filter(sub -> sub.getIdSousCategorie().equals(idSousCategorie)) // Corrected field name for subcategory ID
+                .filter(sub -> sub.getIdSousCategorie().equals(idSousCategorie))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Sub-category with ID " + idSousCategorie + " not found"));
 
-        // Assign the category and sub-category to the reclamation
+        // ► Assigner la catégorie et sous-catégorie
         reclamation.setCategorie(categorie);
         reclamation.setSousCategorie(sousCategorie);
 
-        // Save the reclamation and return
-        return reclamationRepository.save(reclamation);
+        // ► Sauvegarder
+        Reclamation saved = reclamationRepository.save(reclamation);
+
+        // ► Ajouter à la timeline
+        reclamationEventService.logEvent(
+                currentUser,
+                saved,
+                EventType.CREATION,
+                "Réclamation créée dans la catégorie '" + categorie.getNom() + "' / sous-catégorie '" + sousCategorie.getNomSousCategorie() + "'"
+        );
+
+        return saved;
     }
+
 
 
     @Override
@@ -54,9 +75,60 @@ public class ReclamationImpService implements IReclamationService {
     }
 
     @Override
-    public Reclamation updateReclamation(Reclamation reclamation) {
-        return reclamationRepository.save(reclamation);
+    public Reclamation updateReclamation(Reclamation reclamation, User currentUser) {
+        Reclamation oldReclamation = reclamationRepository.findById(reclamation.getIdReclamation())
+                .orElseThrow(() -> new RuntimeException("Reclamation not found"));
+
+        String ancienTitre = oldReclamation.getTitre();
+        String ancienneDescription = oldReclamation.getDescription();
+        byte[] ancienneImage = oldReclamation.getImage_reclamation();
+
+        boolean titreChanged = !ancienTitre.equals(reclamation.getTitre());
+        boolean descriptionChanged = !ancienneDescription.equals(reclamation.getDescription());
+        boolean imageChanged = (reclamation.getImage_reclamation() != null && !java.util.Arrays.equals(ancienneImage, reclamation.getImage_reclamation()));
+
+        Reclamation saved = reclamationRepository.save(reclamation);
+
+        if (titreChanged) {
+            reclamationEventService.logEvent(
+                    currentUser,
+                    saved,
+                    EventType.TITRE_CHANGE,
+                    "Titre changé de '" + ancienTitre + "' à '" + reclamation.getTitre() + "'"
+            );
+        }
+
+        if (descriptionChanged) {
+            reclamationEventService.logEvent(
+                    currentUser,
+                    saved,
+                    EventType.DESCRIPTION_CHANGE,
+                    "Description modifiée"
+            );
+        }
+
+        if (imageChanged) {
+            reclamationEventService.logEvent(
+                    currentUser,
+                    saved,
+                    EventType.IMAGE_CHANGE,
+                    "Image mise à jour"
+            );
+        }
+
+        // Si aucun changement détecté, tu peux logger une mise à jour générique si tu veux :
+        if (!titreChanged && !descriptionChanged && !imageChanged) {
+            reclamationEventService.logEvent(
+                    currentUser,
+                    saved,
+                    EventType.MODIFICATION,
+                    "Réclamation enregistrée sans modification de contenu détectée"
+            );
+        }
+
+        return saved;
     }
+
 
     @Override
     public void deleteReclamation(String id) {
@@ -69,23 +141,42 @@ public class ReclamationImpService implements IReclamationService {
     }
 
     @Override
-    public Reclamation updateStatut(String id, Statut statut) {
+    public Reclamation updateStatut(String id, Statut statut, User currentUser) {
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reclamation not found with id: " + id));
+
+        Statut ancienStatut = reclamation.getStatut();
         reclamation.setStatut(statut);
-        return reclamationRepository.save(reclamation);
+        Reclamation saved = reclamationRepository.save(reclamation);
+
+        reclamationEventService.logEvent(
+                currentUser,
+                saved,
+                EventType.STATUT_CHANGE,
+                "Statut changé de '" + ancienStatut.name() + "' à '" + statut.name() + "'"
+        );
+
+        return saved;
     }
 
+
     @Override
-    public Reclamation updatePriority(String id, Priorite priority) {
-        Reclamation reclamation = reclamationRepository.findById(id).orElse(null);
+    public Reclamation updatePriority(String id, Priorite priority, User currentUser) {
+        Reclamation reclamation = reclamationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reclamation not found with id: " + id));
 
-        if (reclamation != null) {
-            reclamation.setPriorite(priority);
-            return reclamationRepository.save(reclamation);
-        }
+        Priorite anciennePriorite = reclamation.getPriorite();
+        reclamation.setPriorite(priority);
+        Reclamation saved = reclamationRepository.save(reclamation);
 
-        return null; // Return null if reclamation not found
+        reclamationEventService.logEvent(
+                currentUser,
+                saved,
+                EventType.PRIORITE_CHANGE,
+                "Priorité changée de '" + (anciennePriorite != null ? anciennePriorite.name() : "null") + "' à '" + priority.name() + "'"
+        );
+
+        return saved;
     }
 
     @Override
@@ -137,9 +228,12 @@ public class ReclamationImpService implements IReclamationService {
     }
 
 
-@Override
-    public Reclamation updateCategorieOfReclamation(String idReclamation, String idCategorie, String idSousCategorie) {
-        Reclamation reclamation = getReclamationById(idReclamation); // méthode déjà existante
+    @Override
+    public Reclamation updateCategorieOfReclamation(String idReclamation, String idCategorie, String idSousCategorie, User currentUser) {
+        Reclamation reclamation = getReclamationById(idReclamation);
+
+        Categorie ancienneCategorie = reclamation.getCategorie();
+        SousCategorie ancienneSousCategorie = reclamation.getSousCategorie();
 
         Categorie categorie = categorieRepository.findById(idCategorie)
                 .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
@@ -154,8 +248,26 @@ public class ReclamationImpService implements IReclamationService {
 
         reclamation.setCategorie(categorie);
         reclamation.setSousCategorie(sousCategorie);
+        Reclamation saved = reclamationRepository.save(reclamation);
 
-        return reclamationRepository.save(reclamation);
+        reclamationEventService.logEvent(
+                currentUser,
+                saved,
+                EventType.CATEGORIE_CHANGE,
+                "Catégorie changée de '" + (ancienneCategorie != null ? ancienneCategorie.getNom() : "null") +
+                        "' à '" + categorie.getNom() + "', sous-catégorie changée de '" +
+                        (ancienneSousCategorie != null ? ancienneSousCategorie.getNomSousCategorie() : "null") +
+                        "' à '" + sousCategorie.getNomSousCategorie() + "'"
+        );
+
+        return saved;
     }
+
+    public List<ReclamationEvent> getEventsForReclamation(String idReclamation) {
+        Reclamation reclamation = reclamationRepository.findById(idReclamation)
+                .orElseThrow(() -> new RuntimeException("Réclamation non trouvée"));
+        return EventRepo.findByReclamationOrderByTimestampAsc(reclamation);
+    }
+
 
 }

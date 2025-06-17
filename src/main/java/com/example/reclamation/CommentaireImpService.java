@@ -1,5 +1,7 @@
 package com.example.reclamation;
 
+import com.example.reclamation.Event.EventType;
+import com.example.reclamation.Event.ReclamationEventService;
 import com.example.reclamation.email.EmailService;
 import com.example.reclamation.email.EmailTemplateName;
 import com.example.reclamation.role.Role;
@@ -26,6 +28,7 @@ public class CommentaireImpService implements ICommentaireService {
     private final ReclamationImpService reclamationService;
     private final UserService userService;
     private final EmailService emailService;
+    private final ReclamationEventService eventService;
 
     @Override
     public Commentaire addComment(String idReclamation, String contenu)throws MessagingException  {
@@ -68,20 +71,27 @@ public class CommentaireImpService implements ICommentaireService {
     public Commentaire addCommentInterne(String idReclamation, String contenu) throws MessagingException {
         User currentUser = userService.getCurrentUser();
 
-        if (!(currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT)) {
-            throw new SecurityException("Seuls les agents et admins peuvent créer des commentaires internes.");
-        }
-
         Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
 
         Commentaire commentaire = new Commentaire();
         commentaire.setReclamation(reclamation);
         commentaire.setUser(currentUser);
         commentaire.setContenu(contenu);
-        commentaire.setInterne(true);
+        commentaire.setInterne(false);
         commentaire.setDateCommentaire(LocalDateTime.now());
 
-        return commentaireRepository.save(commentaire);
+        Commentaire savedCommentaire = commentaireRepository.save(commentaire);
+
+        // Loguer l'événement dans la timeline
+        String description = "Nouveau commentaire ajouté par " + currentUser.getUsername();
+        eventService.logEvent(
+                currentUser,
+                reclamation,
+                EventType.COMMENTAIRE_AJOUT, // ajoute cette valeur dans ton enum EventType
+                description
+        );
+
+        return savedCommentaire;
     }
 
     @Override

@@ -21,4 +21,13 @@ public class Categorie {
 
     @DBRef(lazy = false)
     private List<SousCategorie> sousCategories; // List of references to SousCategorie documents
+    // Getter
+    public String getNom() {
+        return nomCategorie;
+    }
+
+    // Setter
+    public void setNom(String nom) {
+        this.nomCategorie = nom;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.reclamation;
 
+import com.example.reclamation.Event.ReclamationEvent;
+import com.example.reclamation.Event.ReclamationEventService;
 import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserService;
@@ -27,6 +29,8 @@ public class ReclamationController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ReclamationEventService eventService;
 
     // Helper method to get the current authenticated user
     private User getCurrentUser() {
@@ -52,10 +56,10 @@ public class ReclamationController {
             @RequestParam("idCategorie") String idCategorie,
             @RequestParam("idSousCategorie") String idSousCategorie) throws IOException {
 
-        // Récupérer l'utilisateur authentifié
+        // ► Récupérer l'utilisateur authentifié
         User currentUser = getCurrentUser();
 
-        // Créer l'objet réclamation
+        // ► Créer et remplir la réclamation
         Reclamation reclamation = new Reclamation();
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
@@ -67,11 +71,17 @@ public class ReclamationController {
             reclamation.setImage_reclamation(fileReclamation.getBytes());
         }
 
-        // Créer et enregistrer la réclamation avec catégorie
-        Reclamation createdReclamation = reclamationService.createReclamation(reclamation, idCategorie, idSousCategorie);
+        // ► Appeler le service AVEC l'utilisateur
+        Reclamation createdReclamation = reclamationService.createReclamation(
+                reclamation,
+                idCategorie,
+                idSousCategorie,
+                currentUser
+        );
 
         return ResponseEntity.ok(createdReclamation);
     }
+
 
 
 
@@ -101,25 +111,31 @@ public class ReclamationController {
             @RequestParam("idReclamation") String idReclamation,
             @RequestParam("titre") String titre,
             @RequestParam("description") String description,
-            @RequestParam(value = "image_reclamation", required = false) MultipartFile image_reclamation) throws IOException {
+            @RequestParam(value = "image_reclamation", required = false) MultipartFile image_reclamation)
+            throws IOException {
 
-        // Get the reclamation by ID
+        // ► 1. Récupérer la réclamation existante
         Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+        if (reclamation == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        // Update the other fields
+        // ► 2. Mettre à jour les champs
         reclamation.setTitre(titre);
         reclamation.setDescription(description);
-
-        // If there's a new image, update it; otherwise, keep the old image
         if (image_reclamation != null) {
             reclamation.setImage_reclamation(image_reclamation.getBytes());
         }
 
-        // Save the updated reclamation
-        Reclamation updatedReclamation = reclamationService.updateReclamation(reclamation);
+        // ► 3. Récupérer l’utilisateur connecté
+        User currentUser = getCurrentUser();   // helper ci‑dessous
 
-        return ResponseEntity.ok(updatedReclamation);
+        // ► 4. Appeler le service AVEC l’utilisateur
+        Reclamation updated = reclamationService.updateReclamation(reclamation, currentUser);
+
+        return ResponseEntity.ok(updated);
     }
+
 
     @DeleteMapping("/remove/{reclamation-id}")
     public void deleteReclamation(@PathVariable("reclamation-id") String id) {
@@ -138,12 +154,15 @@ public class ReclamationController {
 
         String newStatut = request.get("statut");
         try {
-            // Convert the incoming string to the Statut enum
             Statut statutEnum = Statut.valueOf(newStatut);
-            Reclamation updated = reclamationService.updateStatut(id, statutEnum);
+
+            // Récupérer l'utilisateur courant
+            User currentUser = userService.getCurrentUser();
+
+            Reclamation updated = reclamationService.updateStatut(id, statutEnum, currentUser);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // Return 400 if statut invalid
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
@@ -153,7 +172,9 @@ public class ReclamationController {
             @RequestParam("priority") Priorite priority) {
 
         // Call the service to update the priority
-        Reclamation updatedReclamation = reclamationService.updatePriority(id, priority);
+        User currentUser = getCurrentUser();
+
+        Reclamation updatedReclamation = reclamationService.updatePriority(id, priority,currentUser);
 
         // Check if the reclamation was found and updated
         if (updatedReclamation != null) {
@@ -184,7 +205,21 @@ public class ReclamationController {
             @PathVariable String idReclamation,
             @RequestParam String idCategorie,
             @RequestParam String idSousCategorie) {
-        return reclamationService.updateCategorieOfReclamation(idReclamation, idCategorie, idSousCategorie);
+        User currentUser = getCurrentUser();
+
+        return reclamationService.updateCategorieOfReclamation(idReclamation, idCategorie, idSousCategorie,currentUser);
     }
+
+    @GetMapping("/reclamation/{idReclamation}/events")
+    public ResponseEntity<List<ReclamationEvent>> getEventsByReclamation(@PathVariable String idReclamation) {
+        Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+        if (reclamation == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ReclamationEvent> events = eventService.getEventsForReclamation(reclamation);
+        return ResponseEntity.ok(events);
+    }
+
 
 }
