@@ -12,6 +12,9 @@
   position: relative;
   margin-left: 250px; /* Adjust for fixed sidebar width */
   transition: margin-left 0.3s ease;
+  overflow: visible !important;
+  position: static !important;
+  z-index: auto !important;
 }
 
 /* Handle sidebar toggle */
@@ -24,6 +27,9 @@
   margin-top: 0.5rem; /* Reduced margin to bring elements closer */
   overflow-x: auto;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  overflow: visible !important;
+  position: static !important;
+  z-index: auto !important;
 }
 
 /* ========== Page Title ========== */
@@ -78,6 +84,9 @@ table {
   border-spacing: 0 0.5rem;
   font-size: 0.95rem;
   color: #1f2a44;
+  overflow: visible !important;
+  position: static !important;
+  z-index: auto !important;
 }
 
 /* Table Header */
@@ -101,8 +110,11 @@ tbody tr {
   transition: all 0.3s ease;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
   border: 1px solid rgba(0, 0, 0, 0.02);
+  overflow: visible !important;
+  position: static !important;
+  z-index: auto !important;
 }
 
 tbody tr:hover {
@@ -119,6 +131,7 @@ td {
   border: none;
   font-weight: 500;
   color: #1f2a44;
+  overflow: visible !important;
 }
 
 tbody tr td:first-child {
@@ -167,6 +180,8 @@ tbody tr td:last-child {
   letter-spacing: 0.04em;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
+  z-index: 1 !important;
+  position: relative !important;
 }
 
 .role-badge i {
@@ -198,6 +213,35 @@ tbody tr td:last-child {
 .role-badge.user:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(75, 137, 220, 0.5);
+}
+
+.role-badge-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.role-dropdown-menu,
+.dropdown-menu.show.role-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  min-width: 150px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  padding: 0.5rem 0;
+  margin-top: 4px;
+  pointer-events: auto;
+  background-clip: padding-box;
+}
+
+.role-badge {
+  z-index: 1 !important;
+  position: relative !important;
 }
 
 /* ========== Status Badges ========== */
@@ -367,8 +411,7 @@ tbody tr td:last-child {
 }
 
 /* Modern Form Inputs - Vertical Layout */
-.form-control,
-.form-select {
+.form-control {
   border-radius: 8px;
   border: 2px solid #e9ecef;
   padding: 0.625rem 0.875rem;
@@ -381,31 +424,66 @@ tbody tr td:last-child {
   color: #2c3e50;
   width: 100%;
   display: block;
+}
+
+.form-select {
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  padding: 0.625rem 2.2rem 0.625rem 0.875rem;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #fff 60%, #f8f9fa 100%);
+  box-shadow: 0 2px 8px rgba(255, 111, 61, 0.04);
+  color: #1f2a44;
+  width: 100%;
+  display: block;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ff6f3d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
-  background-size: 1.25rem;
-  padding-right: 2.5rem;
+  background-size: 1.5rem;
+  font-weight: 600;
 }
 
-.form-control:focus,
 .form-select:focus {
+  border-color: #ff6f3d;
+  box-shadow: 0 0 0 3px rgba(255, 111, 61, 0.13), 0 2px 8px rgba(255, 111, 61, 0.08);
+  background: linear-gradient(135deg, #fff7f3 60%, #ffe8d1 100%);
+}
+
+.form-select:hover {
+  border-color: #ff8c5a;
+  background: linear-gradient(135deg, #fff3e6 60%, #ffe8d1 100%);
+}
+
+.form-select option {
+  background: #fff;
+  color: #1f2a44;
+  font-weight: 500;
+  padding: 0.75rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.form-select option:hover, .form-select option:checked {
+  background: linear-gradient(135deg, #ff6f3d 0%, #ff8c5a 100%);
+  color: #fff;
+  font-weight: 700;
+}
+
+.form-control:focus {
   border-color: #ff6f3d;
   box-shadow: 0 0 0 3px rgba(255, 111, 61, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
   outline: none;
   transform: translateY(-1px);
   background: #fff;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ff6f3d' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
 }
 
-.form-control:hover,
-.form-select:hover {
+.form-control:hover {
   border-color: #ff8c5a;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ff8c5a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
 }
 
 /* Enhanced Select Dropdown Styling */
@@ -436,27 +514,6 @@ tbody tr td:last-child {
 .form-select:focus:before {
   opacity: 1;
   background: linear-gradient(135deg, rgba(255, 111, 61, 0.05) 0%, rgba(255, 140, 90, 0.05) 100%);
-}
-
-/* Select Option Styling */
-.form-select option {
-  background: #fff;
-  color: #2c3e50;
-  font-weight: 500;
-  padding: 0.75rem;
-  border: none;
-  transition: all 0.2s ease;
-}
-
-.form-select option:hover {
-  background: linear-gradient(135deg, #ff6f3d 0%, #ff8c5a 100%);
-  color: #fff;
-}
-
-.form-select option:checked {
-  background: linear-gradient(135deg, #1f2a44 0%, #2c3e50 100%);
-  color: #fff;
-  font-weight: 600;
 }
 
 /* Custom Select Container */
@@ -525,11 +582,8 @@ tbody tr td:last-child {
 
 /* Form Group Spacing - Vertical Layout */
 .form-group {
-  margin-bottom: 1rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  display: block;
+  margin-bottom: 0.2rem;
 }
 
 .form-group:last-child {
@@ -703,6 +757,31 @@ tbody tr td:last-child {
   width: 95%;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.4s ease-in-out;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.flex-half {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-group {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.form-error {
+  font-size: 0.75rem;
+  color: #dc3545;
+  min-height: 18px;
+  margin-top: 2px;
+  z-index: 2;
+  display: block;
 }
 
 /* ========== Responsive Design ========== */
@@ -881,4 +960,34 @@ tbody tr td:last-child {
 
 [role="button"] {
   cursor: pointer;
+}
+
+/* Add user modal: make first and last name fields side by side on desktop */
+#addUserModal .modal-body .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+}
+#addUserModal .modal-body .col-md-6 {
+  flex: 0 0 48%;
+  max-width: 48%;
+  min-width: 0;
+  display: block;
+}
+@media (max-width: 767.98px) {
+  #addUserModal .modal-body .row {
+    flex-direction: column;
+    gap: 0;
+  }
+  #addUserModal .modal-body .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+*,
+*::before,
+*::after {
+  overflow: visible !important;
+  z-index: auto !important;
 }

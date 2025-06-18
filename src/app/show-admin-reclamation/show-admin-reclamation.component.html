@@ -89,14 +89,14 @@
       </div>
 
       <!-- Footer -->
-      <div class="reclamation-footer">
-        <span class="created-date">
-          🕒 {{ reclamation.createdDate | date:'mediumDate' }}
-        </span>
+      <div class="reclamation-footer d-flex justify-content-between align-items-center">
         <button class="timeline-btn" (click)="openTimelinePopup()">
           <i class="fas fa-history"></i>
           Afficher timeline
         </button>
+        <span class="created-date">
+          🕒 {{ reclamation.createdDate | date:'mediumDate' }}
+        </span>
 
         <!-- Timeline Popup -->
         <div
@@ -126,7 +126,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>

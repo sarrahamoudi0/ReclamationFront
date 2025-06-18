@@ -23,6 +23,8 @@ availableRoles = [UserRole.ADMIN, UserRole.AGENT];
 roleDropdownStates: Map<string, number> = new Map();
 pageSize = 5;
 currentPage = 1;
+searchTerm: string = '';
+filteredUsers: User[] = [];
 
 
 
@@ -116,16 +118,31 @@ closeDropdown(): void {
       next: (users: any[]) => {
         this.users = users.map((user: any) => {
           if (user.role && !user.roles) {
-            user.roles = [user.role]; // Create the expected 'roles' array
+            user.roles = [user.role];
           }
           return user as User;
         });
+        this.onSearch(); // Initialize filteredUsers
       },
       error: (err) => {
         this.errorMessage = 'Failed to load users. Please try again later.';
         console.error('Error loading users', err);
       }
     });
+  }
+
+  onSearch(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredUsers = [...this.users];
+    } else {
+      this.filteredUsers = this.users.filter(user =>
+        user.firstname.toLowerCase().includes(term) ||
+        user.lastname.toLowerCase().includes(term) ||
+        user.email.toLowerCase().includes(term)
+      );
+    }
+    this.currentPage = 1;
   }
 
   getRole(roles: string[]): string {
@@ -136,6 +153,18 @@ closeDropdown(): void {
   }
 
   openAddUserForm(): void {
+    // Reset the newUser object to clear previous values
+    this.newUser = {
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: '',
+      password: '',
+      role: UserRole.AGENT, // use enum value
+      enabled: true,
+      accountLocked: false
+    };
+
     const modalElement = document.getElementById('addUserModal');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
@@ -146,6 +175,11 @@ closeDropdown(): void {
   }
 
 addUser(): void {
+  const form = document.querySelector('#addUserModal form') as HTMLFormElement;
+  if (form && !form.checkValidity()) {
+    this.errorMessage = 'Veuillez vérifier les champs du formulaire et corriger les erreurs.';
+    return;
+  }
   const updatedUser: AdminCreateUserRequest = {
     ...this.newUser,
     role: this.newUser.role
@@ -153,16 +187,10 @@ addUser(): void {
 
   this.authenticationService.createUser(updatedUser).subscribe({
     next: (response) => {
-      console.log('User added successfully', response);
-
-      // Optional: if you want to show a success message before reload, you can use setTimeout.
-
-      // Force full page reload
       window.location.reload();
     },
     error: (err) => {
-      console.error('Error creating user', err);
-      this.errorMessage = 'Failed to create user. Please try again later.';
+      this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";
     }
   });
 }
@@ -309,11 +337,11 @@ toggleBan(userId: string) {
 
 get pagedUsers(): User[] {
   const start = (this.currentPage - 1) * this.pageSize;
-  return this.sortedUsers.slice(start, start + this.pageSize);
+  return this.filteredUsers.slice(start, start + this.pageSize);
 }
 
 get totalPages(): number {
-  return Math.ceil(this.sortedUsers.length / this.pageSize);
+  return Math.ceil(this.filteredUsers.length / this.pageSize);
 }
 
 goToPage(page: number): void {

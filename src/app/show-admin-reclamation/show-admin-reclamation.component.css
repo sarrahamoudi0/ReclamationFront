@@ -226,11 +226,17 @@ background-color: #2ecc71; /* Green */
 /* Footer de la réclamation */
 .reclamation-footer {
   position: absolute;
+  left: 0;
+  right: 0;
   bottom: 15px;
-  right: 20px;
+  padding: 0 20px;
   font-size: 0.8rem;
   color: #888;
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  z-index: 2;
 }
 
 .reclamation-footer .created-date {
