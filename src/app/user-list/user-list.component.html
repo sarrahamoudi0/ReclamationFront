@@ -15,21 +15,22 @@
       <div class="table-responsive mt-4">
 
         <!-- Title and search bar on the same line -->
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h2 class="page-title mb-0" style="white-space:nowrap;">
+        <div class="mb-2">
+          <h2 class="page-title mb-0 text-center" style="white-space:nowrap;">
             <i class="fa fa-users me-2" aria-hidden="true"></i> Les Utilisateurs
           </h2>
-          <div class="d-flex align-items-center" style="gap: 1rem;">
-            <div class="position-relative" style="width: 350px; min-width: 200px;">
-              <span class="position-absolute top-50 start-0 translate-middle-y ps-3" style="z-index:2; color:#aaa;">
-                <i class="fas fa-search"></i>
-              </span>
-              <input type="text" class="form-control rounded-pill ps-5 shadow-sm" style="height: 40px;" placeholder="Rechercher un utilisateur..." [(ngModel)]="searchTerm" (input)="onSearch()">
-            </div>
-            <button class="btn-add-user d-flex align-items-center justify-content-center" (click)="openAddUserForm()" title="Ajouter un utilisateur" aria-label="Ajouter un utilisateur" style="height: 40px; width: 40px; padding: 0; border-radius: 50%;">
-              <i class="fas fa-user-plus"></i>
-            </button>
+        </div>
+        <!-- Search and Add button on the same line, right-aligned, below the title -->
+        <div class="d-flex align-items-center justify-content-end mb-3" style="gap: 1rem;">
+          <div class="position-relative" style="width: 350px; min-width: 200px;">
+            <span class="position-absolute top-50 start-0 translate-middle-y ps-3" style="z-index:2; color:#aaa;">
+              <i class="fas fa-search"></i>
+            </span>
+            <input type="text" class="form-control rounded-pill ps-5 shadow-sm" style="height: 40px;" placeholder="Rechercher un utilisateur..." [(ngModel)]="searchTerm" (input)="onSearch()">
           </div>
+          <button class="btn-add-user d-flex align-items-center justify-content-center align-self-end" (click)="openAddUserForm()" title="Ajouter un utilisateur" aria-label="Ajouter un utilisateur" style="height: 40px; width: 40px; padding: 0; border-radius: 50%; margin-bottom: 2px;">
+            <i class="fas fa-user-plus"></i>
+          </button>
         </div>
 
     <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">

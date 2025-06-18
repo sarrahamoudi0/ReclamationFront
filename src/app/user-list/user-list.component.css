@@ -26,7 +26,6 @@
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
-/* ========== Page Title ========== */
 .page-title {
   font-size: clamp(1.4rem, 4vw, 1.8rem); /* Smaller responsive font size */
   font-weight: 700;
@@ -70,6 +69,7 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 111, 61, 0.3); /* Smaller focus ring */
 }
+
 
 /* ========== Table ========== */
 table {
