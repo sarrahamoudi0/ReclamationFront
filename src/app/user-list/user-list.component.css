@@ -12,9 +12,6 @@
   position: relative;
   margin-left: 250px; /* Adjust for fixed sidebar width */
   transition: margin-left 0.3s ease;
-  overflow: visible !important;
-  position: static !important;
-  z-index: auto !important;
 }
 
 /* Handle sidebar toggle */
@@ -27,9 +24,6 @@
   margin-top: 0.5rem; /* Reduced margin to bring elements closer */
   overflow-x: auto;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  overflow: visible !important;
-  position: static !important;
-  z-index: auto !important;
 }
 
 /* ========== Page Title ========== */
@@ -84,9 +78,6 @@ table {
   border-spacing: 0 0.5rem;
   font-size: 0.95rem;
   color: #1f2a44;
-  overflow: visible !important;
-  position: static !important;
-  z-index: auto !important;
 }
 
 /* Table Header */
@@ -110,11 +101,8 @@ tbody tr {
   transition: all 0.3s ease;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   position: relative;
-  overflow: visible !important;
+  overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.02);
-  overflow: visible !important;
-  position: static !important;
-  z-index: auto !important;
 }
 
 tbody tr:hover {
@@ -131,7 +119,6 @@ td {
   border: none;
   font-weight: 500;
   color: #1f2a44;
-  overflow: visible !important;
 }
 
 tbody tr td:first-child {
@@ -180,8 +167,6 @@ tbody tr td:last-child {
   letter-spacing: 0.04em;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
-  z-index: 1 !important;
-  position: relative !important;
 }
 
 .role-badge i {
@@ -213,35 +198,6 @@ tbody tr td:last-child {
 .role-badge.user:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(75, 137, 220, 0.5);
-}
-
-.role-badge-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-.role-dropdown-menu,
-.dropdown-menu.show.role-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  min-width: 150px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-  padding: 0.5rem 0;
-  margin-top: 4px;
-  pointer-events: auto;
-  background-clip: padding-box;
-}
-
-.role-badge {
-  z-index: 1 !important;
-  position: relative !important;
 }
 
 /* ========== Status Badges ========== */
@@ -784,162 +740,6 @@ tbody tr td:last-child {
   display: block;
 }
 
-/* ========== Responsive Design ========== */
-@media (max-width: 1200px) {
-  .table-wrapper {
-    margin-left: 200px; /* Adjust for smaller sidebar */
-  }
-  .sidebar-collapsed .table-wrapper {
-    margin-left: 50px;
-  }
-}
-
-@media (max-width: 992px) {
-  .table-wrapper {
-    padding: 1.5rem;
-    margin-left: 0; /* Remove margin for tablet */
-    max-width: 100%;
-  }
-  .page-title {
-    font-size: clamp(1.6rem, 4vw, 2rem);
-  }
-  .btn-add-user {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.95rem;
-  }
-  table {
-    font-size: 0.9rem;
-  }
-  .role-badge {
-    width: 90px;
-    font-size: 0.8rem;
-  }
-  .status-badge {
-    width: 80px;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .table-wrapper {
-    padding: 1rem;
-  }
-  .page-title {
-    font-size: clamp(1.4rem, 4vw, 1.8rem);
-  }
-  .btn-add-user {
-    padding: 0.4rem 1rem;
-    font-size: 0.9rem;
-  }
-  table {
-    font-size: 0.85rem;
-  }
-  .user-image {
-    width: 36px;
-    height: 36px;
-  }
-  .pagination-container button {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  .modal-content {
-    margin: 1rem;
-    border-radius: 14px;
-    max-width: 350px;
-  }
-  
-  .modal-header {
-    padding: 0.75rem 1rem;
-  }
-  
-  .modal-body {
-    padding: 1rem;
-  }
-  
-  .modal-footer {
-    padding: 0.75rem 1rem;
-    flex-direction: column;
-    gap: 0.375rem;
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    margin-bottom: 0.25rem;
-    padding: 0.6rem 1rem;
-  }
-  
-  .form-control,
-  .form-select {
-    padding: 0.6rem 0.75rem;
-    font-size: 0.8rem;
-  }
-  
-  .form-label {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .table-wrapper {
-    padding: 0.75rem;
-  }
-  .page-title {
-    font-size: clamp(1.2rem, 4vw, 1.6rem);
-  }
-  .btn-add-user {
-    padding: 0.35rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  table {
-    font-size: 0.8rem;
-  }
-  .user-image {
-    width: 32px;
-    height: 32px;
-  }
-  .role-badge {
-    width: 80px;
-    font-size: 0.75rem;
-  }
-  .status-badge {
-    width: 70px;
-    font-size: 0.8rem;
-  }
-  .custom-modal {
-    padding: 1.25rem;
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-title {
-    font-size: 1rem;
-  }
-  
-  .form-label {
-    font-size: 0.65rem;
-  }
-  
-  .modal-body {
-    padding: 0.875rem;
-  }
-  
-  .modal-header {
-    padding: 0.625rem 0.875rem;
-  }
-  
-  .modal-footer {
-    padding: 0.625rem 0.875rem;
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    font-size: 0.75rem;
-    padding: 0.5rem 0.875rem;
-  }
-}
-
 /* ========== Animation Keyframes ========== */
 @keyframes fadeIn {
   from {
@@ -960,34 +760,4 @@ tbody tr td:last-child {
 
 [role="button"] {
   cursor: pointer;
-}
-
-/* Add user modal: make first and last name fields side by side on desktop */
-#addUserModal .modal-body .row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 1rem;
-}
-#addUserModal .modal-body .col-md-6 {
-  flex: 0 0 48%;
-  max-width: 48%;
-  min-width: 0;
-  display: block;
-}
-@media (max-width: 767.98px) {
-  #addUserModal .modal-body .row {
-    flex-direction: column;
-    gap: 0;
-  }
-  #addUserModal .modal-body .col-md-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-}
-
-*,
-*::before,
-*::after {
-  overflow: visible !important;
-  z-index: auto !important;
 }
