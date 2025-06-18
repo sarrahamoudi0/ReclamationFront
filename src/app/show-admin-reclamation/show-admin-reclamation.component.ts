@@ -39,6 +39,7 @@ showTimelinePopup: boolean = false;
 hoverBtn = false;
 
 
+
   statutValues: Statut[] = Object.values(Statut);
   selectedStatut: Statut = Statut.Nouveau;
   showStatutList = false;
@@ -255,16 +256,17 @@ onClickOutside(event: MouseEvent): void {
   }
 }
 
- 
 loadCommentaires(idReclamation: string): void {
   this.commentaireService.getCommentairesByReclamation(idReclamation).subscribe({
     next: (comments) => {
-      this.commentaires = comments;
+      console.log('Commentaires reçus:', comments);
+      this.commentaires = comments.filter(c => !c.interne);
       setTimeout(() => this.scrollToBottom(), 0);
     },
     error: (error) => console.error('Erreur chargement commentaires:', error)
   });
 }
+
 
 addComment(): void {
   if (!this.newCommentContent.trim() || !this.reclamation?.idReclamation) return;
@@ -343,14 +345,13 @@ loadTimelineEvents(idReclamation: string): void {
     error: (err) => console.error('Erreur chargement timeline:', err)
   });
 }
+
 openTimelinePopup(): void {
-  console.log('openTimelinePopup called');
   if (this.reclamation?.idReclamation) {
     this.loadTimelineEvents(this.reclamation.idReclamation);
     this.showTimelinePopup = true;
   }
 }
-
 
 closeTimelinePopup(): void {
   this.showTimelinePopup = false;

@@ -829,52 +829,174 @@ background: #a8a8a8;
 }
 .timeline-popup-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(30, 34, 45, 0.55);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s;
 }
 
-.timeline-popup {
-  background: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  width: 400px;
+.timeline-popup-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 32px 28px 24px 28px;
+  width: 420px;
+  max-width: 95vw;
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  animation: popIn 0.35s cubic-bezier(.4,2,.6,1);
 }
 
-.close-btn {
+/* Custom scrollbar for timeline popup */
+.timeline-popup-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timeline-popup-card::-webkit-scrollbar-track {
+  background: rgba(243,156,18,0.1);
+  border-radius: 3px;
+}
+
+.timeline-popup-card::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  border-radius: 3px;
+}
+
+.timeline-popup-card::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes popIn {
+  from { transform: scale(0.92) translateY(30px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.timeline-close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
+  top: 14px;
+  right: 18px;
+  background: none;
   border: none;
-  font-size: 20px;
+  font-size: 1.4rem;
+  color: #888;
   cursor: pointer;
+  transition: color 0.2s;
+}
+.timeline-close-btn:hover { color: #e67e22; }
+
+.timeline-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #222;
+  letter-spacing: 0.5px;
 }
 
-.timeline-list {
-  list-style-type: none;
-  padding-left: 0;
+.timeline-vertical {
+  position: relative;
+  margin-left: 24px;
+  padding-left: 18px;
+  border-left: 3px solid #f39c12;
 }
 
-.timeline-item {
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
+.timeline-event {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  position: relative;
 }
 
-.timeline-timestamp {
-  color: gray;
-  font-size: 12px;
+.timeline-dot {
+  position: absolute;
+  left: -28px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #f39c12, #ff9800);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(243,156,18,0.18);
 }
 
-.no-events {
-  color: gray;
+.timeline-content {
+  background: #fff7e6;
+  border-radius: 10px;
+  padding: 12px 18px;
+  box-shadow: 0 2px 8px rgba(243,156,18,0.08);
+  min-width: 0;
+  flex: 1;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.98em;
+  margin-bottom: 4px;
+}
+
+.timeline-type {
+  font-weight: 600;
+  color: #e67e22;
+  text-transform: capitalize;
+  letter-spacing: 0.2px;
+}
+
+.timeline-date {
+  color: #888;
+  font-size: 0.93em;
+}
+
+.timeline-desc {
+  color: #333;
+  font-size: 1em;
+  margin-top: 2px;
+  word-break: break-word;
+}
+
+.timeline-no-events {
+  text-align: center;
+  color: #aaa;
   font-style: italic;
+  margin-top: 30px;
+}
+
+.timeline-btn {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(243,156,18,0.3);
+}
+
+.timeline-btn:hover {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(243,156,18,0.4);
+}
+
+.timeline-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(243,156,18,0.3);
+}
+
+.timeline-btn i {
+  font-size: 0.9em;
 }
