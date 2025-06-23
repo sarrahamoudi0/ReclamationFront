@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.reclamation;
 
 import com.example.reclamation.Event.ReclamationEvent;
 import com.example.reclamation.Event.ReclamationEventService;
@@ -26,7 +26,6 @@ import java.util.Map;
 public class ReclamationController {
     @Autowired
     private IReclamationService reclamationService;
-
     @Autowired
     private UserService userService;
     @Autowired

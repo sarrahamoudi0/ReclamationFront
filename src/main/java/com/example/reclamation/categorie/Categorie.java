@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.categorie;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

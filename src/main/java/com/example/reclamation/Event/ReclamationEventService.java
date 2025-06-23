@@ -1,19 +1,20 @@
 package com.example.reclamation.Event;
 
-import com.example.reclamation.Reclamation;
+import com.example.reclamation.reclamation.Reclamation;
 import com.example.reclamation.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+
 @Service
-@RequiredArgsConstructor
-
 public class ReclamationEventService {
-
-    private final ReclamationEventRepository eventRepo;
+@Autowired
+    private  ReclamationEventRepository eventRepo;
 
     /** Enregistre un événement dans la timeline d’une réclamation. */
     public void logEvent(User acteur,

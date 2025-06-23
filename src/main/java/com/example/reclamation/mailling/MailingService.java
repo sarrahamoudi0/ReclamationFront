@@ -1,7 +1,6 @@
-package com.example.reclamation;
+package com.example.reclamation.mailling;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

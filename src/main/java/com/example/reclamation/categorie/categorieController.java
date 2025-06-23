@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.categorie;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController

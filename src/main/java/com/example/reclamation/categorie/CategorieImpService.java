@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.categorie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

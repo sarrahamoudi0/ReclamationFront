@@ -1,6 +1,7 @@
-package com.example.reclamation;
+package com.example.reclamation.reclamation;
 
 import java.util.List;
+
 import com.example.reclamation.user.User;
 
 public interface IReclamationService {

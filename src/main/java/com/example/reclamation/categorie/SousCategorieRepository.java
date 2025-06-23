@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.categorie;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

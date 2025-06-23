@@ -1,17 +1,22 @@
-package com.example.reclamation;
+package com.example.reclamation.reclamation;
 
 import com.example.reclamation.Event.EventType;
+
 import com.example.reclamation.Event.ReclamationEvent;
 import com.example.reclamation.Event.ReclamationEventRepository;
 import com.example.reclamation.Event.ReclamationEventService;
+import com.example.reclamation.categorie.Categorie;
+import com.example.reclamation.categorie.CategorieRepository;
+import com.example.reclamation.categorie.SousCategorie;
+import com.example.reclamation.categorie.SousCategorieRepository;
 import com.example.reclamation.user.User;
-import com.example.reclamation.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+
 public class ReclamationImpService implements IReclamationService {
 
     @Autowired

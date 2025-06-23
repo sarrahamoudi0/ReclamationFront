@@ -1,7 +1,7 @@
-package com.example.reclamation;
+package com.example.reclamation.commentaire;
 
+import com.example.reclamation.reclamation.Reclamation;
 import com.example.reclamation.user.User;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;

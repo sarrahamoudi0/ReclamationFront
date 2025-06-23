@@ -1,9 +1,11 @@
-package com.example.reclamation;
+package com.example.reclamation.commentaire;
 
 import com.example.reclamation.Event.EventType;
 import com.example.reclamation.Event.ReclamationEventService;
 import com.example.reclamation.email.EmailService;
 import com.example.reclamation.email.EmailTemplateName;
+import com.example.reclamation.reclamation.Reclamation;
+import com.example.reclamation.reclamation.ReclamationImpService;
 import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserService;
@@ -14,11 +16,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @AllArgsConstructor
 @Service

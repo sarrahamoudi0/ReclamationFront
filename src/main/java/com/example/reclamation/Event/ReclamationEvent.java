@@ -1,11 +1,8 @@
 package com.example.reclamation.Event;
 
-import com.example.reclamation.Reclamation;
+import com.example.reclamation.reclamation.Reclamation;
 import com.example.reclamation.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +14,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+
+
 public class ReclamationEvent {
     @Id
     private String id;

@@ -1,7 +1,5 @@
-package com.example.reclamation;
+package com.example.reclamation.commentaire;
 
-import com.example.reclamation.role.Role;
-import com.example.reclamation.user.User;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,7 +30,7 @@ public class CommentaireController {
         }
     }
 
-    @GetMapping("/commentaire/{idReclamation}")
+    @GetMapping("/getcommentaire/{idReclamation}")
     public ResponseEntity<List<Commentaire>> getCommentairesByReclamation(@PathVariable String idReclamation) {
         List<Commentaire> commentaires = commentaireService.getCommentairesByReclamation(idReclamation);
         return ResponseEntity.ok(commentaires);

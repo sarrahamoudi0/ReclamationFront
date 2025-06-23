@@ -1,4 +1,4 @@
-package com.example.reclamation;
+package com.example.reclamation.mailling;
 
 import org.springframework.http.ResponseEntity;
 
