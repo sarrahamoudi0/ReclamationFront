@@ -23,7 +23,7 @@ export class CommentaireService {
 
   // Récupérer la liste des commentaires d'une réclamation
   getCommentairesByReclamation(idReclamation: string): Observable<Commentaire[]> {
-    return this.http.get<Commentaire[]>(`${this.apiUrl}/commentaire/${idReclamation}`);
+    return this.http.get<Commentaire[]>(`${this.apiUrl}/getcommentaire/${idReclamation}`);
   }
 
   // Mettre à jour un commentaire
