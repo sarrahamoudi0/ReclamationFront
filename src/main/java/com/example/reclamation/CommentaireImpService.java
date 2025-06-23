@@ -39,14 +39,24 @@ public class CommentaireImpService implements ICommentaireService {
         commentaire.setReclamation(reclamation);
         commentaire.setUser(currentUser);
         commentaire.setContenu(contenu);
+        commentaire.setInterne(false);
         commentaire.setDateCommentaire(LocalDateTime.now());
 
         Commentaire savedCommentaire = commentaireRepository.save(commentaire);
+        // Loguer l'événement dans la timeline via eventService
+        String description = "Nouveau commentaire ajouté par " + currentUser.getFullName();
+        eventService.logEvent(
+                currentUser,
+                reclamation,
+                EventType.COMMENTAIRE_AJOUTER,  // Assure-toi que cette valeur existe dans ton enum EventType
+                description
+        );
+
         if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
             User client = reclamation.getUser();
             String emailClient = client.getEmail();
             String lienFront = "http://localhost:4200/reclamation/" + reclamation.getIdReclamation();
-            String sujet = "Nouveau commentaire sur votre réclamation";
+            String sujet = "Nouveau commentaire sur cette réclamation";
 
             Context context = new Context();
             context.setVariable("username", client.getFullName());
@@ -77,17 +87,17 @@ public class CommentaireImpService implements ICommentaireService {
         commentaire.setReclamation(reclamation);
         commentaire.setUser(currentUser);
         commentaire.setContenu(contenu);
-        commentaire.setInterne(false);
+        commentaire.setInterne(true);
         commentaire.setDateCommentaire(LocalDateTime.now());
 
         Commentaire savedCommentaire = commentaireRepository.save(commentaire);
 
         // Loguer l'événement dans la timeline
-        String description = "Nouveau commentaire ajouté par " + currentUser.getUsername();
+        String description = "Nouveau commentaire interne ajouté par " + currentUser.getFullName();
         eventService.logEvent(
                 currentUser,
                 reclamation,
-                EventType.COMMENTAIRE_AJOUT, // ajoute cette valeur dans ton enum EventType
+                EventType.COMMENTAIRE_AJOUTER, // ajoute cette valeur dans ton enum EventType
                 description
         );
 

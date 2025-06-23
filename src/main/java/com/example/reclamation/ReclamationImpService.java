@@ -93,7 +93,7 @@ public class ReclamationImpService implements IReclamationService {
             reclamationEventService.logEvent(
                     currentUser,
                     saved,
-                    EventType.TITRE_CHANGE,
+                    EventType.TITRE_CHANGER,
                     "Titre changé de '" + ancienTitre + "' à '" + reclamation.getTitre() + "'"
             );
         }
@@ -102,7 +102,7 @@ public class ReclamationImpService implements IReclamationService {
             reclamationEventService.logEvent(
                     currentUser,
                     saved,
-                    EventType.DESCRIPTION_CHANGE,
+                    EventType.DESCRIPTION_CHANGER,
                     "Description modifiée"
             );
         }
@@ -111,7 +111,7 @@ public class ReclamationImpService implements IReclamationService {
             reclamationEventService.logEvent(
                     currentUser,
                     saved,
-                    EventType.IMAGE_CHANGE,
+                    EventType.IMAGE_CHANGER,
                     "Image mise à jour"
             );
         }
@@ -152,7 +152,7 @@ public class ReclamationImpService implements IReclamationService {
         reclamationEventService.logEvent(
                 currentUser,
                 saved,
-                EventType.STATUT_CHANGE,
+                EventType.STATUT_CHANGER,
                 "Statut changé de '" + ancienStatut.name() + "' à '" + statut.name() + "'"
         );
 
@@ -172,7 +172,7 @@ public class ReclamationImpService implements IReclamationService {
         reclamationEventService.logEvent(
                 currentUser,
                 saved,
-                EventType.PRIORITE_CHANGE,
+                EventType.PRIORITE_CHANGER,
                 "Priorité changée de '" + (anciennePriorite != null ? anciennePriorite.name() : "null") + "' à '" + priority.name() + "'"
         );
 
@@ -253,7 +253,7 @@ public class ReclamationImpService implements IReclamationService {
         reclamationEventService.logEvent(
                 currentUser,
                 saved,
-                EventType.CATEGORIE_CHANGE,
+                EventType.CATEGORIE_CHANGER,
                 "Catégorie changée de '" + (ancienneCategorie != null ? ancienneCategorie.getNom() : "null") +
                         "' à '" + categorie.getNom() + "', sous-catégorie changée de '" +
                         (ancienneSousCategorie != null ? ancienneSousCategorie.getNomSousCategorie() : "null") +
