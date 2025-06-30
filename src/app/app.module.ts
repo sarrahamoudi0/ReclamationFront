@@ -24,6 +24,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { SideabrAdminComponent } from './sideabr-admin/sideabr-admin.component';
+import { LogsComponent } from './logs/logs.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SideabrAdminComponent } from './sideabr-admin/sideabr-admin.component';
     NavbarComponent,
     NotFoundComponent,
     UserListComponent,
-    SideabrAdminComponent
+    SideabrAdminComponent,
+    LogsComponent
   ],
   imports: [
     BrowserModule,

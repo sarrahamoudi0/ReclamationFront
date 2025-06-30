@@ -16,6 +16,7 @@ import { authGuard } from './guards/auth.guard';
 import { UserRole } from './models/role';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { LogsComponent } from './logs/logs.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'forgotpass', component: ForgotPasswordComponent },
   { path: 'navbar', component: NavbarComponent },
   {path:"user",component:UserListComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
+  { path: 'logs', component: LogsComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
 
 
 
@@ -41,7 +43,6 @@ const routes: Routes = [
   { path: 'admin-dashboard', component: CategorieComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
   { path: 'reclamationclient', component: ReclamationComponent, canActivate: [authGuard],data: { roles: [UserRole.USER] }},
   { path: 'reclamationagnet', component: ReclamtionBackofficeComponent, canActivate: [authGuard],data: { roles: [UserRole.AGENT] }}
-
 
 
 

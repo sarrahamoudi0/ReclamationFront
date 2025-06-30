@@ -11,6 +11,8 @@ import { jwtDecode } from 'jwt-decode';
 import { UserRole } from '../models/role'; 
 import { User } from '../models/User';
 import { AdminCreateUserRequest } from '../models/AdminCreateUser';
+import {of} from 'rxjs'
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -68,11 +70,13 @@ banOrUnbanUser(userId: string): Observable<any> {
   login(request: AuthenticationRequest): Observable<AuthenticationResponse> {
     return this.http.post<AuthenticationResponse>(`${this.apiUrl}/authenticate`, request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('Erreur de connexion :', error);
-        return throwError(() => new Error('Échec de l\'authentification.'));
+        const errorMessage = error.error?.message || 'Échec de l\'authentification.';
+        console.error('Erreur de connexion :', errorMessage);
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
+  
 
   // Activer le compte avec un token
   activateAccount(token: string): Observable<string> {
@@ -213,12 +217,15 @@ banOrUnbanUser(userId: string): Observable<any> {
   isAuthenticated(): boolean {
     return this.getToken() !== null;
   }
-
+  
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('roles'); 
     this.router.navigate(['/login']);
   }
+  
+  
+
  createUser(request: AdminCreateUserRequest): Observable<any> {
   return this.http.post(`${this.apiUrl}/create-user`, request, {
     responseType: 'text' as 'json' 

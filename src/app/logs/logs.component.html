@@ -1,0 +1,45 @@
+<app-sideabr-admin></app-sideabr-admin>
+
+<div class="logs-wrapper">
+  <div *ngIf="loading" class="message-block info">Chargement des logs...</div>
+  <div *ngIf="errorMessage" class="message-block error">{{ errorMessage }}</div>
+
+  <div class="logs-header">
+    <h2>Historique des actions</h2>
+  </div>
+
+  <div class="logs-table-container" *ngIf="!loading && logs.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th><i class="icon">👤</i> Agent</th>
+          <th><i class="icon">⚙️</i> Action</th>
+          <th><i class="icon">📝</i> Détails</th>
+          <th><i class="icon">📅</i> Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of paginatedLogs">
+          <td data-label="Agent">{{ log.agentEmail }}</td>
+          <td data-label="Action">{{ log.action }}</td>
+          <td data-label="Détails">{{ log.details }}</td>
+          <td data-label="Date">{{ log.timestamp | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">&laquo;</button>
+      <button *ngFor="let page of [].constructor(totalPages); let i = index"
+              (click)="changePage(i + 1)"
+              [class.active]="currentPage === i + 1">
+        {{ i + 1 }}
+      </button>
+      <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">&raquo;</button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && logs.length === 0" class="message-block warning">
+    Aucun log disponible.
+  </div>
+</div>
