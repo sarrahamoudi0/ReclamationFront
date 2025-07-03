@@ -1,8 +1,6 @@
 package com.example.reclamation.user;
 
 import com.example.reclamation.role.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data

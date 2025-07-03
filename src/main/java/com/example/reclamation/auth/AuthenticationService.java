@@ -2,9 +2,7 @@ package com.example.reclamation.auth;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Optional;
 
 
 
@@ -354,7 +352,26 @@ public class AuthenticationService {
         return false;
     }
 
+    // Service
 
+    public User getUserFromToken(String token) {
+        // Vérifier si le token est blacklisté (optionnel)
+        Optional<Token> blacklistedToken = tokenRepository.findByToken(token);
+        if (blacklistedToken.isPresent() && blacklistedToken.get().isRevoked()) {
+            throw new RuntimeException("Token révoqué");
+        }
+
+        // Extraire email du token JWT
+        String email = jwtService.extractEmailFromToken(token);
+
+        // Chercher utilisateur par email
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable pour le token"));
+    }
+
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
+    }
 
 
 

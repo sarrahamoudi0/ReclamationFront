@@ -2,6 +2,7 @@ package com.example.reclamation.reclamation;
 
 import com.example.reclamation.Event.ReclamationEvent;
 import com.example.reclamation.Event.ReclamationEventService;
+import com.example.reclamation.logs.AuditLogService;
 import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserService;
@@ -30,6 +31,9 @@ public class ReclamationController {
     private UserService userService;
     @Autowired
     private ReclamationEventService eventService;
+    @Autowired
+    private AuditLogService auditLogService;
+
 
     // Helper method to get the current authenticated user
     private User getCurrentUser() {
@@ -155,31 +159,67 @@ public class ReclamationController {
         try {
             Statut statutEnum = Statut.valueOf(newStatut);
 
-            // Récupérer l'utilisateur courant
             User currentUser = userService.getCurrentUser();
 
+            Reclamation existingReclamation = reclamationService.getReclamationById(id);
+            if (existingReclamation == null) {
+                return ResponseEntity.notFound().build();
+            }
+            Statut oldStatut = existingReclamation.getStatut();
+
             Reclamation updated = reclamationService.updateStatut(id, statutEnum, currentUser);
+
+            if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+                // Message uniquement sur le changement de statut, sans l’ID dans la phrase
+                String message = String.format(
+                        "Statut changé de %s à %s.",
+                        oldStatut, statutEnum
+                );
+
+                // On ajoute l’ID séparément (important pour le frontend)
+                String details = message + " Réclamation ID: " + id;
+
+                auditLogService.logAction(
+                        currentUser.getEmail(),
+                        "STATUT MODIFIÉ",
+                        details
+                );
+            }
+
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
+
     @PutMapping("/{id}/priority")
     public ResponseEntity<Reclamation> updatePriority(
             @PathVariable("id") String id,
             @RequestParam("priority") Priorite priority) {
 
-        // Call the service to update the priority
         User currentUser = getCurrentUser();
 
-        Reclamation updatedReclamation = reclamationService.updatePriority(id, priority,currentUser);
+        Reclamation existingReclamation = reclamationService.getReclamationById(id);
+        if (existingReclamation == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Priorite oldPriority = existingReclamation.getPriorite();
 
-        // Check if the reclamation was found and updated
+        Reclamation updatedReclamation = reclamationService.updatePriority(id, priority, currentUser);
+
         if (updatedReclamation != null) {
+            if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+                String details = String.format("Priorité changée de %s à %s. Réclamation ID: %s", oldPriority, priority, id);
+                auditLogService.logAction(
+                        currentUser.getEmail(),
+                        "CHANGEMENT DE PRIORITÉ",
+                        details
+                );
+            }
             return ResponseEntity.ok(updatedReclamation);
         } else {
-            return ResponseEntity.notFound().build(); // Return 404 if reclamation is not found
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -192,11 +232,35 @@ public class ReclamationController {
     }
 
     @PutMapping("/{idReclamation}/assign-categorie")
-    public Reclamation assignCategorieToReclamation(
+    public ResponseEntity<Reclamation> assignCategorieToReclamation(
             @PathVariable String idReclamation,
             @RequestParam String idCategorie,
             @RequestParam String idSousCategorie) {
-        return reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie);
+        Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+        if (reclamation == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String oldCategorie = reclamation.getCategorie() != null ? reclamation.getCategorie().getNomCategorie() : "Aucune";
+        String oldSousCategorie = reclamation.getSousCategorie() != null ? reclamation.getSousCategorie().getNomSousCategorie() : "Aucune";
+
+        Reclamation updatedReclamation = reclamationService.assignOneCategorieToReclamation(idReclamation, idCategorie, idSousCategorie);
+
+        User currentUser = getCurrentUser();
+
+        String newCategorie = updatedReclamation.getCategorie() != null ? updatedReclamation.getCategorie().getNomCategorie() : "Aucune";
+        String newSousCategorie = updatedReclamation.getSousCategorie() != null ? updatedReclamation.getSousCategorie().getNomSousCategorie() : "Aucune";
+
+        if (Role.ROLE_ADMIN.equals(currentUser.getRole()) || Role.ROLE_AGENT.equals(currentUser.getRole())) {
+            String details = String.format(
+                    "Catégorie changée de %s:%s à %s:%s. Réclamation ID: %s",
+                    oldCategorie, oldSousCategorie, newCategorie, newSousCategorie, idReclamation);
+
+            System.out.println("LOGGING ACTION : " + currentUser.getEmail() + " CHANGEMENT DE CATÉGORIE " + details);
+            auditLogService.logAction(currentUser.getEmail(), "CHANGEMENT DE CATÉGORIE", details);
+        }
+
+        return ResponseEntity.ok(updatedReclamation);
     }
 
     @PutMapping("/{idReclamation}/update-categorie")

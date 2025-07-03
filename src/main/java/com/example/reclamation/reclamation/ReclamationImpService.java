@@ -9,6 +9,9 @@ import com.example.reclamation.categorie.Categorie;
 import com.example.reclamation.categorie.CategorieRepository;
 import com.example.reclamation.categorie.SousCategorie;
 import com.example.reclamation.categorie.SousCategorieRepository;
+import com.example.reclamation.logs.AuditLog;
+import com.example.reclamation.logs.AuditLogService;
+import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,8 @@ public class ReclamationImpService implements IReclamationService {
     private ReclamationEventRepository EventRepo;
     @Autowired
     private ReclamationEventService reclamationEventService;
+    @Autowired
+    private AuditLogService auditLogService;
 
 
     @Override
@@ -253,20 +258,36 @@ public class ReclamationImpService implements IReclamationService {
 
         reclamation.setCategorie(categorie);
         reclamation.setSousCategorie(sousCategorie);
+
         Reclamation saved = reclamationRepository.save(reclamation);
 
+        // Log audit action
+        if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+            String details = String.format(
+                    "Catégorie changée de %s:%s à %s:%s. Réclamation ID: %s",
+                    ancienneCategorie != null ? ancienneCategorie.getNomCategorie() : "Aucune",
+                    ancienneSousCategorie != null ? ancienneSousCategorie.getNomSousCategorie() : "Aucune",
+                    categorie.getNomCategorie(),
+                    sousCategorie.getNomSousCategorie(),
+                    idReclamation
+            );
+            auditLogService.logAction(currentUser.getEmail(), "CHANGEMENT DE CATÉGORIE", details);
+        }
+
+        // Log event for timeline or events tracking
         reclamationEventService.logEvent(
                 currentUser,
                 saved,
                 EventType.CATEGORIE_CHANGER,
-                "Catégorie changée de '" + (ancienneCategorie != null ? ancienneCategorie.getNom() : "null") +
-                        "' à '" + categorie.getNom() + "', sous-catégorie changée de '" +
+                "Catégorie changée de '" + (ancienneCategorie != null ? ancienneCategorie.getNomCategorie() : "null") +
+                        "' à '" + categorie.getNomCategorie() + "', sous-catégorie changée de '" +
                         (ancienneSousCategorie != null ? ancienneSousCategorie.getNomSousCategorie() : "null") +
                         "' à '" + sousCategorie.getNomSousCategorie() + "'"
         );
 
         return saved;
     }
+
 
     public List<ReclamationEvent> getEventsForReclamation(String idReclamation) {
         Reclamation reclamation = reclamationRepository.findById(idReclamation)

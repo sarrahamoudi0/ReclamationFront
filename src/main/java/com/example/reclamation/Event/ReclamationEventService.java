@@ -1,6 +1,7 @@
 package com.example.reclamation.Event;
 
 import com.example.reclamation.reclamation.Reclamation;
+import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,4 +38,10 @@ public class ReclamationEventService {
     public List<ReclamationEvent> getEventsForReclamation(Reclamation reclamation) {
         return eventRepo.findByReclamationOrderByTimestampAsc(reclamation);
     }
+
+
+    public List<ReclamationEvent> getEventsByAgentsAndAdmins() {
+        return eventRepo.findByActeurRoleIn(List.of(Role.ROLE_AGENT, Role.ROLE_ADMIN));
+    }
+
 }

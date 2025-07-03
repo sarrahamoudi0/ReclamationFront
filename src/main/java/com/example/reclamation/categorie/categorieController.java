@@ -1,9 +1,15 @@
 package com.example.reclamation.categorie;
 
+import com.example.reclamation.logs.AuditLogService;
+import com.example.reclamation.role.Role;
+import com.example.reclamation.user.User;
+import com.example.reclamation.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +22,38 @@ import java.util.List;
 public class categorieController {
     @Autowired
     private ICategorieService categorieService;
+    @Autowired
+    private AuditLogService auditLogService;
+    @Autowired
+    private UserService userService;
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Ensure the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        String email = authentication.getName(); // getName() returns the principal, which is the email in this case
+
+        // Use UserService to find the user by email
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     @PostMapping("/addCategorie")
     public ResponseEntity<Categorie> createCategorie(@RequestBody Categorie categorie) {
         Categorie createdCategorie = categorieService.createCategorie(categorie);
-        return ResponseEntity.ok(createdCategorie);  // Return created category with HTTP 200 status
+
+        User currentUser = getCurrentUser();
+
+        if (currentUser != null && (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT)) {
+            String details = "Catégorie créée : " + createdCategorie.getNomCategorie();
+            auditLogService.logAction(currentUser.getEmail(), "CRÉATION DE CATÉGORIE", details);
+        }
+
+        return ResponseEntity.ok(createdCategorie);
     }
 
     @GetMapping("/getAllCategorie")

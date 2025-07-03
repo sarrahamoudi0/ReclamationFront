@@ -22,9 +22,9 @@ public class ReclamationEvent {
     @Id
     private String id;
 
-    private EventType type;       // Type d’événement (enum ci‑dessus)
+    private EventType type;
 
-    private String description;   // Détail lisible (généré automatiquement)
+    private String description;
 
     private LocalDateTime timestamp;
 

@@ -2,11 +2,14 @@ package com.example.reclamation.auth;
 
 
 
+import com.example.reclamation.logs.AuditLogService;
+import com.example.reclamation.role.Role;
 import com.example.reclamation.token.Token;
 import com.example.reclamation.token.TokenRepository;
 import com.example.reclamation.user.AdminCreateUserRequest;
 import com.example.reclamation.user.ResetPasswordRequest;
 import com.example.reclamation.user.User;
+import com.example.reclamation.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -15,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 @RestController
@@ -34,7 +42,10 @@ import java.util.Optional;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-    private final TokenRepository tokenRepository;
+    private final UserService userService;
+    private final AuditLogService auditLogService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> register(
@@ -57,10 +68,40 @@ public class AuthenticationController {
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
+        try {
+            AuthenticationResponse response = service.authenticate(request);
+
+            User user = userService.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (user.getRole() == Role.ROLE_AGENT || user.getRole() == Role.ROLE_ADMIN) {
+                auditLogService.logAction(
+                        user.getEmail(),
+                        "Connexion",
+                        user.getRole() == Role.ROLE_AGENT
+                                ? "Agent connecté avec succès"
+                                : "Administrateur connecté avec succès"
+                );
+            }
+
+
+            logger.info("✅ Connexion réussie : email={}, date={}", request.getEmail(), LocalDateTime.now());
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            logger.warn("❌ Échec de connexion : email={}, raison={}, date={}",
+                    request.getEmail(), e.getMessage(), LocalDateTime.now());
+
+            // Return 401 with a JSON body
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Échec de l'authentification : " + e.getMessage());
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(error);
+        }
     }
 
     @GetMapping("/activate-account")
@@ -111,42 +152,93 @@ public class AuthenticationController {
         }
     }
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
-        // Strip "Bearer " prefix from the token
-        String jwtToken = token.replace("Bearer ", "");
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().build();
+        }
+        String token = authHeader.substring(7);
 
-        // Call the logout method from AuthenticationService to blacklist or invalidate the token
-        service.logout(jwtToken);
+        try {
+            User user = service.getUserFromToken(token);
+            service.logout(token);  // ta logique pour blacklist
 
-        return ResponseEntity.ok().build(); // Return a success response
+            if (user.getRole() == Role.ROLE_ADMIN || user.getRole() == Role.ROLE_AGENT) {
+                String details;
+                if (user.getRole() == Role.ROLE_ADMIN) {
+                    details = "Administrateur " + user.getFullName() + " déconnecté avec succès";
+                } else {
+                    details = "Agent " + user.getFullName() + " déconnecté avec succès";
+                }
+                auditLogService.logAction(user.getEmail(), "Déconnexion", details);
+            }
+
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+
+
+
 
 
 
     @PostMapping("/create-user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> createUserByAdmin(@RequestBody AdminCreateUserRequest request) {
-        // Call the service layer to create the user
         String responseMessage = service.createUserByAdmin(request);
 
-        // Return success or failure message based on service response
         if ("User created successfully.".equals(responseMessage)) {
+            String adminEmail = getLoggedAdminEmail();
+
+            auditLogService.logAction(
+                    adminEmail,
+                    "Création utilisateur",
+                    "Administrateur a créé un utilisateur avec email : " + request.getEmail() +
+                            " et rôle : " + request.getRole()
+            );
+
             return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
         } else {
-            return ResponseEntity.badRequest().body(responseMessage); // Error message
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
     @PutMapping("/ban-user/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
         public ResponseEntity<String> toggleUserBan(@PathVariable String userId) {
-            boolean success = service.toggleUserBan(userId);
-            if (success) {
-                return ResponseEntity.ok("User ban status toggled successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        boolean success = service.toggleUserBan(userId);
+        if (success) {
+            // Récupérer email admin connecté
+            String adminEmail = getLoggedAdminEmail();
+
+            // Récupérer l'utilisateur banni
+            Optional<User> bannedUserOpt = service.findById(userId);
+            if (bannedUserOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable.");
             }
+            User bannedUser = bannedUserOpt.get();
+
+            // Statut ban actuel
+            boolean isBanned = bannedUser.isBanned();
+            String statut = isBanned ? "Banni" : "Débanni";
+
+            // Log d’audit avec statut
+            auditLogService.logAction(
+                    adminEmail,
+                    "Ban/Déban utilisateur",
+                    "Admin a changé le statut de ban de l’utilisateur avec email : "
+                            + bannedUser.getEmail() + ". Statut actuel : " + statut
+            );
+
+            return ResponseEntity.ok("User ban status toggled successfully. Statut: " + statut);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
+    }
 
 
 
@@ -173,15 +265,47 @@ public class AuthenticationController {
         }
 
         try {
+            // Step 1: Get current admin's email
+            String adminEmail = getLoggedAdminEmail();
+
+            // Step 2: Get user before update
+            Optional<User> userOptional = service.findById(id);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable.");
+            }
+            User user = userOptional.get();
+            String oldRole = user.getRole().name();
+
+            // Step 3: Update the role
             boolean updated = service.updateUserRole(id, roleName);
             if (!updated) {
                 return ResponseEntity.notFound().build();
             }
+            User adminUser = userService.findByEmail(adminEmail).orElse(null);
+            if (adminUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Admin non authentifié");
+            }
+            String oldRoleFormatted = formatRole(oldRole);
+            String newRoleFormatted = formatRole(roleName);
+            // Step 4: Log the action
+            String message = String.format("L'administrateur %s a changé le rôle de l'utilisateur %s de %s à %s.",
+                    adminUser.getFullName()  , user.getEmail(), oldRoleFormatted,
+                    newRoleFormatted);
+
+            auditLogService.logAction(adminEmail, "Changement de rôle", message);
+
             return ResponseEntity.ok("Role updated successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    private String formatRole(String role) {
+        if (role == null) return "";
+        // Supprime "ROLE_" et met en majuscule la partie restante
+        return role.replace("ROLE_", "").toUpperCase();
+    }
+
 
 
 
@@ -191,6 +315,22 @@ public class AuthenticationController {
         String responseMessage = service.deleteUser(id);
         return ResponseEntity.ok(responseMessage);
     }
+
+
+    private String getLoggedAdminEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        }
+        return null;
+    }
+
+    private User getLoggedAdminUser() {
+        String email = getLoggedAdminEmail();
+        if (email == null) return null;
+        return userService.findByEmail(email).orElse(null);
+    }
+
 
 }
 

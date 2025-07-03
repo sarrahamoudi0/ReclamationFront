@@ -1,10 +1,16 @@
 package com.example.reclamation.commentaire;
 
+import com.example.reclamation.logs.AuditLogService;
+import com.example.reclamation.role.Role;
+import com.example.reclamation.user.User;
+import com.example.reclamation.user.UserService;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +23,10 @@ import java.util.List;
 public class CommentaireController {
     @Autowired
     private  ICommentaireService commentaireService;
+    @Autowired
+    AuditLogService auditLogService;
+    @Autowired
+    UserService userService;
 
     @PostMapping("/{idReclamation}")
     public ResponseEntity<?> addComment(
@@ -24,10 +34,39 @@ public class CommentaireController {
             @RequestParam String contenu) {
         try {
             Commentaire savedCommentaire = commentaireService.addComment(idReclamation, contenu);
+
+            User currentUser = getCurrentUser();
+
+            if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+                // Message clair, l'ID est uniquement pour le lien
+                String details = String.format(
+                        "Commentaire public ajouté par %s. Réclamation ID: %s",
+                        currentUser.getFullName(),
+                        idReclamation
+                );
+                auditLogService.logAction(currentUser.getEmail(), "COMMENTAIRE PUBLIC", details);
+            }
+
             return ResponseEntity.ok(savedCommentaire);
+
         } catch (MessagingException e) {
             return ResponseEntity.status(500).body("Erreur lors de l'envoi du mail : " + e.getMessage());
         }
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Ensure the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        String email = authentication.getName(); // getName() returns the principal, which is the email in this case
+
+        // Use UserService to find the user by email
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @GetMapping("/getcommentaire/{idReclamation}")
@@ -60,6 +99,14 @@ public class CommentaireController {
             @RequestParam String contenu) {
         try {
             Commentaire savedCommentaire = commentaireService.addCommentInterne(idReclamation, contenu);
+
+            User currentUser = getCurrentUser();
+
+            if (currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_AGENT) {
+                String details = "Commentaire interne ajouté à la réclamation par " + currentUser.getFullName() + ". Réclamation ID: " + idReclamation;
+                auditLogService.logAction(currentUser.getEmail(), "COMMENTAIRE INTERNE", details);
+            }
+
             return ResponseEntity.ok(savedCommentaire);
         } catch (SecurityException e) {
             return ResponseEntity.status(403).body(e.getMessage());
