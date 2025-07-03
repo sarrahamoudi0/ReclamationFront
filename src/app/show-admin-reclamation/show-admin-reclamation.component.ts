@@ -18,7 +18,7 @@ import { ReclamationEvent } from '../models/EventType';
   styleUrls: ['./show-admin-reclamation.component.css']
 })
 export class ShowAdminReclamationComponent implements OnInit, AfterViewChecked {
-  @ViewChild('commentsContainer') private commentsContainer!: ElementRef;
+  @ViewChild('commentsContainer') private commentsContainer?: ElementRef;
   
   reclamation!: Reclamation;
     categories: Categorie[] = []; 
@@ -75,12 +75,15 @@ hoverBtn = false;
 
   private scrollToBottom(): void {
     try {
-      const element = this.commentsContainer.nativeElement;
-      element.scrollTop = element.scrollHeight;
+      if (this.commentsContainer?.nativeElement) {
+        const element = this.commentsContainer.nativeElement;
+        element.scrollTop = element.scrollHeight;
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
   }
+  
 
   getReclamation(idReclamation: string): void {
     this.reclamationService.getReclamationById(idReclamation).subscribe({

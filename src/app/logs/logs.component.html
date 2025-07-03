@@ -5,14 +5,53 @@
   <div *ngIf="errorMessage" class="message-block error">{{ errorMessage }}</div>
 
   <div class="logs-header">
-    <h2>Historique des actions</h2>
+    <h2><span class="icon">📝</span> Historique</h2>
+    <div class="logs-controls">
+      <div class="search-container">
+        <div class="search-field">
+          <input 
+            type="email" 
+            [(ngModel)]="searchEmail" 
+            (input)="onSearchChange()"
+            placeholder="Rechercher par email..."
+            class="search-input"
+          >
+          <button *ngIf="searchEmail" (click)="clearEmailSearch()" class="clear-search" aria-label="Effacer la recherche email">
+            ✕
+          </button>
+        </div>
+        <div *ngIf="currentLogType === 'reclamation'" class="search-field">
+          <input 
+            type="text" 
+            [(ngModel)]="searchId" 
+            (input)="onSearchChange()"
+            placeholder="Rechercher par ID réclamation..."
+            class="search-input"
+          >
+          <button *ngIf="searchId" (click)="clearSearch()" class="clear-search" aria-label="Effacer la recherche ID">
+            ✕
+          </button>
+        </div>
+        <button *ngIf="searchEmail || searchId" (click)="clearAllSearches()" class="clear-all-search" aria-label="Effacer toutes les recherches">
+          Effacer tout
+        </button>
+      </div>
+      <div class="logs-toggle-icons">
+        <button (click)="switchLogType('auth')" [class.active]="currentLogType === 'auth'" aria-label="Authentification logs">
+          <i class="icon" aria-hidden="true">🔒</i>
+        </button>
+        <button (click)="switchLogType('reclamation')" [class.active]="currentLogType === 'reclamation'" aria-label="Réclamation logs">
+          <i class="icon" aria-hidden="true">📄</i>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="logs-table-container" *ngIf="!loading && logs.length > 0">
     <table>
       <thead>
         <tr>
-          <th><i class="icon">👤</i> Agent</th>
+          <th><i class="icon">👤</i> Utilisateur</th>
           <th><i class="icon">⚙️</i> Action</th>
           <th><i class="icon">📝</i> Détails</th>
           <th><i class="icon">📅</i> Date</th>
@@ -22,7 +61,15 @@
         <tr *ngFor="let log of paginatedLogs">
           <td data-label="Agent">{{ log.agentEmail }}</td>
           <td data-label="Action">{{ log.action }}</td>
-          <td data-label="Détails">{{ log.details }}</td>
+          <td data-label="Détails">
+            <ng-container *ngIf="currentLogType === 'reclamation' && getReclamationId(log.details); else normalDetails">
+              <span [innerHTML]="getDetailsWithLink(log.details)"></span>
+            </ng-container>
+            <ng-template #normalDetails>
+              {{ log.details }}
+            </ng-template>
+          </td>
+          
           <td data-label="Date">{{ log.timestamp | date: 'short' }}</td>
         </tr>
       </tbody>

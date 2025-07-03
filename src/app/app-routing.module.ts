@@ -24,7 +24,7 @@ const routes: Routes = [
   {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
   {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
   {path:"reclamation/:id",component:ShowReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.USER]}},
-  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.ADMIN]}},
+  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.ADMIN,UserRole.AGENT]}},
   {path:"categorie",component:CategorieComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
   {path:"register",component:RegisterComponent}, 
   { path: 'activate', component: ActivationComponent },

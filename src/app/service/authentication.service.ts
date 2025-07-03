@@ -219,8 +219,29 @@ banOrUnbanUser(userId: string): Observable<any> {
   }
   
   logout(): void {
+    const token = this.getToken();
+  
+    if (!token) {
+      // No token found, just clear and redirect
+      this.clearSession();
+      return;
+    }
+  
+    const headers = { Authorization: `Bearer ${token}` };
+  
+    this.http.post<void>(`${this.apiUrl}/logout`, null, { headers }).pipe(
+      tap(() => this.clearSession()),  // On success, clear session and redirect
+      catchError((err) => {
+        console.error('Logout failed', err);
+        this.clearSession();  // Still clear session even on error
+        return of(null);
+      })
+    ).subscribe();
+  }
+  
+  private clearSession() {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('roles'); 
+    localStorage.removeItem('roles');
     this.router.navigate(['/login']);
   }
   
