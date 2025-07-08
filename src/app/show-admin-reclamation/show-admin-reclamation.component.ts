@@ -11,6 +11,7 @@ import { SousCategorie } from '../models/SousCategorie';
 import { Commentaire } from '../models/Commentaire';
 import { User } from '../models/User';
 import { ReclamationEvent } from '../models/EventType';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -54,8 +55,8 @@ hoverBtn = false;
     private route: ActivatedRoute,
      private categorieService: CategorieService,
      private commentaireService: CommentaireService,
-
-    private router: Router
+    private router: Router,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -112,7 +113,10 @@ affecterCategorie(): void {
     };
 
     this.reclamationService.assignCategorieToReclamation(payload.idReclamation, payload.idCategorie).subscribe({
-      next: () => console.log('Catégorie affectée avec succès'),
+      next: () => {
+        this.toastrService.success('Catégorie affectée avec succès');
+        console.log('Catégorie affectée avec succès');
+      },
       error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
     });
   }
@@ -143,6 +147,7 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
       this.showCategorieList = false;
       this.showSousCategorieList = false;
       this.selectedCategorie = undefined;
+      this.toastrService.success('Catégorie mise à jour avec succès');
     },
     error: (err) => console.error('Erreur mise à jour:', err)
   });
@@ -185,6 +190,7 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
       .subscribe(
         (updatedReclamation) => {
           this.reclamation = updatedReclamation;
+          this.toastrService.success('Statut mis à jour avec succès');
         },
         (error) => {
           console.error('Erreur lors de la mise à jour du statut :', error);
@@ -202,6 +208,7 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
       .subscribe(
         (updatedReclamation) => {
           this.reclamation = updatedReclamation;
+          this.toastrService.success('Priorité mise à jour avec succès');
         },
         (error) => {
           console.error('Erreur lors de la mise à jour de la priorité :', error);

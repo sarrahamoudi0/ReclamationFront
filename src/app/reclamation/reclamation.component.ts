@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Reclamation } from '../models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
-import { Router } from '@angular/router';
+
 import { Statut } from 'src/app/models/Statut';
 import { Priorite } from '../models/Priorite';
 import { Categorie } from '../models/Categorie';
 import { SousCategorie } from '../models/SousCategorie';  // Assurez-vous d'importer SousCategorie
 import { CategorieService } from '../service/categorie.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-reclamation',
@@ -36,7 +39,7 @@ export class ReclamationComponent implements OnInit {
 
   constructor(private reclamationService: ReclamationService,
               private categorieService: CategorieService,
-              private router: Router) { }
+              private router: Router, private ToastService: ToastrService) { }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -88,7 +91,7 @@ export class ReclamationComponent implements OnInit {
     // Envoi de la réclamation
     this.reclamationService.addReclamation(formData).subscribe({
       next: (res) => {
-        console.log('Réclamation envoyée avec succès :', res);
+        this.ToastService.success('Réclamation envoyée avec succés');
         this.router.navigate(['/myreclamation']);
       },
       error: (err) => {

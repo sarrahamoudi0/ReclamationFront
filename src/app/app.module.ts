@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -25,6 +26,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { SideabrAdminComponent } from './sideabr-admin/sideabr-admin.component';
 import { LogsComponent } from './logs/logs.component';
+import {ToastrModule} from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -54,6 +57,14 @@ import { LogsComponent } from './logs/logs.component';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    ToastrModule.forRoot({
+      progressBar: true,
+      closeButton: true,
+      newestOnTop: true,
+      tapToDismiss: true,
+      positionClass: 'toast-bottom-right',
+      timeOut: 8000
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

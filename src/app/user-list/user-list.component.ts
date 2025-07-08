@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { UserRole } from '../models/role';
 import { AdminCreateUserRequest } from '../models/AdminCreateUser';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -106,7 +107,8 @@ closeDropdown(): void {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -187,7 +189,15 @@ addUser(): void {
 
   this.authenticationService.createUser(updatedUser).subscribe({
     next: (response) => {
-      window.location.reload();
+      this.toastrService.success('Utilisateur créé avec succès');
+      // Close the modal
+      const modalElement = document.getElementById('addUserModal');
+      if (modalElement) {
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) modal.hide();
+      }
+      // Add the new user to the list and refresh the view
+      this.loadUsers();
     },
     error: (err) => {
       this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";

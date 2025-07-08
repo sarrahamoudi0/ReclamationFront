@@ -5,6 +5,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { SousCategorie } from '../models/SousCategorie';
 import { Reclamation } from '../models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-categorie',
@@ -27,7 +28,7 @@ export class CategorieComponent implements OnInit {
   currentCategorie: Categorie = { nomCategorie: '', sousCategories: [] };
   selectedCategory?: Categorie;
 
-  constructor(private categorieService: CategorieService,   private reclamationService: ReclamationService) {}
+  constructor(private categorieService: CategorieService,   private reclamationService: ReclamationService, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -64,6 +65,7 @@ export class CategorieComponent implements OnInit {
       next: cat => {
         this.categories.push(cat);
         this.closeModal();
+        this.toastrService.success('Catégorie ajoutée avec succès');
       },
       error: err => console.error('Erreur ajout catégorie', err)
     });
@@ -77,7 +79,7 @@ export class CategorieComponent implements OnInit {
   updateCategorie(): void {
     const name = this.categorieName.trim();
     if (!name || !this.currentCategorie.idCategorie) {
-      alert('Erreur : nom vide ou ID manquant.');
+      this.toastrService.error('Erreur : nom vide ou ID manquant.');
       return;
     }
     this.categorieService.updateCategorie({
@@ -89,6 +91,7 @@ export class CategorieComponent implements OnInit {
           cat.idCategorie === updated.idCategorie ? updated : cat
         );
         this.closeModal();
+        this.toastrService.success('Catégorie mise à jour avec succès');
       },
       error: err => console.error('Erreur mise à jour', err)
     });
@@ -99,15 +102,19 @@ export class CategorieComponent implements OnInit {
 
     const isTopLevel = this.categories.some(cat => cat.idCategorie === idCategorie);
     if (!isTopLevel) {
-      console.warn('Tried to delete a subcategory using category deletion method.');
+      this.toastrService.error('Suppression invalide.');
       return;
     }
 
     this.categorieService.deleteCategorie(idCategorie).subscribe({
       next: () => {
         this.categories = this.categories.filter(cat => cat.idCategorie !== idCategorie);
+        this.toastrService.success('Catégorie supprimée avec succès');
       },
-      error: err => console.error('Erreur suppression catégorie', err)
+      error: err => {
+        console.error('Erreur suppression catégorie', err);
+        this.toastrService.error('Erreur lors de la suppression de la catégorie');
+      }
     });
   }
 
@@ -161,14 +168,14 @@ export class CategorieComponent implements OnInit {
 
   deleteSousCategorie(idParent: string, idSousCategorie: string): void {
     if (!idParent || !idSousCategorie) {
-      console.warn('Invalid category or subcategory ID.');
+      this.toastrService.error('ID de catégorie ou de sous-catégorie invalide.');
       return;
     }
 
     this.categorieService.deleteSousCategorie(idParent, idSousCategorie)
       .subscribe({
         next: () => {
-          alert('Sous-catégorie supprimée avec succès');
+          this.toastrService.success('Sous-catégorie supprimée avec succès');
           // Optionally remove the subcategory from the UI without refreshing
           const category = this.categories.find(cat => cat.idCategorie === idParent);
           if (category) {
@@ -177,7 +184,7 @@ export class CategorieComponent implements OnInit {
         },
         error: (error) => {
           console.error('Erreur lors de la suppression:', error);
-          alert('Erreur lors de la suppression');
+          this.toastrService.error('Erreur lors de la suppression de la sous-catégorie');
         }
       });
   }
