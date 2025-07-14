@@ -1,0 +1,323 @@
+.navbar-system {
+  width: 97vw;
+  height: 60px;
+  background: rgba(255,255,255,0.85); /* glassmorphism effect */
+  backdrop-filter: blur(8px);
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-shadow: 0 2px 12px rgba(44,62,80,0.07);
+  border-bottom: 1px solid #ececec;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+  padding: 0 2.5rem 0 0;
+  transition: margin-left 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.4rem;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.5rem;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.icon-btn:hover {
+  background: #f5f5f5;
+  color: #e47429;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  background: #f5f5f5;
+  margin-left: 0.5rem;
+  transition: box-shadow 0.2s;
+}
+.avatar-wrapper:hover .avatar {
+  box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background: #fff;
+  color: #222;
+  min-width: 220px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+  padding: 0.7rem 0 0.3rem 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.18s;
+  border: 1px solid #ececec;
+}
+
+.dropdown-user-info.modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.2rem 0.7rem 1.2rem;
+  border-bottom: none;
+  margin-bottom: 0.1rem;
+}
+.dropdown-avatar img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e47429;
+  margin-bottom: 0.3rem;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+}
+.dropdown-fullname {
+  font-weight: 700;
+  font-size: 1.13rem;
+  color: #222;
+  margin-bottom: 0.1rem;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+.dropdown-divider {
+  width: 90%;
+  height: 1px;
+  background: #ececec;
+  margin: 0.2rem auto 0.2rem auto;
+  border-radius: 2px;
+}
+
+.dropdown-list.modern {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dropdown-list.modern li a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.8rem 1.4rem;
+  color: #222;
+  text-decoration: none;
+  font-size: 1.05rem;
+  border: none;
+  background: none;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 10px;
+}
+.dropdown-list.modern li a i {
+  font-size: 1.15rem;
+  color: #e47429;
+}
+.dropdown-list.modern li a:hover {
+  background: #e47429;
+  color: #fff;
+}
+.dropdown-list.modern li a:hover i {
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dropdown-menu li a {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 1.2rem;
+  color: #222;
+  text-decoration: none;
+  font-size: 1rem;
+  border: none;
+  background: none;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 6px;
+}
+.dropdown-menu li a:hover {
+  background: #e47429;
+  color: #fff;
+}
+
+/* Modern Notification Dropdown Styles */
+.modern-dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  min-width: 320px;
+  z-index: 100;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.notif-dropdown-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+  border: 1px solid #ececec;
+  overflow: hidden;
+  min-width: 320px;
+  max-width: 360px;
+  padding: 0;
+  animation: fadeIn 0.18s;
+}
+
+.notif-dropdown-header {
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: #e47429;
+  background: #f8f8f8;
+  padding: 1rem 1.3rem 0.7rem 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-bottom: none;
+}
+
+.notif-dropdown-divider {
+  width: 92%;
+  height: 1px;
+  background: #ececec;
+  margin: 0.1rem auto 0.1rem auto;
+  border-radius: 2px;
+}
+
+.notif-dropdown-list {
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.2rem 0;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.notif-dropdown-item {
+  padding: 0.85rem 1.3rem 0.7rem 1.3rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: #222;
+  font-size: 1.01em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.notif-dropdown-item:hover {
+  background: #f7f7f7;
+  color: #e47429;
+}
+
+.notif-message {
+  font-weight: 500;
+  font-size: 1.01em;
+  margin-bottom: 0.1rem;
+}
+
+.notif-meta {
+  font-size: 0.87em;
+  color: #aaa;
+  margin-top: 0.1rem;
+}
+
+.notif-empty {
+  color: #aaa;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1em;
+  cursor: default;
+  padding: 1.2rem 0;
+}
+
+.muted {
+  color: #bbb;
+}
+
+.badge.animate {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #e74c3c 60%, #e47429 100%);
+  color: #fff;
+  border-radius: 50%;
+  padding: 3px 8px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  min-width: 22px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(231,76,60,0.18);
+  border: 2.5px solid #fff;
+  animation: badge-pop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+  letter-spacing: 0.01em;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  z-index: 2;
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.notif-number {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Montserrat', 'Arial Rounded MT Bold', Arial, sans-serif;
+  color: #fff;
+  background: #ff3b30;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-sizing: border-box;
+  z-index: 2;
+  user-select: none;
+  letter-spacing: 0.01em;
+  transform: none;
+  animation: none;
+  transition: none;
+}
+
+@media (max-width: 900px) {
+  .navbar-system {
+    width: 100vw;
+    margin-left: 0;
+    padding: 0 0.7rem;
+  }
+}

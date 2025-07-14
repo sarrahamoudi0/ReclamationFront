@@ -21,4 +21,5 @@ export class NotificationService {
   getUnreadCount(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/count-unread`);
   }
+  
 }

@@ -1,6 +1,5 @@
 <div class="d-flex">
   <!-- Sidebar on the left -->
-  <app-sideabr-admin></app-sideabr-admin>
 
   <!-- Main content on the right -->
   <div class="flex-grow-1 p-3">
@@ -48,9 +47,9 @@
         <tr  *ngFor="let user of pagedUsers">
 
           <td>    <div class="user-info">
-       <img 
-      [src]="user.image ? 'data:image/jpeg;base64,' + user.image : 'assets/img/default-avatar.png'" 
-      alt="Photo" 
+       <img
+      [src]="user.image ? 'data:image/jpeg;base64,' + user.image : 'assets/img/default-avatar.png'"
+      alt="Photo"
       class="user-image"
     />
 
@@ -70,7 +69,7 @@
   </span>
 
   <div *ngIf="isDropdownOpen(user, i) && isUserAdminOrAgent(user)" class="dropdown-menu show">
-    <button 
+    <button
       *ngFor="let r of availableRoles"
       class="dropdown-item"
       (click)="onRoleClick($event, user.id!, r)">
@@ -79,7 +78,7 @@
   </div>
 </div>
 
- 
+
 </td>
 
 <td>
@@ -213,8 +212,8 @@
               </div>
             </div>
           </div>
-          
-          
+
+
 
           <!-- Email -->
           <div class="form-group mb-2">

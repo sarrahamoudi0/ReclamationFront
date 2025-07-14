@@ -1,56 +1,31 @@
-<app-navbar></app-navbar>
+
+<br>
+<br> <br>
 <div class="reclamations-container">
-  <h1 class="page-title">Mes réclamations</h1>
 
   <!-- Message si aucun résultat -->
   <div *ngIf="reclamations.length === 0" class="loading-message">
     <p>No reclamations found or loading...</p>
   </div>
 
-  <!-- Liste des réclamations -->
-  <div *ngIf="reclamations.length > 0" class="reclamation-list">
-    <div *ngFor="let reclamation of reclamations" class="reclamation-card">
-      <!-- Image de gauche -->
-      <div class="reclamation-img-wrapper">
-        <img src="assets/img/myreclamation.svg" alt="My Reclamation" />
-      </div>
-
-
-      <!-- Contenu à droite -->
-      <div class="reclamation-content">
-        <div class="reclamation-header-row">
-          <h3 class="reclamation-title">{{ reclamation.titre | slice:0:50  }}</h3>
-          <span class="statut-button" [ngClass]="getStatutClass(reclamation.statut)">
+  <!-- Vertical Card List -->
+  <div *ngIf="reclamations.length > 0" class="vertical-list">
+    <div *ngFor="let reclamation of reclamations" class="vertical-card">
+      <div class="vertical-status-bar" [ngClass]="getStatutClass(reclamation.statut)"></div>
+      <div class="vertical-card-content">
+        <div class="vertical-card-header">
+          <span class="vertical-title">{{ reclamation.titre | slice:0:50 }}</span>
+          <span class="vertical-status-label" [ngClass]="getStatutClass(reclamation.statut)">
             {{ reclamation.statut }}
           </span>
         </div>
-
-
-<br>
-
-  <p class="reclamation-description">
-    {{ reclamation.description | slice:0:150}}
-  </p>
-        <div class="created-date-container">
-
-<br>
-<br>
-          <p class="created-date">
-            🕒  {{ getFormattedDate(reclamation.createdDate) }} 
-            <button class="arrow-btn" [routerLink]="['/reclamation', reclamation.idReclamation]">
-              <i class="fa fa-arrow-right"></i>
-              
-            </button>
-            
-            
-
-          </p>
-
+        <div class="vertical-desc">{{ reclamation.description | slice:0:150 }}</div>
+        <div class="vertical-card-footer">
+          <span class="vertical-date">🕒 {{ getFormattedDate(reclamation.createdDate) }}</span>
+          <button class="arrow-btn" [routerLink]="['/reclamation', reclamation.idReclamation]">
+            <i class="fa fa-arrow-right"></i>
+          </button>
         </div>
-
-
-
-
       </div>
     </div>
   </div>

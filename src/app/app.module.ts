@@ -27,6 +27,10 @@ import { UserListComponent } from './user-list/user-list.component';
 import { SideabrAdminComponent } from './sideabr-admin/sideabr-admin.component';
 import { LogsComponent } from './logs/logs.component';
 import {ToastrModule} from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+import { MynavbarComponent } from './mynavbar/mynavbar.component';
+import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
+
 
 
 @NgModule({
@@ -49,13 +53,18 @@ import {ToastrModule} from 'ngx-toastr';
     NotFoundComponent,
     UserListComponent,
     SideabrAdminComponent,
-    LogsComponent
+    NavbarSystemComponent,
+    LogsComponent,
+    MynavbarComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    CommonModule,
+
     FormsModule,
     ToastrModule.forRoot({
       progressBar: true,

@@ -238,6 +238,8 @@ banOrUnbanUser(userId: string): Observable<any> {
       })
     ).subscribe();
   }
+
+  
   
   private clearSession() {
     localStorage.removeItem('authToken');
@@ -245,7 +247,14 @@ banOrUnbanUser(userId: string): Observable<any> {
     this.router.navigate(['/login']);
   }
   
-  
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/getcurrentuser`).pipe(
+      catchError(error => {
+        console.error('Erreur lors de la récupération de l\'utilisateur courant :', error);
+        return throwError(() => new Error('Impossible de récupérer les informations utilisateur.'));
+      })
+    );
+  }
 
  createUser(request: AdminCreateUserRequest): Observable<any> {
   return this.http.post(`${this.apiUrl}/create-user`, request, {

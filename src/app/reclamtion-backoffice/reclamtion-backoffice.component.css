@@ -9,7 +9,7 @@ body {
   padding: 0.5rem;
   margin: 5px auto;
   margin-left: 300px;
-  margin-top: 40px;
+  margin-top: 60px;
   background: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -193,6 +193,7 @@ body {
   font-family: 'Segoe UI', sans-serif;
   letter-spacing: 0.4px;
   margin: 0;
+  margin-top: 24px;
 }
 
 /* Icon styling for the emoji in page title */
@@ -441,4 +442,11 @@ body {
   .table-container {
     overflow-x: auto;
   }
+}
+
+.nav-links li a.active,
+.nav-links li a:hover,
+.logout:hover {
+  background: #e47429;
+  color: #fff;
 }

@@ -1,0 +1,51 @@
+<nav class="navbar-system">
+  <div class="navbar-actions">
+    <div class="notification-section" style="position: relative;">
+      <button class="icon-btn" aria-label="Notifications" (click)="toggleNotificationDropdown()">
+        <span class="notification-icon" style="position: relative; display: flex; align-items: center;">
+          <i class="fa fa-bell"></i>
+          <span *ngIf="unreadNotificationsCount > 0 && dropdownOpen !== 'notif'" class="notif-number">
+            {{ unreadNotificationsCount }}
+          </span>
+        </span>
+      </button>
+      <div class="notification-wrapper modern-dropdown" *ngIf="dropdownOpen === 'notif'">
+        <div class="notif-dropdown-card">
+          <div class="notif-dropdown-header">
+            <i class="fa fa-bell"></i> Notifications
+          </div>
+          <div class="notif-dropdown-divider"></div>
+          <div class="notif-dropdown-list">
+            <div *ngFor="let notif of notifications" class="notif-dropdown-item" (click)="goToReclamation(notif.reclamationId)">
+              <div class="notif-message">{{ notif.message }}</div>
+              <div class="notif-meta" *ngIf="notif.date">{{ notif.date | date:'short' }}</div>
+            </div>
+            <div *ngIf="!notifications.length" class="notif-dropdown-item notif-empty">
+              <i class="fa fa-inbox"></i> <span class="muted">Aucune notification</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="icon-btn" aria-label="Settings" (click)="toggleDropdown()">
+      <i class="fa fa-cog"></i>
+    </button>
+    <div class="avatar-wrapper" (click)="toggleDropdown()">
+      <img [src]="avatarUrl" alt="Avatar" class="avatar" />
+      <div class="dropdown-menu" *ngIf="dropdownOpen === true">
+        <div class="dropdown-user-info modern">
+          <div class="dropdown-avatar">
+            <img [src]="avatarUrl" alt="Avatar" />
+          </div>
+          <div class="dropdown-fullname">{{ userName }}</div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <ul class="dropdown-list modern">
+          <li><a ><i class="fa fa-user"></i> Profile</a></li>
+          <li><a ><i class="fa fa-cog"></i> Settings</a></li>
+          <li><a (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -545,7 +545,7 @@ display: flex;
 gap: 12px;
 padding: 12px 12px 12px 32px; /* Add left padding for breathing room */
 height: calc(103vh - 64px);
-margin-left: 250px; /* Sidebar width */
+margin-left: 300px; /* Sidebar width */
 }
 
 /* Left Side: Reclamation Details */

@@ -3,11 +3,11 @@ import { AuthenticationService } from '../service/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 
 import * as SockJS from 'sockjs-client';
+import { Client, IMessage } from '@stomp/stompjs';
+import { Router } from '@angular/router';
 
-interface Notification {
-  message: string;
-  // Add other properties as needed
-}
+
+import { Notification } from '../models/Notification';
 
 @Component({
   selector: 'app-mynavbar',
@@ -23,12 +23,46 @@ export class MynavbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthenticationService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private router:Router
   ) {}
 
+
+  
   ngOnInit(): void {
-   
+    this.setupNavigation();
+  
+    this.authService.getCurrentUser().subscribe({
+      next: (currentUser) => {
+        if (currentUser?.email) {
+          const socket = new SockJS('http://localhost:8083/ws');
+          
+          this.socketClient = new Client({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+            onConnect: () => {
+              this.socketClient.subscribe(`/user/${currentUser.email}/notifications`, (message: IMessage) => {
+                const notif: Notification = JSON.parse(message.body);
+                this.notifications.unshift(notif);
+                this.toastService.info(notif.message);
+                this.unreadNotificationsCount++;
+              });
+            },
+            onStompError: (frame) => {
+              console.error('Broker error:', frame.headers['message']);
+            }
+          });
+  
+          this.socketClient.activate();
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération de l’utilisateur :', err);
+      }
+    });
   }
+  
+  
 
   ngOnDestroy(): void {
     if (this.socketClient) {
@@ -49,6 +83,10 @@ export class MynavbarComponent implements OnInit, OnDestroy {
         link.classList.add('active');
       });
     });
+  }
+
+  goToReclamation(id: string): void {
+    this.router.navigate(['/reclamationadmin', id]); // adjust your route
   }
 }
   

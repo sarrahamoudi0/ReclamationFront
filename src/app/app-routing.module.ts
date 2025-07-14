@@ -17,6 +17,8 @@ import { UserRole } from './models/role';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { LogsComponent } from './logs/logs.component';
+import { MynavbarComponent } from './mynavbar/mynavbar.component';
+import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 
 
 const routes: Routes = [
@@ -33,6 +35,8 @@ const routes: Routes = [
   { path: 'navbar', component: NavbarComponent },
   {path:"user",component:UserListComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
   { path: 'logs', component: LogsComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
+  { path: 'mynavbar', component: MynavbarComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,,UserRole.AGENT] }},
+
 
 
 

@@ -4,60 +4,60 @@
   top: 0;
   left: 0;
   height: 100vh;
-  width: 250px; /* Default width for expanded sidebar */
-  background-color: #0a1827;
+  width: 240px;
+  background: linear-gradient(135deg, #0a1827 80%, #e47429 100%);
   color: white;
   display: flex;
+
   flex-direction: column;
   align-items: stretch;
-  padding: 1rem;
-  transition: width 0.3s ease; /* Smooth transition for width change */
+  padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+  transition: width 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+  box-shadow: 2px 0 16px rgba(44,62,80,0.13);
+  z-index: 2000; /* Ensure sidebar is always on top */
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
   overflow: hidden;
 }
-.logo-container {
-  text-align: center;
-  padding: 10px;
-}
 
-.logo-img {
-  max-width: 100px;
-  height: auto;
-}
-
-/* Collapsed Sidebar */
 .navbar.collapsed {
-  width: 70px; /* Width when sidebar is collapsed */
-}
-
-.navbar.collapsed .logo,
-.navbar.collapsed .text {
-  display: none; /* Hide text and logo when collapsed */
-}
-
-.navbar.collapsed .nav-links li a {
-  justify-content: center; /* Center the icons when collapsed */
-}
-
-.navbar.collapsed .logout {
-  justify-content: center; /* Center the logout icon when collapsed */
+  width: 70px;
 }
 
 /* Toggle Button */
 .toggle-btn {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   cursor: pointer;
   text-align: right;
-  margin-bottom: 1rem;
-  color: white;
+  margin-bottom: 1.2rem;
+  color: #fff;
+  transition: color 0.2s;
+}
+.toggle-btn:hover {
+  color: #e47429;
 }
 
-/* Logo */
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  text-align: center;
-  transition: opacity 0.3s ease; /* Smooth transition for logo opacity */
+/* Logo Section */
+.logo-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2.2rem;
+  padding: 0.5rem 0.2rem;
+  transition: all 0.3s;
+}
+.logo-img {
+  max-width: 110px;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  transition: max-width 0.3s, max-height 0.3s;
+}
+.navbar.collapsed .logo-img {
+  max-width: 38px;
+  max-height: 38px;
 }
 
 /* Nav Links */
@@ -66,58 +66,72 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.1rem;
   flex-grow: 1;
 }
 
-/* Individual Nav Link */
-.nav-links li a {
+.nav-links li {
+  width: 100%;
+}
+
+.nav-links li a,
+.logout {
   color: white;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1.13rem;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover Effect on Nav Links */
-.nav-links li a:hover {
-  background-color: #e47429;
-}
-
-/* Logout Button */
-.logout {
-  background-color: #0a1827;
+  gap: 14px;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  background: none;
   border: none;
-  color: white;
-  padding: 0.7rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  transition: background 0.2s, color 0.2s;
+  width: 100%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-/* Hover Effect on Logout Button */
+.nav-links li a.active,
+.nav-links li a:hover,
 .logout:hover {
-  background-color: #d62839;
+  background: #e47429;
+  color: #fff;
 }
 
-/* Icon Styles */
-.nav-links li a .icon,
-.logout .icon {
-  font-size: 1.3rem; /* Icon size */
-  transition: font-size 0.3s ease; /* Smooth transition for icon size */
+.icon {
+  font-size: 1.45rem;
+  min-width: 28px;
+  text-align: center;
+  transition: font-size 0.3s;
 }
 
-/* When the sidebar is collapsed, the icons will become larger and centered */
-.navbar.collapsed .nav-links li a .icon,
-.navbar.collapsed .logout .icon {
-  font-size: 1.8rem; /* Increase icon size when collapsed */
+.text {
+  transition: opacity 0.3s, width 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navbar.collapsed .text {
+  opacity: 0;
+  width: 0;
+  display: inline-block;
+}
+
+/* Responsive: Overlay on mobile */
+@media (max-width: 700px) {
+  .navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 2000;
+    box-shadow: 2px 0 16px rgba(44,62,80,0.18);
+    border-radius: 0 18px 18px 0;
+  }
+}
+
+.navbar-system {
+  margin-top: 60px; /* Adjust to match the height of your navbar */
+  position: static; /* Remove fixed positioning */
 }
 

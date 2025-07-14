@@ -1,40 +1,26 @@
 <nav class="navbar" [class.collapsed]="collapsed">
   <div class="toggle-btn" (click)="toggleSidebar()">
-    ☰
+    <i class="fa fa-bars"></i>
   </div>
-  <div class="logo-container">
-    <img src="assets/img/logo.png" alt="Logo" class="logo-img" />
+  <div class="logo-section">
+    <img src="assets/img/orangelogo.png" alt="Logo Orange" class="logo-img" />
   </div>
-  <div class="logo">Menu</div>
   <ul class="nav-links">
-    <li>
-      <a href="#">
-        <span class="icon"><i class="fa-solid fa-user"></i></span>
-        <span class="text">Profile</span>
+    <li *ngFor="let item of menu">
+      <a *ngIf="item.route" [routerLink]="item.route" routerLinkActive="active">
+        <span class="icon"><i [class]="item.icon"></i></span>
+        <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
+      </a>
+      <a *ngIf="item.external" [href]="item.route" target="_blank">
+        <span class="icon"><i [class]="item.icon"></i></span>
+        <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
       </a>
     </li>
-    <li>
-      <a routerLink="/reclamation">
-        <span class="icon"><i class="fa-solid fa-envelope"></i></span>
-        <span class="text">Reclamation</span>
-      </a>
+    <li *ngIf="isLoggedIn()">
+      <button class="logout" (click)="logout()">
+        <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+        <span class="text" *ngIf="!collapsed">Se déconnecter</span>
+      </button>
     </li>
-    <li>
-      <a routerLink="/myreclamation">
-        <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
-        <span class="text">Mes Reclamations</span>
-      </a>
-    </li>
-    <li>
-      <a href="#">
-        <span class="icon"><i class="fa-solid fa-circle-info"></i></span>
-        <span class="text">A propos</span>
-      </a>
-    </li>
-
-    <button class="logout" *ngIf="isLoggedIn()" (click)="logout()">
-      <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-      <span class="text">Se déconnecter</span>
-    </button>
   </ul>
 </nav>
