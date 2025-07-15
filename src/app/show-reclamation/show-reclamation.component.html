@@ -13,7 +13,7 @@
       <!-- Statut -->
       <div class="statut-container">
         <span [ngClass]="getStatutClass(reclamation.statut)" class="statut-badge">
-          {{ reclamation.statut }}
+          {{ getDisplayStatut(reclamation.statut) }}
         </span>
       </div>
       <!-- Infos -->

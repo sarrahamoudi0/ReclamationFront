@@ -83,6 +83,8 @@
   padding: 1rem 1.2rem 0.7rem 1.2rem;
   border-bottom: none;
   margin-bottom: 0.1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 .dropdown-avatar img {
   width: 54px;
@@ -119,7 +121,8 @@
   align-items: center;
   gap: 0.7rem;
   width: 100%;
-  padding: 0.8rem 1.4rem;
+  box-sizing: border-box;
+  padding: 0.8rem 1.2rem;
   color: #222;
   text-decoration: none;
   font-size: 1.05rem;

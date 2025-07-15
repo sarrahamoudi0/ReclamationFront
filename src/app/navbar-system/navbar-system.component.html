@@ -3,12 +3,12 @@
     <div class="notification-section" style="position: relative;">
       <button class="icon-btn" aria-label="Notifications" (click)="toggleNotificationDropdown()">
         <span class="notification-icon" style="position: relative; display: flex; align-items: center;">
-          <i class="fa fa-bell"></i>
+      <i class="fa fa-bell"></i>
           <span *ngIf="unreadNotificationsCount > 0 && dropdownOpen !== 'notif'" class="notif-number">
             {{ unreadNotificationsCount }}
           </span>
         </span>
-      </button>
+    </button>
       <div class="notification-wrapper modern-dropdown" *ngIf="dropdownOpen === 'notif'">
         <div class="notif-dropdown-card">
           <div class="notif-dropdown-header">

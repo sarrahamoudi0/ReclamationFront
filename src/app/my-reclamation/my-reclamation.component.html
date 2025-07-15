@@ -16,7 +16,7 @@
         <div class="vertical-card-header">
           <span class="vertical-title">{{ reclamation.titre | slice:0:50 }}</span>
           <span class="vertical-status-label" [ngClass]="getStatutClass(reclamation.statut)">
-            {{ reclamation.statut }}
+            {{ getDisplayStatut(reclamation.statut) }}
           </span>
         </div>
         <div class="vertical-desc">{{ reclamation.description | slice:0:150 }}</div>

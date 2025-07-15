@@ -70,5 +70,12 @@ getFormattedDate(date: Date | null | undefined): string {
     }
   }
 
+  getDisplayStatut(statut: Statut): string {
+    if (statut === Statut.Escale) {
+      return 'En cours';
+    }
+    return statut;
+  }
+
  
 }

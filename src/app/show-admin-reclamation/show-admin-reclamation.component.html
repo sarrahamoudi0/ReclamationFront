@@ -11,21 +11,21 @@
       
       
       <div class="categorie-container">
-        <span class="categorie-badge" (click)="toggleCategorieList($event)">
+        <span class="categorie-badge" (click)="canEdit() ? toggleCategorieList($event) : showEditBlockedMsg()">
           {{ reclamation.categorie?.nomCategorie }}
           &nbsp;&rsaquo;&nbsp;{{ reclamation.sousCategorie?.nomSousCategorie }}
         </span>
 
         <!-- Category List -->
         <ul *ngIf="showCategorieList" class="categorie-list">
-          <li *ngFor="let cat of categories" (click)="selectCategorie(cat)">
+          <li *ngFor="let cat of categories" (click)="canEdit() ? selectCategorie(cat) : showEditBlockedMsg()">
             {{ cat.nomCategorie }}
           </li>
         </ul>
 
         <!-- Subcategory List -->
         <ul *ngIf="selectedCategorie && showSousCategorieList" class="sous-categorie-list">
-          <li *ngFor="let sous of selectedCategorie.sousCategories" (click)="selectSousCategorie(sous)">
+          <li *ngFor="let sous of selectedCategorie.sousCategories" (click)="canEdit() ? selectSousCategorie(sous) : showEditBlockedMsg()">
             {{ sous.nomSousCategorie }}
           </li>
         </ul>
@@ -36,14 +36,14 @@
         <button
           [ngClass]="getStatutClass(reclamation.statut)"
           class="statut-badge"
-          (click)="toggleStatutList($event)">
+          (click)="canEdit() ? toggleStatutList($event) : showEditBlockedMsg()">
           {{ reclamation.statut }}
         </button>
 
         <button
           [ngClass]="getPrioriteClass(reclamation.priorite)"
           class="priorite-badge"
-          (click)="togglePrioriteList($event)">
+          (click)="canEdit() ? togglePrioriteList($event) : showEditBlockedMsg()">
           {{ reclamation.priorite }}
         </button>
 
@@ -51,7 +51,7 @@
         <ul *ngIf="showStatutList" class="statut-list" [ngClass]="{'show': showStatutList}">
           <li
             *ngFor="let statut of statutValues"
-            (click)="selectStatut(statut)"
+            (click)="canEdit() ? selectStatut(statut) : showEditBlockedMsg()"
             [class.active]="statut === reclamation.statut">
             {{ statut }}
           </li>
@@ -61,7 +61,7 @@
         <ul *ngIf="showPrioriteList" class="priorite-list" [ngClass]="{'show': showPrioriteList}">
           <li
             *ngFor="let priorite of prioriteValues"
-            (click)="selectPriorite(priorite)"
+            (click)="canEdit() ? selectPriorite(priorite) : showEditBlockedMsg()"
             [class.active]="priorite === selectedPriorite">
             {{ priorite }}
           </li>
@@ -181,11 +181,11 @@
         [placeholder]="showInternalComments ? 'Écrire un commentaire interne...' : 'Écrire un commentaire...'"
         rows="2"
         class="comment-textarea"
-        (keyup.enter)="addComment()"
+        (keyup.enter)="canEdit() ? addComment() : showEditBlockedMsg()"
       ></textarea>
       <button 
         class="send-btn" 
-        (click)="addComment()"
+        (click)="canEdit() ? addComment() : showEditBlockedMsg()"
         [disabled]="!newCommentContent.trim()"
       >
         Envoyer

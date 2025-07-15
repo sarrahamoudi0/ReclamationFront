@@ -26,7 +26,11 @@ export class ReclamtionBackofficeComponent implements OnInit {
   getAllReclamations(): void {
     this.reclamationService.getAllReclamations().subscribe(
       (data: Reclamation[]) => {
-        this.reclamations = data;
+        // Sort by priority: Élevé > Moyenne > Faible
+        this.reclamations = data.sort((a, b) => {
+          const priorityOrder = { 'Élevé': 0, 'Moyenne': 1, 'Faible': 2 };
+          return priorityOrder[a.priorite] - priorityOrder[b.priorite];
+        });
         this.currentPage = 1; // reset to first page when data is loaded/refreshed
       },
       (error) => {

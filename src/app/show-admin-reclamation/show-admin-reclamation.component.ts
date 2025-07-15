@@ -12,6 +12,7 @@ import { Commentaire } from '../models/Commentaire';
 import { User } from '../models/User';
 import { ReclamationEvent } from '../models/EventType';
 import { ToastrService } from 'ngx-toastr';
+import { AuthenticationService } from '../service/authentication.service';
 
 @Component({
   selector: 'app-show-admin-reclamation',
@@ -50,13 +51,16 @@ hoverBtn = false;
   selectedPriorite: Priorite = Priorite.Faible;
   showPrioriteList = false;
 
+  userRoles: string[] = [];
+
   constructor(
     private reclamationService: ReclamationService,
     private route: ActivatedRoute,
      private categorieService: CategorieService,
      private commentaireService: CommentaireService,
     private router: Router,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +72,22 @@ hoverBtn = false;
       }
     });
       this.getCategories();
+    this.authService.getCurrentUser().subscribe(user => {
+      this.userRoles = (user.roles || []).map(r => r.replace('ROLE_', ''));
+    });
+  }
+
+  isAgent(): boolean {
+    return this.userRoles.includes('AGENT');
+  }
+
+  canEdit(): boolean {
+    return !(this.isAgent() && this.reclamation?.statut === Statut.Escale);
+  }
+
+  showEditBlockedMsg(): void {
+    console.log('Edit blocked: agent cannot edit escalated reclamation');
+    this.toastrService.error('Vous ne pouvez pas modifier une réclamation escalée');
   }
 
   ngAfterViewChecked() {
@@ -105,22 +125,29 @@ hoverBtn = false;
       error: (error) => console.error('Error fetching categories:', error)
     });
   }
-affecterCategorie(): void {
-  if (this.selectedCategorie && this.reclamation) {
-    const payload = {
-      idReclamation: this.reclamation.idReclamation || '',
-      idCategorie: this.selectedCategorie.idCategorie || ''
-    };
-
-    this.reclamationService.assignCategorieToReclamation(payload.idReclamation, payload.idCategorie).subscribe({
-      next: () => {
-        this.toastrService.success('Catégorie affectée avec succès');
-        console.log('Catégorie affectée avec succès');
-      },
-      error: (error) => console.error('Erreur lors de l\'affectation de la catégorie :', error)
-    });
+  // In all edit methods, check canEdit() and show toastr if not allowed
+  affecterCategorie(): void {
+    if (!this.canEdit()) {
+      this.showEditBlockedMsg();
+      return;
+    }
+    if (this.selectedCategorie && this.reclamation) {
+      const payload = {
+        idReclamation: this.reclamation.idReclamation || '',
+        idCategorie: this.selectedCategorie.idCategorie || ''
+      };
+      this.reclamationService.assignCategorieToReclamation(payload.idReclamation, payload.idCategorie).subscribe({
+        next: () => {
+          this.toastrService.success('Catégorie affectée avec succès');
+          console.log('Catégorie affectée avec succès');
+        },
+        error: (error) => {
+          console.error('Erreur lors de l\'affectation de la catégorie :', error);
+          this.toastrService.error('Action interdite : vous ne pouvez pas modifier la catégorie pour une réclamation escalée.');
+        }
+      });
+    }
   }
-}
 
 toggleCategorieList(event: MouseEvent): void {
   this.showCategorieList = !this.showCategorieList;
@@ -135,6 +162,10 @@ selectCategorie(categorie: Categorie): void {
 }
 
 selectSousCategorie(sousCategorie: SousCategorie): void {
+  if (!this.canEdit()) {
+    this.showEditBlockedMsg();
+    return;
+  }
   if (!this.reclamation || !this.selectedCategorie) return;
 
   this.reclamationService.updateCategorieToReclamation(
@@ -149,7 +180,10 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
       this.selectedCategorie = undefined;
       this.toastrService.success('Catégorie mise à jour avec succès');
     },
-    error: (err) => console.error('Erreur mise à jour:', err)
+    error: (err) => {
+      console.error('Erreur mise à jour:', err);
+      this.toastrService.error('Action interdite : vous ne pouvez pas modifier la catégorie pour une réclamation escalée.');
+    }
   });
 }
 
@@ -194,6 +228,7 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
         },
         (error) => {
           console.error('Erreur lors de la mise à jour du statut :', error);
+          this.toastrService.error('Action interdite : vous ne pouvez pas modifier le statut pour une réclamation escalée.');
         }
       );
   }
@@ -212,6 +247,7 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
         },
         (error) => {
           console.error('Erreur lors de la mise à jour de la priorité :', error);
+          this.toastrService.error('Action interdite : vous ne pouvez pas modifier la priorité pour une réclamation escalée.');
         }
       );
   }
@@ -232,12 +268,20 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
   
 
   selectStatut(statut: Statut) {
+    if (!this.canEdit()) {
+      this.showEditBlockedMsg();
+      return;
+    }
     this.selectedStatut = statut;
     this.showStatutList = false; // Hide the list after selection
     this.updateStatut();         // Update the statut
   }
 
   selectPriorite(priorite: Priorite) {
+    if (!this.canEdit()) {
+      this.showEditBlockedMsg();
+      return;
+    }
     this.selectedPriorite = priorite;
     this.showPrioriteList = false; // Hide the list after selection
     this.updatePriorite();         // Update the priorite
@@ -279,6 +323,10 @@ loadCommentaires(idReclamation: string): void {
 
 
 addComment(): void {
+  if (!this.canEdit()) {
+    this.showEditBlockedMsg();
+    return;
+  }
   if (!this.newCommentContent.trim() || !this.reclamation?.idReclamation) return;
 
   if (this.showInternalComments) {
@@ -289,7 +337,10 @@ addComment(): void {
         this.newCommentContent = '';
         setTimeout(() => this.scrollToBottom(), 0);
       },
-      error: (error) => console.error('Erreur ajout commentaire interne:', error)
+      error: (error) => {
+        console.error('Erreur ajout commentaire interne:', error);
+        this.toastrService.error('Action interdite : vous ne pouvez pas ajouter un commentaire interne à une réclamation escalée.');
+      }
     });
   } else {
     // Ajouter un commentaire normal
@@ -299,7 +350,10 @@ addComment(): void {
         this.newCommentContent = '';
         setTimeout(() => this.scrollToBottom(), 0);
       },
-      error: (error) => console.error('Erreur ajout commentaire:', error)
+      error: (error) => {
+        console.error('Erreur ajout commentaire:', error);
+        this.toastrService.error('Action interdite : vous ne pouvez pas ajouter un commentaire à une réclamation escalée.');
+      }
     });
   }
 }

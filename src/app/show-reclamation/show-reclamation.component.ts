@@ -115,6 +115,13 @@ getReclamation(idReclamation: string): void {
     }
   }
 
+  getDisplayStatut(statut: Statut): string {
+    if (statut === Statut.Escale) {
+      return 'En cours';
+    }
+    return statut;
+  }
+
   openPopupUpdate(r: Reclamation): void {
     this.reclamationToUpdate = { ...r };  // Set all fields
     
