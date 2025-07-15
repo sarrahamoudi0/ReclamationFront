@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
-@CrossOrigin(origins = "http://localhost:4200") // autorise Angular
+@CrossOrigin("*") // autorise Angular
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -103,6 +104,25 @@ public class AuthenticationController {
                     .body(error);
         }
     }
+    @GetMapping("/getcurrentuser")
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Ensure the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        String email = authentication.getName(); // getName() returns the principal, which is the email in this case
+
+        // Use UserService to find the user by email
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+
+
 
     @GetMapping("/activate-account")
     public ResponseEntity<?> confirm(@RequestParam String token) {

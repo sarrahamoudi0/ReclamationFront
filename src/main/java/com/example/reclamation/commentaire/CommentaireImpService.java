@@ -6,6 +6,7 @@ import com.example.reclamation.email.EmailService;
 import com.example.reclamation.email.EmailTemplateName;
 import com.example.reclamation.reclamation.Reclamation;
 import com.example.reclamation.reclamation.ReclamationImpService;
+import com.example.reclamation.reclamation.Statut;
 import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
 import com.example.reclamation.user.UserService;
@@ -33,6 +34,10 @@ public class CommentaireImpService implements ICommentaireService {
     public Commentaire addComment(String idReclamation, String contenu)throws MessagingException  {
         User currentUser = userService.getCurrentUser();
         Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+        if (reclamation.getStatut() == Statut.Escalé && currentUser.getRole() == Role.ROLE_AGENT) {
+            throw new RuntimeException("Les agents ne peuvent pas commenter une réclamation escalée.");
+        }
+
 
         Commentaire commentaire = new Commentaire();
         commentaire.setReclamation(reclamation);
@@ -81,6 +86,10 @@ public class CommentaireImpService implements ICommentaireService {
         User currentUser = userService.getCurrentUser();
 
         Reclamation reclamation = reclamationService.getReclamationById(idReclamation);
+        if (reclamation.getStatut() == Statut.Escalé && currentUser.getRole() == Role.ROLE_AGENT) {
+            throw new RuntimeException("Les agents ne peuvent pas commenter une réclamation escalée.");
+        }
+
 
         Commentaire commentaire = new Commentaire();
         commentaire.setReclamation(reclamation);

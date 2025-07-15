@@ -11,30 +11,28 @@ import com.example.reclamation.categorie.SousCategorie;
 import com.example.reclamation.categorie.SousCategorieRepository;
 import com.example.reclamation.logs.AuditLog;
 import com.example.reclamation.logs.AuditLogService;
+import com.example.reclamation.notification.NotificationService;
 import com.example.reclamation.role.Role;
 import com.example.reclamation.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 
 public class ReclamationImpService implements IReclamationService {
 
-    @Autowired
-    private ReclamationRepository reclamationRepository;
 
-    @Autowired
-    private CategorieRepository categorieRepository;
-    @Autowired
-    private SousCategorieRepository sousCategorieRepository;
-    @Autowired
-    private ReclamationEventRepository EventRepo;
-    @Autowired
-    private ReclamationEventService reclamationEventService;
-    @Autowired
-    private AuditLogService auditLogService;
+    private final ReclamationRepository reclamationRepository;
+    private final CategorieRepository categorieRepository;
+    private final SousCategorieRepository sousCategorieRepository;
+    private final ReclamationEventRepository EventRepo;
+    private final ReclamationEventService reclamationEventService;
+    private final AuditLogService auditLogService;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -154,9 +152,17 @@ public class ReclamationImpService implements IReclamationService {
     public Reclamation updateStatut(String id, Statut statut, User currentUser) {
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reclamation not found with id: " + id));
+        if (currentUser.getRole() == Role.ROLE_AGENT && reclamation.getStatut() == Statut.Escalé) {
+            throw new RuntimeException("Modification impossible : un agent ne peut pas modifier une réclamation déjà escalée.");
+        }
 
         Statut ancienStatut = reclamation.getStatut();
         reclamation.setStatut(statut);
+
+        if (statut == Statut.Escalé) {
+            reclamation.setActionPar(currentUser);
+        }
+
         Reclamation saved = reclamationRepository.save(reclamation);
 
         reclamationEventService.logEvent(
@@ -166,14 +172,27 @@ public class ReclamationImpService implements IReclamationService {
                 "Statut changé de '" + ancienStatut.name() + "' à '" + statut.name() + "'"
         );
 
+        if (statut == Statut.Escalé) {
+            notificationService.notifyAdminsOnEscalade(saved);
+        }
+
+        if (statut == Statut.Résolu) {
+            notificationService.notifyUserOnResolution(saved, currentUser);
+        }
+
+
         return saved;
     }
+
 
 
     @Override
     public Reclamation updatePriority(String id, Priorite priority, User currentUser) {
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reclamation not found with id: " + id));
+        if (reclamation.getStatut() == Statut.Escalé && currentUser.getRole() == Role.ROLE_AGENT) {
+            throw new RuntimeException("Les agents ne sont pas autorisés à modifier la priorité d'une réclamation escalée.");
+        }
 
         Priorite anciennePriorite = reclamation.getPriorite();
         reclamation.setPriorite(priority);
@@ -185,6 +204,11 @@ public class ReclamationImpService implements IReclamationService {
                 EventType.PRIORITE_CHANGER,
                 "Priorité changée de '" + (anciennePriorite != null ? anciennePriorite.name() : "null") + "' à '" + priority.name() + "'"
         );
+
+        if (priority == Priorite.Élevé) {
+            notificationService.notifyAgentsOnPrioriteElevee(saved, currentUser);
+        }
+
 
         return saved;
     }
@@ -241,6 +265,9 @@ public class ReclamationImpService implements IReclamationService {
     @Override
     public Reclamation updateCategorieOfReclamation(String idReclamation, String idCategorie, String idSousCategorie, User currentUser) {
         Reclamation reclamation = getReclamationById(idReclamation);
+        if (reclamation.getStatut() == Statut.Escalé && currentUser.getRole() == Role.ROLE_AGENT) {
+            throw new RuntimeException("Les agents ne sont pas autorisés à modifier la catégorie d'une réclamation escalée.");
+        }
 
         Categorie ancienneCategorie = reclamation.getCategorie();
         SousCategorie ancienneSousCategorie = reclamation.getSousCategorie();
