@@ -27,7 +27,7 @@ export class NavbarSystemComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   unreadNotificationsCount = 0;
   notificationLoaded = false;
-
+  userRoles: string[] = [];
 
 
   avatarUrl: string = 'assets/img/default-avatar.png';
@@ -51,6 +51,13 @@ export class NavbarSystemComponent implements OnInit, OnDestroy {
         if (decoded.image) {
           this.avatarUrl = 'data:image/jpeg;base64,' + decoded.image;
         }
+        // Extract roles from 'authorities' and strip 'ROLE_' if present
+        if (decoded.authorities) {
+          this.userRoles = decoded.authorities.map((role: string) => role.replace('ROLE_', ''));
+        } else if (decoded.roles) {
+          this.userRoles = decoded.roles;
+        }
+        console.log('User roles:', this.userRoles);
       } catch (e) {
         // fallback to defaults
       }
@@ -139,7 +146,11 @@ export class NavbarSystemComponent implements OnInit, OnDestroy {
   }
 
   goToReclamation(id: string): void {
-    this.router.navigate(['/reclamationadmin', id]); // adjust your route
+    if (this.userRoles.includes('USER')) {
+      this.router.navigate(['/reclamation', id]);
+    } else {
+      this.router.navigate(['/reclamationadmin', id]);
+    }
   }
 
   

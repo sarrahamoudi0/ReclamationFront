@@ -501,16 +501,19 @@ margin: 0 auto;
 
 /* Right Side: Comments Section */
 .comments-section {
-flex: 0.5; /* Make chat section even smaller */
-max-width: 30%; /* Reduce max width for comments */
-min-width: 280px; /* Slightly reduce minimum width */
-max-width: 370px; /* Add maximum width to prevent too wide chat */
-display: flex;
-flex-direction: column;
-background: white;
-border-radius: 10px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-height: 100%;
+  flex: 0.5;
+  max-width: 30%;
+  min-width: 280px;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  height: auto;
+  max-height: 650px; /* Increased max height for more space at the bottom */
+  overflow-y: auto;
+  margin-top: 60px;
 }
 
 .comments-header {

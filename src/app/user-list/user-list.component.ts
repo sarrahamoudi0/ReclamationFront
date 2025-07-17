@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '../models/User';
 import { AuthenticationService } from '../service/authentication.service';
 import { Router } from '@angular/router';
@@ -13,14 +13,14 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];  // Holds the list of users
-  errorMessage: string = '';  
+  errorMessage: string = '';
   sortColumn = 'lastname'; // default sort column
 sortDirection: 'asc' | 'desc' = 'asc';
 expandedIndex: number | null = null;
 editingEmailIndex: number | null = null;
-availableRoles = [UserRole.ADMIN, UserRole.AGENT]; 
+availableRoles = [UserRole.ADMIN, UserRole.AGENT];
 roleDropdownStates: Map<string, number> = new Map();
 pageSize = 5;
 currentPage = 1;
@@ -60,10 +60,10 @@ changeUserRole(userId: string, newRole: string): void {
         user.roles = [formattedRole]; // Assuming only one role at a time
         // Or if your app supports multiple roles, update accordingly
       }
-      
+
       // Clear dropdown state so it closes after update
       this.roleDropdownStates.delete(userId);
-      
+
       // Manually trigger change detection if needed (should happen automatically)
       this.cdr.detectChanges();
     },
@@ -92,17 +92,22 @@ closeDropdown(): void {
 }
 
 
-  selectedUser: User = {} as User;  
+  selectedUser: User = {} as User;
   newUser: AdminCreateUserRequest = {
     firstname: '',
     lastname: '',
     email: '',
     phone: '',
     password: '',
-    role: UserRole.USER, 
+    role: UserRole.USER,
     enabled: true,
     accountLocked: false,
   };
+
+  // Add modal state tracking
+  private addModalInstance: any = null;
+  private updateModalInstance: any = null;
+  private isModalOpening: boolean = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -113,6 +118,56 @@ closeDropdown(): void {
 
   ngOnInit(): void {
     this.loadUsers();
+
+    // Debug: Check if Bootstrap is available
+    setTimeout(() => {
+      if (typeof bootstrap !== 'undefined') {
+        console.log('Bootstrap is available');
+      } else {
+        console.log('Bootstrap is not available, using fallback');
+      }
+
+      // Check if modal elements exist
+      const addModal = document.getElementById('addUserModal');
+      const updateModal = document.getElementById('updateUserModal');
+      console.log('Add modal element:', addModal ? 'Found' : 'Not found');
+      console.log('Update modal element:', updateModal ? 'Found' : 'Not found');
+
+      // Ensure modals are initially hidden
+      this.forceCloseModal('addUserModal');
+      this.forceCloseModal('updateUserModal');
+    }, 1000);
+  }
+
+  // Prevent any accidental modal opening
+  private preventAccidentalModalOpen(): void {
+    // Remove any existing modal event listeners that might cause accidental opening
+    const addModal = document.getElementById('addUserModal');
+    const updateModal = document.getElementById('updateUserModal');
+
+    if (addModal) {
+      // Remove any existing Bootstrap modal instances
+      try {
+        const existingInstance = bootstrap.Modal.getInstance(addModal);
+        if (existingInstance) {
+          existingInstance.dispose();
+        }
+      } catch (e) {
+        console.log('No existing add modal instance to dispose');
+      }
+    }
+
+    if (updateModal) {
+      // Remove any existing Bootstrap modal instances
+      try {
+        const existingInstance = bootstrap.Modal.getInstance(updateModal);
+        if (existingInstance) {
+          existingInstance.dispose();
+        }
+      } catch (e) {
+        console.log('No existing update modal instance to dispose');
+      }
+    }
   }
 
   loadUsers(): void {
@@ -141,10 +196,11 @@ closeDropdown(): void {
       this.filteredUsers = this.users.filter(user =>
         user.firstname.toLowerCase().includes(term) ||
         user.lastname.toLowerCase().includes(term) ||
-        user.email.toLowerCase().includes(term)
+        user.email.toLowerCase().includes(term) ||
+        (user.phone && user.phone.toLowerCase().includes(term))
       );
     }
-    this.currentPage = 1;
+    this.currentPage = 1; // Reset to first page when searching
   }
 
   getRole(roles: string[]): string {
@@ -155,6 +211,18 @@ closeDropdown(): void {
   }
 
   openAddUserForm(): void {
+    // Prevent multiple simultaneous opens
+    if (this.isModalOpening) {
+      console.log('Modal already opening, ignoring request');
+      return;
+    }
+
+    console.log('Opening Add User Modal');
+    this.isModalOpening = true;
+
+    // Prevent any accidental modal opening
+    this.preventAccidentalModalOpen();
+
     // Reset the newUser object to clear previous values
     this.newUser = {
       firstname: '',
@@ -162,62 +230,151 @@ closeDropdown(): void {
       email: '',
       phone: '',
       password: '',
-      role: UserRole.AGENT, // use enum value
+      role: UserRole.AGENT,
       enabled: true,
       accountLocked: false
     };
 
+    // Clear any previous error messages
+    this.errorMessage = '';
+
     const modalElement = document.getElementById('addUserModal');
     if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();  // Show the modal
-    } else {
-      console.error('Modal element not found');
-    }
-  }
+      try {
+        // Force close any existing modal first
+        this.forceCloseModal('addUserModal');
 
-addUser(): void {
-  const form = document.querySelector('#addUserModal form') as HTMLFormElement;
-  if (form && !form.checkValidity()) {
-    this.errorMessage = 'Veuillez vérifier les champs du formulaire et corriger les erreurs.';
-    return;
-  }
-  const updatedUser: AdminCreateUserRequest = {
-    ...this.newUser,
-    role: this.newUser.role
-  };
+        // Check if Bootstrap is available
+        if (typeof bootstrap !== 'undefined') {
+          // Create new modal instance with strict options
+          this.addModalInstance = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',
+            keyboard: false,
+            focus: true
+          });
 
-  this.authenticationService.createUser(updatedUser).subscribe({
-    next: (response) => {
-      this.toastrService.success('Utilisateur créé avec succès');
-      // Close the modal
-      const modalElement = document.getElementById('addUserModal');
-      if (modalElement) {
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) modal.hide();
+          // Add event listeners for proper cleanup
+          const hiddenListener = () => {
+            this.onModalHidden();
+            this.addModalInstance = null;
+            this.isModalOpening = false;
+            modalElement.removeEventListener('hidden.bs.modal', hiddenListener);
+          };
+
+          modalElement.addEventListener('hidden.bs.modal', hiddenListener);
+
+          // Show modal
+          this.addModalInstance.show();
+          console.log('Add user modal opened successfully with Bootstrap');
+        } else {
+          // Use fallback method
+          console.log('Using fallback modal method for add user');
+          this.showFallbackModal('addUserModal');
+        }
+      } catch (error) {
+        console.error('Error opening add user modal:', error);
+        this.isModalOpening = false;
       }
-      // Add the new user to the list and refresh the view
-      this.loadUsers();
-    },
-    error: (err) => {
-      this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";
+    } else {
+      console.error('Add user modal element not found');
+      this.isModalOpening = false;
     }
-  });
-}
+  }
 
+  addUser(): void {
+    const form = document.querySelector('#addUserModal form') as HTMLFormElement;
+    if (form && !form.checkValidity()) {
+      this.errorMessage = 'Veuillez vérifier les champs du formulaire et corriger les erreurs.';
+      return;
+    }
 
+    const updatedUser: AdminCreateUserRequest = {
+      ...this.newUser,
+      role: this.newUser.role
+    };
 
+    this.authenticationService.createUser(updatedUser).subscribe({
+      next: (response) => {
+        this.toastrService.success('Utilisateur créé avec succès');
 
+        // Close the modal properly
+        this.closeModal('addUserModal');
+
+        // Clear error message
+        this.errorMessage = '';
+
+        // Reset form and page state
+        this.resetPageState();
+
+        // Add the new user to the list and refresh the view
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";
+        console.error('Error creating user:', err);
+      }
+    });
+  }
 
   openUpdateModal(user: User): void {
-    this.selectedUser = { ...user };  // Clone the user to avoid directly modifying the original
+    // Prevent multiple simultaneous opens
+    if (this.isModalOpening) {
+      console.log('Modal already opening, ignoring request');
+      return;
+    }
+
+    console.log('Opening Update User Modal for user:', user.id);
+    this.isModalOpening = true;
+
+    // Prevent any accidental modal opening
+    this.preventAccidentalModalOpen();
+
+    // Clone the user to avoid directly modifying the original
+    this.selectedUser = { ...user };
+
+    // Clear any previous error messages
+    this.errorMessage = '';
 
     const modalElement = document.getElementById('updateUserModal');
     if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();  // Show the modal
+      try {
+        // Force close any existing modal first
+        this.forceCloseModal('updateUserModal');
+
+        // Check if Bootstrap is available
+        if (typeof bootstrap !== 'undefined') {
+          // Create new modal instance with strict options
+          this.updateModalInstance = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',
+            keyboard: false,
+            focus: true
+          });
+
+          // Add event listeners for proper cleanup
+          const hiddenListener = () => {
+            this.onModalHidden();
+            this.updateModalInstance = null;
+            this.isModalOpening = false;
+            modalElement.removeEventListener('hidden.bs.modal', hiddenListener);
+          };
+
+          modalElement.addEventListener('hidden.bs.modal', hiddenListener);
+
+          // Show modal
+          this.updateModalInstance.show();
+          console.log('Update user modal opened successfully with Bootstrap');
+        } else {
+          // Use fallback method
+          console.log('Using fallback modal method for update user');
+          this.showFallbackModal('updateUserModal');
+        }
+      } catch (error) {
+        console.error('Error opening update user modal:', error);
+        this.isModalOpening = false;
+      }
     } else {
-      console.error('Modal element not found');
+      console.error('Update user modal element not found');
+      this.isModalOpening = false;
     }
   }
 
@@ -225,20 +382,30 @@ addUser(): void {
     this.authenticationService.updateUser(this.selectedUser.id!, this.selectedUser).subscribe({
       next: (response: string) => {
         console.log('User updated successfully', response);
+        this.toastrService.success('Utilisateur mis à jour avec succès');
 
+        // Update the local user data
         const index = this.users.findIndex(user => user.id === this.selectedUser.id);
         if (index !== -1) {
-          this.users[index] = { ...this.selectedUser };  // Replace the old user data with the updated one
+          this.users[index] = { ...this.selectedUser };
+        }
+
+        // Update filtered users as well
+        const filteredIndex = this.filteredUsers.findIndex(user => user.id === this.selectedUser.id);
+        if (filteredIndex !== -1) {
+          this.filteredUsers[filteredIndex] = { ...this.selectedUser };
         }
 
         this.cdr.detectChanges();
 
-        // Close the modal
-        const modalElement = document.getElementById('updateUserModal');
-        if (modalElement) {
-          const modal = bootstrap.Modal.getInstance(modalElement);  // Get the modal instance
-          modal?.hide();  // Close the modal
-        }
+        // Close the modal properly
+        this.closeModal('updateUserModal');
+
+        // Clear error message
+        this.errorMessage = '';
+
+        // Reset page state
+        this.resetPageState();
       },
       error: (err) => {
         console.error('Error updating user', err);
@@ -247,32 +414,221 @@ addUser(): void {
     });
   }
 
-deleteUser(user: User): void {
-  if (confirm(`Are you sure you want to delete user: ${user.firstname} ${user.lastname}?`)) {
-    if (!user.id) {
-      console.error('User ID is undefined');
-      this.errorMessage = 'User ID is missing for deletion.';
-      return;
+  // Method to handle cancel action
+  cancelAction(modalId: string): void {
+    console.log('Canceling action for modal:', modalId);
+
+    // Close the modal
+    this.closeModal(modalId);
+
+    // Reset form data
+    if (modalId === 'addUserModal') {
+      this.resetAddUserForm();
+    } else if (modalId === 'updateUserModal') {
+      this.resetUpdateUserForm();
     }
 
-    this.authenticationService.deleteUser(user.id).subscribe({
-      next: (response) => {
-        console.log('User deleted successfully', response);
-
-        // Remove the user from the local list
-        this.users = this.users.filter(u => u.id !== user.id);
-
-        // Clear error if any
-        this.errorMessage = '';
-      },
-      error: (err) => {
-        console.error('Error deleting user', err);
-        this.errorMessage = 'Failed to delete user. Please try again later.';
-      }
-    });
+    // Reset page state
+    this.resetPageState();
   }
-}
 
+  // Reset add user form
+  private resetAddUserForm(): void {
+    this.newUser = {
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: '',
+      password: '',
+      role: UserRole.AGENT,
+      enabled: true,
+      accountLocked: false
+    };
+    this.errorMessage = '';
+  }
+
+  // Reset update user form
+  private resetUpdateUserForm(): void {
+    this.selectedUser = {} as User;
+    this.errorMessage = '';
+  }
+
+  // Reset page state
+  private resetPageState(): void {
+    // Reset search
+    this.searchTerm = '';
+
+    // Reset pagination
+    this.currentPage = 1;
+
+    // Reset filtered users to show all users
+    this.filteredUsers = [...this.users];
+
+    // Clear any error messages
+    this.errorMessage = '';
+
+    // Force change detection
+    this.cdr.detectChanges();
+
+    console.log('Page state reset successfully');
+  }
+
+  deleteUser(user: User): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur: ${user.firstname} ${user.lastname}?`)) {
+      if (!user.id) {
+        console.error('User ID is undefined');
+        this.errorMessage = 'User ID is missing for deletion.';
+        return;
+      }
+
+      this.authenticationService.deleteUser(user.id).subscribe({
+        next: (response) => {
+          console.log('User deleted successfully', response);
+          this.toastrService.success('Utilisateur supprimé avec succès');
+
+          // Remove the user from the local list
+          this.users = this.users.filter(u => u.id !== user.id);
+          this.filteredUsers = this.filteredUsers.filter(u => u.id !== user.id);
+
+          // Clear error if any
+          this.errorMessage = '';
+        },
+        error: (err) => {
+          console.error('Error deleting user', err);
+          this.errorMessage = 'Failed to delete user. Please try again later.';
+        }
+      });
+    }
+  }
+
+  closeModal(modalId: string): void {
+    console.log('Closing modal:', modalId);
+
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      try {
+        // Check if Bootstrap is available
+        if (typeof bootstrap !== 'undefined') {
+          if (modalId === 'addUserModal' && this.addModalInstance) {
+            this.addModalInstance.hide();
+            this.addModalInstance.dispose();
+            this.addModalInstance = null;
+          } else if (modalId === 'updateUserModal' && this.updateModalInstance) {
+            this.updateModalInstance.hide();
+            this.updateModalInstance.dispose();
+            this.updateModalInstance = null;
+          } else {
+            // Force close manually
+            this.forceCloseModal(modalId);
+          }
+        } else {
+          // Use fallback method
+          this.forceCloseModal(modalId);
+        }
+      } catch (error) {
+        console.error('Error closing modal:', error);
+        // Force close manually
+        this.forceCloseModal(modalId);
+      }
+    }
+
+    // Clear error messages when closing modals
+    this.errorMessage = '';
+    this.isModalOpening = false;
+  }
+
+  // Force close modal regardless of state
+  private forceCloseModal(modalId: string): void {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      // Remove any existing modal classes
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+      document.body.classList.remove('modal-open');
+
+      // Remove backdrop
+      const backdrops = document.querySelectorAll('.modal-backdrop');
+      backdrops.forEach(backdrop => backdrop.remove());
+
+      // Dispose Bootstrap instance if exists
+      if (modalId === 'addUserModal' && this.addModalInstance) {
+        try {
+          this.addModalInstance.dispose();
+        } catch (e) {
+          console.log('Error disposing add modal instance:', e);
+        }
+        this.addModalInstance = null;
+      } else if (modalId === 'updateUserModal' && this.updateModalInstance) {
+        try {
+          this.updateModalInstance.dispose();
+        } catch (e) {
+          console.log('Error disposing update modal instance:', e);
+        }
+        this.updateModalInstance = null;
+      }
+    }
+  }
+
+  // Fallback modal show method
+  private showFallbackModal(modalId: string): void {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      modalElement.classList.add('show');
+      modalElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+
+      // Add backdrop
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop show';
+      backdrop.id = 'modal-backdrop';
+      document.body.appendChild(backdrop);
+
+      // Close on backdrop click
+      backdrop.addEventListener('click', () => {
+        this.closeModal(modalId);
+      });
+    }
+  }
+
+  // Method to handle modal hidden events
+  onModalHidden(): void {
+    console.log('Modal hidden event triggered');
+    this.errorMessage = '';
+    this.isModalOpening = false;
+
+    // Clear modal instances
+    this.addModalInstance = null;
+    this.updateModalInstance = null;
+  }
+
+  // Clean up modal instances on component destroy
+  ngOnDestroy(): void {
+    console.log('Component destroying, cleaning up modals');
+
+    // Force close any open modals
+    this.forceCloseModal('addUserModal');
+    this.forceCloseModal('updateUserModal');
+
+    // Clear instances
+    if (this.addModalInstance) {
+      try {
+        this.addModalInstance.dispose();
+      } catch (e) {
+        console.log('Error disposing add modal on destroy:', e);
+      }
+      this.addModalInstance = null;
+    }
+    if (this.updateModalInstance) {
+      try {
+        this.updateModalInstance.dispose();
+      } catch (e) {
+        console.log('Error disposing update modal on destroy:', e);
+      }
+      this.updateModalInstance = null;
+    }
+
+    this.isModalOpening = false;
+  }
 
   displayError(): string {
     return this.errorMessage;
@@ -359,6 +715,9 @@ goToPage(page: number): void {
   this.currentPage = page;
 }
 
+getCurrentPageEnd(): number {
+  return Math.min(this.currentPage * this.pageSize, this.filteredUsers.length);
+}
 
-  
+
 }

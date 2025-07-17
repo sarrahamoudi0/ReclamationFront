@@ -6,6 +6,7 @@ import { SousCategorie } from '../models/SousCategorie';
 import { Reclamation } from '../models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categorie',
@@ -97,7 +98,7 @@ export class CategorieComponent implements OnInit {
     });
   }
 
-  deleteCategorie(idCategorie?: string): void {
+  async deleteCategorie(idCategorie?: string): Promise<void> {
     if (!idCategorie) return;
 
     const isTopLevel = this.categories.some(cat => cat.idCategorie === idCategorie);
@@ -105,6 +106,19 @@ export class CategorieComponent implements OnInit {
       this.toastrService.error('Suppression invalide.');
       return;
     }
+
+    const result = await Swal.fire({
+      title: 'Supprimer la catégorie',
+      text: 'Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler',
+      customClass: { popup: 'swal2-popup-custom' }
+    });
+    if (!result.isConfirmed) return;
 
     this.categorieService.deleteCategorie(idCategorie).subscribe({
       next: () => {

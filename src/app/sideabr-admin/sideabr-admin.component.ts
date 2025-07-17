@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../service/authentication.service';
+import Swal from 'sweetalert2';
 
 interface NavMenuItem {
   label: string;
@@ -35,10 +36,23 @@ export class SideabrAdminComponent {
 
   // Method for logging out with confirmation
   logout(): void {
-    const confirmation = window.confirm('Are you sure you want to log out?');  // Confirmation dialog
-    if (confirmation) {
-      this.authService.logout();  // Log out if confirmed
-    }
+    Swal.fire({
+      title: 'Déconnexion',
+      text: 'Voulez-vous vraiment vous déconnecter ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e47429',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, déconnecter',
+      cancelButtonText: 'Annuler',
+      customClass: {
+        popup: 'swal2-popup-custom'
+      }
+    }).then((result: import('sweetalert2').SweetAlertResult) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+      }
+    });
   }
 
   isLoggedIn(): boolean {

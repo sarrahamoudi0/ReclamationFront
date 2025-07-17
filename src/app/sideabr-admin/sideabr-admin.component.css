@@ -8,12 +8,13 @@
   background: linear-gradient(135deg, #0a1827 80%, #e47429 100%);
   color: white;
   display: flex;
+
   flex-direction: column;
   align-items: stretch;
   padding: 1.2rem 0.7rem 1.2rem 0.7rem;
   transition: width 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
   box-shadow: 2px 0 16px rgba(44,62,80,0.13);
-  z-index: 1002;
+  z-index: 2000; /* Ensure sidebar is always on top */
   border-top-right-radius: 18px;
   border-bottom-right-radius: 18px;
   overflow: hidden;
@@ -128,3 +129,9 @@
     border-radius: 0 18px 18px 0;
   }
 }
+
+.navbar-system {
+  margin-top: 60px; /* Adjust to match the height of your navbar */
+  position: static; /* Remove fixed positioning */
+}
+
