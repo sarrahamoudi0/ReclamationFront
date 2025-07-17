@@ -63,8 +63,6 @@ import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CommonModule,
-
     FormsModule,
     ToastrModule.forRoot({
       progressBar: true,

@@ -3,133 +3,125 @@
 
   <!-- Main content on the right -->
   <div class="flex-grow-1 p-3">
-
     <!-- External CSS Libraries (optional to move to head) -->
-
     <!-- Add User Button & Table Wrapper -->
     <div class="table-wrapper position-relative">
-
       <div class="table-responsive mt-4">
-
         <!-- Title and search bar on the same line -->
         <div class="mb-2">
           <h2 class="page-title mb-0 text-center" style="white-space:nowrap;">
             <i class="fa fa-users me-2" aria-hidden="true"></i> Les Utilisateurs
           </h2>
         </div>
-        <!-- Search and Add button on the same line, right-aligned, below the title -->
-        <div class="d-flex align-items-center justify-content-end mb-3" style="gap: 1rem;">
-          <div class="position-relative" style="width: 350px; min-width: 200px;">
-            <span class="position-absolute top-50 start-0 translate-middle-y ps-3" style="z-index:2; color:#aaa;">
-              <i class="fas fa-search"></i>
-            </span>
-            <input type="text" class="form-control rounded-pill ps-5 shadow-sm" style="height: 40px;" placeholder="Rechercher un utilisateur..." [(ngModel)]="searchTerm" (input)="onSearch()">
+        <!-- Search and Add button container -->
+        <div class="search-add-container">
+          <div class="search-container">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher un utilisateur..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()"
+            >
+            <i class="fas fa-search search-icon"></i>
           </div>
-          <button class="btn-add-user d-flex align-items-center justify-content-center align-self-end" (click)="openAddUserForm()" title="Ajouter un utilisateur" aria-label="Ajouter un utilisateur" style="height: 40px; width: 40px; padding: 0; border-radius: 50%; margin-bottom: 2px;">
+          <button
+            class="btn-add-user"
+            (click)="openAddUserForm()"
+            title="Ajouter un utilisateur"
+            aria-label="Ajouter un utilisateur"
+          >
             <i class="fas fa-user-plus"></i>
           </button>
         </div>
-
-    <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Nom</th>
-          <th scope="col">Prénom</th>
-          <th scope="col">Email</th>
-          <th scope="col">Téléphone</th>
-          <th scope="col">Rôle</th>
-          <th scope="col">Statut </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr  *ngFor="let user of pagedUsers">
-
-          <td>    <div class="user-info">
-       <img
-      [src]="user.image ? 'data:image/jpeg;base64,' + user.image : 'assets/img/default-avatar.png'"
-      alt="Photo"
-      class="user-image"
-    />
-
-
- {{ user.lastname }} </div></td>
-          <td>{{ user.firstname }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone || '—' }}</td>
-         <td>
-<div *ngFor="let role of user.roles; let i = index" class="role-badge-wrapper">
-  <span
-    class="role-badge"
-    [ngClass]="getRoleBadgeInfo(role).cssClass"
-    (click)="toggleRoleDropdown(user, i)">
-    <i [class]="getRoleBadgeInfo(role).icon"></i>
-    {{ getRoleBadgeInfo(role).label }}
-  </span>
-
-  <div *ngIf="isDropdownOpen(user, i) && isUserAdminOrAgent(user)" class="dropdown-menu show">
-    <button
-      *ngFor="let r of availableRoles"
-      class="dropdown-item"
-      (click)="onRoleClick($event, user.id!, r)">
-      {{ getRoleBadgeInfo(r).label }}
-    </button>
-  </div>
-</div>
-
-
-</td>
-
-<td>
-  <span
-    *ngIf="user.banned; else activeStatus"
-    class="badge bg-danger status-badge badge-lg rounded-pill"
-    style="cursor: pointer;"
-    (click)="toggleBan(user.id!)"
-    title="Cliquez pour débannir ce compte">
-    <i class="fas fa-user-slash me-1"></i> Banni
-  </span>
-
-  <ng-template #activeStatus>
-    <span
-      class="badge bg-success status-badge badge-lg rounded-pill"
-      style="cursor: pointer;"
-      (click)="toggleBan(user.id!)"
-      title="Cliquez pour bannir ce compte">
-      <i class="fas fa-user-check me-1"></i> Actif
-    </span>
-  </ng-template>
-</td>
-
-
-
-        </tr>
-      </tbody>
-    </table>
-    <!-- Pagination -->
-<div class="pagination-container" *ngIf="totalPages > 1" style="text-align: center; margin-top: 20px;">
-  <button
-    (click)="goToPage(currentPage - 1)"
-    [disabled]="currentPage === 1"
-    [class.disabled]="currentPage === 1"
-    aria-label="Previous page">
-    <i class="fas fa-chevron-left"></i>
-  </button>
-
-  <button *ngFor="let page of [].constructor(totalPages); let i = index"
-          (click)="goToPage(i + 1)"
-          [class.active]="currentPage === (i + 1)">
-    {{ i + 1 }}
-  </button>
-
-  <button
-    (click)="goToPage(currentPage + 1)"
-    [disabled]="currentPage === totalPages"
-    [class.disabled]="currentPage === totalPages"
-    aria-label="Next page">
-    <i class="fas fa-chevron-right"></i>
-  </button>
-</div>
-
+        <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Nom</th>
+              <th scope="col">Prénom</th>
+              <th scope="col">Email</th>
+              <th scope="col">Téléphone</th>
+              <th scope="col">Rôle</th>
+              <th scope="col">Statut </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr  *ngFor="let user of pagedUsers">
+              <td>    <div class="user-info">
+                <img
+                  [src]="user.image ? 'data:image/jpeg;base64,' + user.image : 'assets/img/default-avatar.png'"
+                  alt="Photo"
+                  class="user-image"
+                />
+                {{ user.lastname }} </div></td>
+              <td>{{ user.firstname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone || '—' }}</td>
+              <td>
+                <div *ngFor="let role of user.roles; let i = index" class="role-badge-wrapper">
+                  <span
+                    class="role-badge"
+                    [ngClass]="getRoleBadgeInfo(role).cssClass"
+                    (click)="toggleRoleDropdown(user, i)">
+                    <i [class]="getRoleBadgeInfo(role).icon"></i>
+                    {{ getRoleBadgeInfo(role).label }}
+                  </span>
+                  <div *ngIf="isDropdownOpen(user, i) && isUserAdminOrAgent(user)" class="dropdown-menu show">
+                    <button
+                      *ngFor="let r of availableRoles"
+                      class="dropdown-item"
+                      (click)="onRoleClick($event, user.id!, r)">
+                      {{ getRoleBadgeInfo(r).label }}
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span
+                  *ngIf="user.banned; else activeStatus"
+                  class="badge bg-danger status-badge badge-lg rounded-pill"
+                  style="cursor: pointer;"
+                  (click)="toggleBan(user.id!)"
+                  title="Cliquez pour débannir ce compte">
+                  <i class="fas fa-user-slash me-1"></i> Banni
+                </span>
+                <ng-template #activeStatus>
+                  <span
+                    class="badge bg-success status-badge badge-lg rounded-pill"
+                    style="cursor: pointer;"
+                    (click)="toggleBan(user.id!)"
+                    title="Cliquez pour bannir ce compte">
+                    <i class="fas fa-user-check me-1"></i> Actif
+                  </span>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination should be outside .table-responsive but inside .table-wrapper -->
+      <div class="pagination-container" *ngIf="totalPages > 1" style="text-align: center; margin-top: 20px;">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          [class.disabled]="currentPage === 1"
+          aria-label="Previous page">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button *ngFor="let page of [].constructor(totalPages); let i = index"
+                (click)="goToPage(i + 1)"
+                [class.active]="currentPage === (i + 1)">
+          {{ i + 1 }}
+        </button>
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          [class.disabled]="currentPage === totalPages"
+          aria-label="Next page">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -184,7 +176,6 @@
       </div>
       <div class="modal-body">
         <form #addUserForm="ngForm" (ngSubmit)="addUser()" novalidate>
-
           <!-- Nom + Prénom côte à côte -->
           <div class="form-row d-flex gap-2">
             <div class="flex-half" style="flex:1;">
@@ -210,9 +201,6 @@
               </div>
             </div>
           </div>
-
-
-
           <!-- Email -->
           <div class="form-group mb-2">
             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -221,13 +209,11 @@
               L'email est requis.
             </div>
           </div>
-
           <!-- Téléphone -->
           <div class="form-group mb-2">
             <label for="phone" class="form-label">Téléphone</label>
             <input type="tel" id="phone" name="phone" class="form-control" [(ngModel)]="newUser.phone" placeholder="Téléphone" />
           </div>
-
           <!-- Mot de passe -->
           <div class="form-group mb-2">
             <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
@@ -236,7 +222,6 @@
               Le mot de passe doit contenir au moins 6 caractères.
             </div>
           </div>
-
           <!-- Rôle -->
           <div class="form-group mb-3">
             <label for="role" class="form-label">Rôle</label>
@@ -245,14 +230,12 @@
               <option [ngValue]="'ROLE_ADMIN'">Admin</option>
             </select>
           </div>
-
           <!-- Boutons -->
           <div class="form-group d-flex justify-content-end gap-2 mt-2 mb-0">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
-
         <!-- Message d'erreur -->
         <div *ngIf="errorMessage" class="alert alert-danger mt-2 mb-0" role="alert">
           {{ errorMessage }}
@@ -265,4 +248,3 @@
 
 
 <!-- Bootstrap JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
