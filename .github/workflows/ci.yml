@@ -12,9 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files for debug
-        run: ls -l
-
       - name: Make mvnw executable
         run: chmod +x mvnw
 
@@ -37,3 +34,23 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
+
+  deploy:
+    needs: build-and-push-backend
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Pull latest backend image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
+
+      - name: Stop and remove existing containers
+        run: docker-compose -f docker-compose.yml down || true
+        working-directory: ReclamationBack
+
+      - name: Start new containers with latest images
+        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans
+        working-directory: ReclamationBack

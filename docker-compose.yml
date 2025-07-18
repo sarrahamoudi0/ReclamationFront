@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  backend:
+    image: sarrahamoudi/reclamation-backend:latest
+    container_name: reclamation-backend
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_APPLICATION_NAME: Reclamation
+      SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/reclamation
+      SPRING_DATA_MONGODB_DATABASE: Reclamation
+      SERVER_PORT: 8083
+      SPRING_SERVLET_MULTIPART_ENABLED: 'true'
+      SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
+      SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
+      APPLICATION_SECURITY_JWT_SECRET_KEY: SR72aaIRCzXl7ohXLVsM_vegwD7h-6DT1jerbJwTtI4=
+      APPLICATION_SECURITY_JWT_EXPIRATION: 86400000
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+      SPRING_MAIL_HOST: smtp.zoho.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: noreply@maginater.com
+      SPRING_MAIL_PASSWORD: Test1234,azert
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: 'true'
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE: 'false'
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: 'true'
+      LOGGING_LEVEL_JAKARTA_MAIL: DEBUG
+      SPRING_PROFILES_ACTIVE: dev
+      APPLICATION_MAILING_FRONTEND_ACTIVATION_URL: http://localhost:4200/activate-account
+      APPLICATION_MAILING_FRONTEND_CHANGE_EMAIL_URL: http://localhost:4200/profile
+      RESET_PASSWORD_URL: http://localhost:4200/reset-password
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB_CORE_MONGOTEMPLATE: DEBUG
+    restart: always
