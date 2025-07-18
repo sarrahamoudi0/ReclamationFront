@@ -50,12 +50,17 @@ jobs:
           Get-ChildItem -Recurse
 
       - name: Pull latest backend image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME   }}/reclamation-backend:latest
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
 
       - name: Stop and remove existing backend container
         run: |
-          try { docker stop reclamation-backend } catch { Write-Host 'ignore error' }
-          try { docker rm reclamation-backend } catch { Write-Host 'ignore error' }
+          $container = docker ps -a --filter name=reclamation-backend --format '{{.Names}}''
+          if ($container) {
+            try { docker stop reclamation-backend } catch { Write-Host 'ignore error' }
+            try { docker rm reclamation-backend } catch { Write-Host 'ignore error' }
+          } else {
+            Write-Host 'Container reclamation-backend does not exist, skipping stop/remove'
+          }
 
       - name: Start new backend container with latest image
         run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans backend
