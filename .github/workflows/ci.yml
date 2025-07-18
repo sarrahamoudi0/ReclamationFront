@@ -48,8 +48,13 @@ jobs:
 
       - name: Stop and remove existing frontend container
         run: |
-          try { docker stop reclamation-frontend } catch { Write-Host 'ignore error' }
-          try { docker rm reclamation-frontend } catch { Write-Host 'ignore error' }
+          $container = docker ps -a --filter name=reclamation-frontend --format {{.Names}}
+          if ($container) {
+            try { docker stop reclamation-frontend } catch { Write-Host 'ignore error' }
+            try { docker rm reclamation-frontend } catch { Write-Host 'ignore error' }
+          } else {
+            Write-Host 'Container reclamation-frontend does not exist, skipping stop/remove'
+          }
 
       - name: Start new frontend container with latest image
         run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans frontend
