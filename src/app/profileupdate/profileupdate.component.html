@@ -47,19 +47,22 @@
 </div>
   <!-- Modal activation code -->
 <div *ngIf="showActivationModal" class="modal-backdrop">
-    <div class="modal-content">
-      <h3>Confirmez votre nouvel email</h3>
-      <form [formGroup]="activationForm" (ngSubmit)="confirmEmailChange()">
-        <label for="activationCode">Code de confirmation</label>
-        <input formControlName="activationCode" id="activationCode" type="text" />
-        <div *ngIf="activationForm.get('activationCode')?.invalid && activationForm.get('activationCode')?.touched" class="error">
-          Le code est requis.
-        </div>
-        <button type="submit" [disabled]="activationForm.invalid">Confirmer</button>
-        <button type="button" (click)="cancelActivation()">Annuler</button>
-      </form>
-    </div>
+  <div class="modal-content code-modal">
+    <h3 class="modal-title">Vérification de l'email</h3>
+    <p class="modal-desc">Un code de confirmation a été envoyé à votre nouvelle adresse email.<br>Veuillez le saisir ci-dessous :</p>
+    <form [formGroup]="activationForm" (ngSubmit)="confirmEmailChange()">
+      <input formControlName="activationCode" id="activationCode" type="text" maxlength="8"
+        class="code-input" placeholder="Code de confirmation" autocomplete="one-time-code" />
+      <div *ngIf="activationForm.get('activationCode')?.invalid && activationForm.get('activationCode')?.touched" class="error">
+        Le code est requis.
+      </div>
+      <div class="modal-actions">
+        <button type="submit" [disabled]="activationForm.invalid" class="modal-btn confirm">Confirmer</button>
+        <button type="button" (click)="cancelActivation()" class="modal-btn cancel">Annuler</button>
+      </div>
+    </form>
   </div>
+</div>
   
   <!-- Ton formulaire profileForm ici (déjà existant) -->
   

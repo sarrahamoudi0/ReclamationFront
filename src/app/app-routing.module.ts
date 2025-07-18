@@ -37,7 +37,7 @@ const routes: Routes = [
   {path:"user",component:UserListComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
   { path: 'logs', component: LogsComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
   { path: 'mynavbar', component: MynavbarComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,UserRole.AGENT] }},
-  { path: 'profile', component: ProfileupdateComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,,UserRole.AGENT] }},
+  { path: 'profile', component: ProfileupdateComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,,UserRole.AGENT,UserRole.USER] }},
 
 
 

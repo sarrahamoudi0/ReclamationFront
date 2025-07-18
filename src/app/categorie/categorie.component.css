@@ -5,9 +5,12 @@
   padding: 30px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   max-width: 900px;
-  margin: 40px auto;
+  margin: 120px auto 40px auto;
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
+  transition: margin-top 0.3s cubic-bezier(.4,1.4,.6,1);
+  position: relative;
+  left: 70px;
 }
 
 /* --- Animation du titre --- */

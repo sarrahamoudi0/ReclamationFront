@@ -88,7 +88,7 @@ export class ProfileupdateComponent implements OnInit {
   updateProfile() {
     this.authenticationService.updateProfile(this.profileForm.value).subscribe({
       next: () => {
-        this.successMessage = 'Profil mis à jour avec succès !';
+        
         this.toastr.success(this.successMessage, 'Succès');
         this.showActivationModal = false;
         this.originalEmail = this.profileForm.value.email; // Mise à jour ici, après succès
