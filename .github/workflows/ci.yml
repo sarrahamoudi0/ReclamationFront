@@ -46,8 +46,8 @@ jobs:
 
       - name: Print working directory and list files
         run: |
-          pwd
-          ls -l
+          Get-Location
+          Get-ChildItem
 
       - name: Pull latest backend image
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
