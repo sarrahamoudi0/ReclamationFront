@@ -54,8 +54,8 @@ jobs:
 
       - name: Stop and remove existing backend container
         run: |
-          docker-compose -f docker-compose.yml stop backend
-          docker-compose -f docker-compose.yml rm -f backend
+          docker stop reclamation-backend || exit 0
+          docker rm reclamation-backend || exit 0
 
       - name: Start new backend container with latest image
         run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans backend
