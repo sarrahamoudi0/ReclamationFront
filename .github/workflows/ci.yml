@@ -47,14 +47,14 @@ jobs:
       - name: Print working directory and list files
         run: |
           Get-Location
-          Get-ChildItem
+          Get-ChildItem -Recurse
 
       - name: Pull latest backend image
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
 
       - name: Stop and remove existing containers
         run: |
-          try { docker-compose -f ReclamationBack/docker-compose.yml down } catch { Write-Host 'ignore error' }
+          try { docker-compose -f docker-compose.yml down } catch { Write-Host 'ignore error' }
 
       - name: Start new containers with latest images
-        run: docker-compose -f ReclamationBack/docker-compose.yml up -d --force-recreate --remove-orphans
+        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans
