@@ -30,6 +30,7 @@ import {ToastrModule} from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { MynavbarComponent } from './mynavbar/mynavbar.component';
 import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
+import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
 
 
 
@@ -56,11 +57,13 @@ import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
     NavbarSystemComponent,
     LogsComponent,
     MynavbarComponent,
+    ProfileupdateComponent,
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,

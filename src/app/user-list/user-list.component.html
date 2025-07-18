@@ -26,13 +26,14 @@
             <i class="fas fa-search search-icon"></i>
           </div>
           <button
-            class="btn-add-user"
-            (click)="openAddUserForm()"
-            title="Ajouter un utilisateur"
-            aria-label="Ajouter un utilisateur"
-          >
-            <i class="fas fa-user-plus"></i>
-          </button>
+          class="btn-add-user"
+          (click)="openAddUserForm()"
+          data-bs-toggle="modal"
+          data-bs-target="#addUserModal"
+          aria-label="Ajouter un utilisateur"
+        >
+          <i class="fas fa-user-plus"></i>
+        </button>
         </div>
         <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
           <thead class="table-dark">
@@ -165,8 +166,9 @@
 </div>
 
 <!-- Add User Modal -->
+<!-- Modal Ajout Utilisateur -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg pour un plus grand format -->
     <div class="modal-content shadow rounded-3">
       <div class="modal-header border-bottom-0">
         <h5 class="modal-title" id="addUserModalLabel">
@@ -176,12 +178,13 @@
       </div>
       <div class="modal-body">
         <form #addUserForm="ngForm" (ngSubmit)="addUser()" novalidate>
-          <!-- Nom + Prénom côte à côte -->
           <div class="form-row d-flex gap-2">
-            <div class="flex-half" style="flex:1;">
+            <div style="flex:1;">
               <div class="form-group mb-2">
                 <label for="firstname" class="form-label">Prénom <span class="text-danger">*</span></label>
-                <input type="text" id="firstname" name="firstname" class="form-control" [(ngModel)]="newUser.firstname" required minlength="2" pattern="^[A-Za-zÀ-ÿ\s'-]+$" placeholder="Prénom" #firstname="ngModel" />
+                <input type="text" id="firstname" name="firstname" class="form-control"
+                  [(ngModel)]="newUser.firstname" required minlength="2"
+                  pattern="^[A-Za-zÀ-ÿ\s'-]+$" placeholder="Prénom" #firstname="ngModel" />
                 <div class="form-error" *ngIf="(addUserForm.submitted || firstname.touched) && firstname.errors">
                   <span *ngIf="firstname.errors['required']">Le prénom est requis.</span>
                   <span *ngIf="firstname.errors['minlength']">Le prénom doit contenir au moins 2 lettres.</span>
@@ -189,10 +192,12 @@
                 </div>
               </div>
             </div>
-            <div class="flex-half" style="flex:1;">
+            <div style="flex:1;">
               <div class="form-group mb-2">
                 <label for="lastname" class="form-label">Nom <span class="text-danger">*</span></label>
-                <input type="text" id="lastname" name="lastname" class="form-control" [(ngModel)]="newUser.lastname" required minlength="2" pattern="^[A-Za-zÀ-ÿ\s'-]+$" placeholder="Nom" #lastname="ngModel" />
+                <input type="text" id="lastname" name="lastname" class="form-control"
+                  [(ngModel)]="newUser.lastname" required minlength="2"
+                  pattern="^[A-Za-zÀ-ÿ\s'-]+$" placeholder="Nom" #lastname="ngModel" />
                 <div class="form-error" *ngIf="(addUserForm.submitted || lastname.touched) && lastname.errors">
                   <span *ngIf="lastname.errors['required']">Le nom est requis.</span>
                   <span *ngIf="lastname.errors['minlength']">Le nom doit contenir au moins 2 lettres.</span>
@@ -201,28 +206,32 @@
               </div>
             </div>
           </div>
-          <!-- Email -->
+
           <div class="form-group mb-2">
             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-            <input type="email" id="email" name="email" class="form-control" [(ngModel)]="newUser.email" required email placeholder="Email" />
+            <input type="email" id="email" name="email" class="form-control"
+              [(ngModel)]="newUser.email" required placeholder="Email" />
             <div *ngIf="addUserForm.submitted && !newUser.email" class="text-danger small mt-1">
               L'email est requis.
             </div>
           </div>
-          <!-- Téléphone -->
+
           <div class="form-group mb-2">
             <label for="phone" class="form-label">Téléphone</label>
-            <input type="tel" id="phone" name="phone" class="form-control" [(ngModel)]="newUser.phone" placeholder="Téléphone" />
+            <input type="tel" id="phone" name="phone" class="form-control"
+              [(ngModel)]="newUser.phone" placeholder="Téléphone" />
           </div>
-          <!-- Mot de passe -->
+
           <div class="form-group mb-2">
             <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
-            <input type="password" id="password" name="password" class="form-control" [(ngModel)]="newUser.password" required minlength="6" placeholder="Mot de passe" />
-            <div *ngIf="addUserForm.submitted && (!newUser.password || newUser.password.length < 6)" class="text-danger small mt-1">
+            <input type="password" id="password" name="password" class="form-control"
+              [(ngModel)]="newUser.password" required minlength="6" placeholder="Mot de passe" />
+            <div *ngIf="addUserForm.submitted && (!newUser.password || newUser.password.length < 6)"
+              class="text-danger small mt-1">
               Le mot de passe doit contenir au moins 6 caractères.
             </div>
           </div>
-          <!-- Rôle -->
+
           <div class="form-group mb-3">
             <label for="role" class="form-label">Rôle</label>
             <select id="role" name="role" class="form-select" [(ngModel)]="newUser.role">
@@ -230,13 +239,13 @@
               <option [ngValue]="'ROLE_ADMIN'">Admin</option>
             </select>
           </div>
-          <!-- Boutons -->
+
           <div class="form-group d-flex justify-content-end gap-2 mt-2 mb-0">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
-        <!-- Message d'erreur -->
+
         <div *ngIf="errorMessage" class="alert alert-danger mt-2 mb-0" role="alert">
           {{ errorMessage }}
         </div>
@@ -244,6 +253,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 

@@ -13,6 +13,7 @@ import { User } from '../models/User';
 import { AdminCreateUserRequest } from '../models/AdminCreateUser';
 import {of} from 'rxjs'
 import { tap } from 'rxjs/operators';
+import { ProfileUpdateRequest } from '../models/ProfileUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -288,8 +289,28 @@ deleteUser(userId: string): Observable<any> {
   });
 }
 
+  updateProfile(request: ProfileUpdateRequest): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/updateprofile`, request);
+  }
 
 
+  confirmEmailChange(token: string): Observable<string> {
+    const params = new HttpParams().set('token', token);
+    return this.http.get<string>(`${this.apiUrl}/confirm-email-change`, { params });
+  }
+
+  requestEmailConfirmation(newEmail: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/request-email-confirmation`,
+      { newEmail },
+      { responseType: 'text' as 'json' }
+    );
+  }
+  setToken(token: string): void {
+    localStorage.setItem('token', token);
+    // Si tu utilises un BehaviorSubject ou autre système de session, mets-le à jour ici aussi
+  }
+  
 
 
 
