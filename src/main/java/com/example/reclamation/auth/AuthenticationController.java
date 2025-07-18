@@ -2,8 +2,11 @@ package com.example.reclamation.auth;
 
 
 
+import com.example.reclamation.Profile.EmailChangeRequest;
+import com.example.reclamation.Profile.ProfileUpdateRequest;
 import com.example.reclamation.logs.AuditLogService;
 import com.example.reclamation.role.Role;
+import com.example.reclamation.security.JwtService;
 import com.example.reclamation.token.Token;
 import com.example.reclamation.token.TokenRepository;
 import com.example.reclamation.user.AdminCreateUserRequest;
@@ -45,6 +48,7 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final UserService userService;
     private final AuditLogService auditLogService;
+    private final JwtService jwtService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
 
@@ -351,6 +355,50 @@ public class AuthenticationController {
         return userService.findByEmail(email).orElse(null);
     }
 
+    @PutMapping("/updateprofile")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateRequest request) {
+        try {
+            User updatedUser = userService.updateProfile(
+                    request.getFirstname(),
+                    request.getLastname(),
+                    request.getPhone(),
+                    request.getEmail(),
+                    request.getCurrentPassword()
+            );
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("/confirm-email-change")
+    public ResponseEntity<?> confirmEmailChange(@RequestParam("token") String token) {
+        try {
+            User user = userService.confirmEmailChange(token); // récupère user à jour
+
+            String newJwtToken = jwtService.generateToken(user); // génère token avec nouvel email
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Changement d'email confirmé avec succès !");
+            response.put("token", newJwtToken);
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/request-email-confirmation")
+    public ResponseEntity<?> requestEmailConfirmation(@RequestBody EmailChangeRequest request) {
+        try {
+            User user = userService.getCurrentUser();
+            userService.sendValidationEmailToNewAddress(user, request.getNewEmail());
+            return ResponseEntity.ok("Email de confirmation envoyé");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }
 

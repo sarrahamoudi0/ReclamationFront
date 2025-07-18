@@ -50,6 +50,9 @@ public class User implements UserDetails {
     @Getter
 
     private boolean banned = false;
+    @Column(name = "pending_email")
+    private String pendingEmail;
+
 
     @Lob
     @Column(length = 209715200)
