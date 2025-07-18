@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  frontend:
+    image: sarrahamoudi/reclamation:latest
+    container_name: reclamation-frontend
+    ports:
+      - "4200:4200"
+    restart: always 
