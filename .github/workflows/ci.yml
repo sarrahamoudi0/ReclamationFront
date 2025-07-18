@@ -52,9 +52,10 @@ jobs:
       - name: Pull latest backend image
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-backend:latest
 
-      - name: Stop and remove existing containers
+      - name: Stop and remove existing backend container
         run: |
-          try { docker-compose -f docker-compose.yml down backend } catch { Write-Host 'ignore error' }
+          docker-compose -f docker-compose.yml stop backend
+          docker-compose -f docker-compose.yml rm -f backend
 
-      - name: Start new containers with latest images
+      - name: Start new backend container with latest image
         run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans backend
