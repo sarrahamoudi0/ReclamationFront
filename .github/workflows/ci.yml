@@ -27,4 +27,28 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/reclamation:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-frontend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Print working directory and list files
+        run: |
+          Get-Location
+          Get-ChildItem -Recurse
+
+      - name: Pull latest frontend image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation:latest
+
+      - name: Stop and remove existing containers
+        run: |
+          try { docker-compose -f docker-compose.yml down } catch { Write-Host 'ignore error' }
+
+      - name: Start new containers with latest images
+        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans
