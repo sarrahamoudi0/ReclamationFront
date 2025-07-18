@@ -1,12 +1,12 @@
-# Build stage
 FROM node:20 AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY ./src ./src
+COPY angular.json ./
+COPY tsconfig*.json ./
 RUN npm run build -- --output-path=dist
 
-# Nginx stage
 FROM nginx:alpine
 COPY --from=build /app/dist/ /usr/share/nginx/html
 EXPOSE 80
