@@ -15,6 +15,9 @@ jobs:
       - name: List files for debug
         run: ls -l
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
