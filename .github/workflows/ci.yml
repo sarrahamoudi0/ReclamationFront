@@ -48,7 +48,7 @@ jobs:
 
       - name: Stop and remove existing containers
         run: |
-          try { docker-compose -f docker-compose.yml down } catch { Write-Host 'ignore error' }
+          try { docker-compose -f docker-compose.yml down frontend } catch { Write-Host 'ignore error' }
 
       - name: Start new containers with latest images
-        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans
+        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans frontend
