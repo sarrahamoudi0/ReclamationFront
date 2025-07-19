@@ -7,7 +7,7 @@ services:
       - "8083:8083"
     environment:
       SPRING_APPLICATION_NAME: Reclamation
-      SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/reclamation
+      SPRING_DATA_MONGODB_URI: mongodb://host.docker.internal:27017/reclamation
       SPRING_DATA_MONGODB_DATABASE: Reclamation
       SERVER_PORT: 8083
       SPRING_SERVLET_MULTIPART_ENABLED: 'true'
