@@ -48,12 +48,12 @@ jobs:
 
       - name: Stop and remove existing frontend container
         run: |
-          $container = docker ps -a --filter name=reclamation-frontend --format '{{.Names}}'
+          $container = docker ps -a --filter name=reclamation-frontend -q
           if ($container) {
-            try { docker stop reclamation-frontend } catch { Write-Host 'ignore error' }
-            try { docker rm reclamation-frontend } catch { Write-Host 'ignore error' }
+            try { docker stop reclamation-frontend } catch { Write-Host "ignore error" }
+            try { docker rm reclamation-frontend } catch { Write-Host "ignore error" }
           } else {
-            Write-Host 'Container reclamation-frontend does not exist, skipping stop/remove'
+            Write-Host "Container reclamation-frontend does not exist, skipping stop/remove"
           }
 
       - name: Start new frontend container with latest image
