@@ -57,4 +57,5 @@ jobs:
           }
 
       - name: Start new frontend container with latest image
-        run: docker-compose -f docker-compose.yml up -d --force-recreate --remove-orphans frontend
+        run: |
+          docker run -d --name reclamation-frontend -p 4200:4200 --restart always ${{ secrets.DOCKERHUB_USERNAME }}/reclamation:latest
