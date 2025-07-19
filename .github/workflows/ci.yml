@@ -59,7 +59,7 @@ jobs:
             try { docker stop reclamation-backend } catch { Write-Host 'ignore error' }
             try { docker rm reclamation-backend } catch { Write-Host 'ignore error' }
           } else {
-            Write-Host 'Container reclamation-backend does not exist, skipping stop/remove'
+            Write-Host "Container reclamation-backend does not exist, skipping stop/remove"
           }
 
       - name: Start new backend container with latest image
