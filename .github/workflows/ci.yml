@@ -54,10 +54,10 @@ jobs:
 
       - name: Stop and remove existing backend container
         run: |
-          $container = docker ps -a --filter name=reclamation-backend --format '{{.Names}}''
+          $container = docker ps -a --filter name=reclamation-backend -q
           if ($container) {
-            try { docker stop reclamation-backend } catch { Write-Host 'ignore error' }
-            try { docker rm reclamation-backend } catch { Write-Host 'ignore error' }
+            try { docker stop reclamation-backend } catch { Write-Host "ignore error" }
+            try { docker rm reclamation-backend } catch { Write-Host "ignore error" }
           } else {
             Write-Host "Container reclamation-backend does not exist, skipping stop/remove"
           }
