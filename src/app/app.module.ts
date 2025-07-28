@@ -31,6 +31,7 @@ import { CommonModule } from '@angular/common';
 import { MynavbarComponent } from './mynavbar/mynavbar.component';
 import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 
 
@@ -66,6 +67,7 @@ import { ProfileupdateComponent } from './profileupdate/profileupdate.component'
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    ChatbotModule,
     FormsModule,
     ToastrModule.forRoot({
       progressBar: true,

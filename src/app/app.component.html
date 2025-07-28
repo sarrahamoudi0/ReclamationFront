@@ -1,4 +1,5 @@
 <app-navbar-system *ngIf="isLoggedIn"></app-navbar-system>
 <app-navbar *ngIf="isLoggedIn && isUser"></app-navbar>
 <app-sideabr-admin *ngIf="isLoggedIn && isAgentOrAdmin"></app-sideabr-admin>
+<app-chatbot></app-chatbot>
 <router-outlet></router-outlet>

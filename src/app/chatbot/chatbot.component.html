@@ -1,0 +1,41 @@
+<button class="chatbot-fab" (click)="toggleChat()" *ngIf="!open" aria-label="Open chat">
+  <span class="chat-icon">💬</span>
+</button>
+
+<div *ngIf="open" class="chatbot-wrapper" role="dialog" aria-modal="true" aria-labelledby="chatbot-header">
+  <div class="chatbot-container">
+    <div class="chat-header" id="chatbot-header">
+      <span>Chatbot Assistant</span>
+      <button class="close-btn" (click)="toggleChat()" title="Close chat" aria-label="Close chat">&times;</button>
+    </div>
+
+    <div class="chat-history" role="log" aria-live="polite" aria-relevant="additions">
+      <div *ngFor="let msg of messages" [ngClass]="msg.sender" class="chat-message">
+        <span class="avatar" *ngIf="msg.sender === 'bot'" aria-hidden="true">🤖</span>
+        <span class="avatar" *ngIf="msg.sender === 'user'" aria-hidden="true">🧑</span>
+        <span class="msg-text">{{ msg.text }}</span>
+      </div>
+
+      <div *ngIf="loading" class="bot loading chat-message">
+        <span class="avatar" aria-hidden="true">🤖</span>
+        <span class="msg-text">
+          <span class="spinner" aria-hidden="true"></span> Thinking...
+        </span>
+      </div>
+    </div>
+
+    <form class="chat-input" (submit)="$event.preventDefault(); sendMessage();" novalidate>
+      <textarea
+        [(ngModel)]="userInput"
+        name="userInput"
+        rows="1"
+        placeholder="Type your question..."
+        (keydown)="handleKeydown($event)"
+        [disabled]="loading"
+        aria-label="Type your question"
+        required
+      ></textarea>
+      <button type="submit" [disabled]="loading || !userInput.trim()">Send</button>
+    </form>
+  </div>
+</div>
