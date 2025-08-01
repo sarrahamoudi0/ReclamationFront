@@ -44,7 +44,7 @@ jobs:
           Get-ChildItem -Recurse
 
       - name: Pull latest frontend image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation:latest
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-frontend:latest
 
       - name: Stop and remove existing frontend container
         run: |
