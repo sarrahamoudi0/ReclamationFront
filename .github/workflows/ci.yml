@@ -58,4 +58,4 @@ jobs:
 
       - name: Start new frontend container with latest image
         run: |
-          docker run -d --name reclamation-frontend -p 4200:80 --restart always ${{ secrets.DOCKERHUB_USERNAME }}/reclamation:latest
+          docker run -d --name reclamation-frontend -p 4200:80 --restart always ${{ secrets.DOCKERHUB_USERNAME }}/reclamation-frontend:latest
