@@ -33,6 +33,7 @@ import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
 import { ChatbotModule } from './chatbot/chatbot.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ReunionModule } from './reunion/reunion.module';
 
 
 
@@ -71,6 +72,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     ChatbotModule,
     FormsModule,
+    ReunionModule,
     ToastrModule.forRoot({
       progressBar: true,
       closeButton: true,

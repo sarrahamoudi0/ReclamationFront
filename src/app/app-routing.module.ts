@@ -21,9 +21,20 @@ import { MynavbarComponent } from './mynavbar/mynavbar.component';
 import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ReunionListComponent } from './reunion/reunion-list/reunion-list.component';
+import { ReunionFormComponent } from './reunion/reunion-form/reunion-form.component';
+import { ReunionViewComponent } from './reunion/reunion-view/reunion-view.component';
 
 
 const routes: Routes = [
+  
+  // Reunion routes
+  { path: 'reunions', component: ReunionListComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
+  { path: 'reunions/create', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
+  { path: 'reunions/edit/:id', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
+  { path: 'reunions/view/:id', component: ReunionViewComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }}
+
+,
   {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
   {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
   {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
@@ -49,9 +60,8 @@ const routes: Routes = [
   { path: '**', component: NotFoundComponent },
   { path: 'admin-dashboard', component: CategorieComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
   { path: 'reclamationclient', component: ReclamationComponent, canActivate: [authGuard],data: { roles: [UserRole.USER] }},
-  { path: 'reclamationagnet', component: ReclamtionBackofficeComponent, canActivate: [authGuard],data: { roles: [UserRole.AGENT] }}
-
-
+  { path: 'reclamationagnet', component: ReclamtionBackofficeComponent, canActivate: [authGuard],data: { roles: [UserRole.AGENT] }},
+  
 
 
 
