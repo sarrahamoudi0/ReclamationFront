@@ -1,7 +1,5 @@
 package com.example.reclamation;
 
-;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
