@@ -120,6 +120,11 @@ export class ReunionService {
     return this.http.get<ReunionResponse[]>(`${this.apiUrl}/participant`);
   }
 
+  // Alias for getReunionsByParticipant - for better readability
+  getMyReunions(): Observable<ReunionResponse[]> {
+    return this.getReunionsByParticipant();
+  }
+
   // Get upcoming reunions
   getUpcomingReunions(): Observable<ReunionResponse[]> {
     return this.http.get<ReunionResponse[]>(`${this.apiUrl}/upcoming`);

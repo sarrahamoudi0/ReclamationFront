@@ -24,15 +24,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReunionListComponent } from './reunion/reunion-list/reunion-list.component';
 import { ReunionFormComponent } from './reunion/reunion-form/reunion-form.component';
 import { ReunionViewComponent } from './reunion/reunion-view/reunion-view.component';
+import { ReunionAgentComponent } from './reunion/reunion-agent/reunion-agent.component';
 
 
 const routes: Routes = [
   
   // Reunion routes
-  { path: 'reunions', component: ReunionListComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
+  { path: 'reunions', component: ReunionListComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
   { path: 'reunions/create', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
   { path: 'reunions/edit/:id', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
-  { path: 'reunions/view/:id', component: ReunionViewComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }}
+  { path: 'reunions/view/:id', component: ReunionViewComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
+  { path: 'myreunions', component: ReunionAgentComponent, canActivate: [authGuard], data: { roles: [UserRole.AGENT] }}
 
 ,
   {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},

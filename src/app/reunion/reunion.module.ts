@@ -6,12 +6,14 @@ import { RouterModule } from '@angular/router';
 import { ReunionListComponent } from './reunion-list/reunion-list.component';
 import { ReunionFormComponent } from './reunion-form/reunion-form.component';
 import { ReunionViewComponent } from './reunion-view/reunion-view.component';
+import { ReunionAgentComponent } from './reunion-agent/reunion-agent.component';
 
 @NgModule({
   declarations: [
     ReunionListComponent,
     ReunionFormComponent,
-    ReunionViewComponent
+    ReunionViewComponent,
+    ReunionAgentComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { ReunionViewComponent } from './reunion-view/reunion-view.component';
   exports: [
     ReunionListComponent,
     ReunionFormComponent,
-    ReunionViewComponent
+    ReunionViewComponent,
+    ReunionAgentComponent
   ]
 })
 export class ReunionModule { } 

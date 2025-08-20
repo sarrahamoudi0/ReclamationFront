@@ -2,20 +2,37 @@
   <div class="toggle-btn" (click)="toggleSidebar()">
     <i class="fa fa-bars"></i>
   </div>
+
   <div class="logo-section">
     <img src="assets/img/orangelogo.png" alt="Logo Orange" class="logo-img" />
   </div>
+
   <ul class="nav-links">
     <li *ngFor="let item of menu">
-      <a *ngIf="item.route" [routerLink]="item.route" routerLinkActive="active">
+      <!-- Internal route -->
+      <a *ngIf="item.route 
+                && ((!item.showForAgent && !item.showForAdmin) 
+                || (item.showForAgent && isAgent()) 
+                || (item.showForAdmin && isAdmin()))"
+         [routerLink]="item.route"
+         routerLinkActive="active">
         <span class="icon"><i [class]="item.icon"></i></span>
         <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
       </a>
-      <a *ngIf="item.external" [href]="item.route" target="_blank">
+
+      <!-- External link -->
+      <a *ngIf="item.external 
+                && ((!item.showForAgent && !item.showForAdmin) 
+                || (item.showForAgent && isAgent()) 
+                || (item.showForAdmin && isAdmin()))"
+         [href]="item.route"
+         target="_blank">
         <span class="icon"><i [class]="item.icon"></i></span>
         <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
       </a>
     </li>
+
+    <!-- Logout -->
     <li *ngIf="isLoggedIn()">
       <button class="logout" (click)="logout()">
         <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>

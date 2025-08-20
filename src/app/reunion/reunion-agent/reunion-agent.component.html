@@ -1,0 +1,187 @@
+<div class="reunion-agent-dashboard">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="dashboard-title">
+          <i class="fas fa-calendar-check"></i>
+          Mes Réunions
+        </h1>
+        <p class="dashboard-subtitle">Consultez les réunions auxquelles vous participez</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ getTotalCount() }}</h3>
+          <p class="stat-label">Total Réunions</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon upcoming">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ getUpcomingCount() }}</h3>
+          <p class="stat-label">À Venir</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon active">
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ getActiveCount() }}</h3>
+          <p class="stat-label">En Cours</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon completed">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ getCompletedCount() }}</h3>
+          <p class="stat-label">Terminées</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search Section -->
+  <div class="filters-section">
+    <div class="filters-container">
+      <div class="filters-left">
+        <div class="filter-group">
+          <label class="filter-label">Statut</label>
+          <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()">
+            <option value="">Tous les statuts</option>
+            <option *ngFor="let status of reunionStatuts" [value]="status">
+              {{ getStatusLabel(status) }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label class="filter-label">Type</label>
+          <select class="filter-select" [(ngModel)]="selectedType" (change)="onTypeFilterChange()">
+            <option value="">Tous les types</option>
+            <option *ngFor="let type of reunionTypes" [value]="type">
+              {{ getTypeLabel(type) }}
+            </option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="filters-right">
+        <div class="search-container">
+          <div class="search-input-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Rechercher une réunion..." 
+                   [(ngModel)]="searchTerm">
+          </div>
+          <button class="btn-search" (click)="onSearch()">
+            Rechercher
+          </button>
+        </div>
+        
+        <button class="btn-clear-filters" (click)="clearFilters()">
+          <i class="fas fa-times"></i>
+          Effacer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement de vos réunions...</p>
+    </div>
+  </div>
+
+  <!-- Reunions Grid -->
+  <div *ngIf="!loading && reunions.length > 0" class="reunions-grid">
+    <div *ngFor="let reunion of reunions" class="reunion-card" [class.upcoming]="isUpcoming(reunion.dateDebut)">
+      <div class="reunion-card-header">
+        <div class="reunion-status">
+          <span [class]="getStatusClass(reunion.statut)">
+            {{ getStatusLabel(reunion.statut) }}
+          </span>
+        </div>
+        <div class="reunion-type">
+          <span class="type-badge">{{ getTypeLabel(reunion.type) }}</span>
+        </div>
+      </div>
+      
+      <div class="reunion-card-body">
+        <h3 class="reunion-title">{{ reunion.titre }}</h3>
+        <p class="reunion-description">{{ reunion.description }}</p>
+        
+        <div class="reunion-details">
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ reunion.lieu }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <i class="fas fa-clock"></i>
+            <span>{{ formatDate(reunion.dateDebut) }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <i class="fas fa-user-tie"></i>
+            <span>Organisé par {{ reunion.organisateur.firstname }} {{ reunion.organisateur.lastname }}</span>
+          </div>
+        </div>
+        
+        <div class="reunion-participants">
+          <div class="participants-preview">
+            <div *ngFor="let participant of reunion.participants.slice(0, 3)" 
+                 class="participant-avatar" 
+                 [class.organizer]="participant.id === reunion.organisateur.id"
+                 [title]="participant.firstname + ' ' + participant.lastname + (participant.id === reunion.organisateur.id ? ' (Organisateur)' : '')">
+              {{ participant.firstname.charAt(0) }}{{ participant.lastname.charAt(0) }}
+            </div>
+            <div *ngIf="reunion.participants.length > 3" class="participant-more">
+              +{{ reunion.participants.length - 3 }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reunion-card-actions">
+        <button class="btn-action btn-view" (click)="viewReunion(reunion)" title="Voir les détails">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && reunions.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-calendar-times"></i>
+    </div>
+    <h3>Aucune réunion trouvée</h3>
+    <p>Vous n'êtes actuellement inscrit à aucune réunion</p>
+    <div class="empty-actions">
+      <p class="empty-note">
+        <i class="fas fa-info-circle"></i>
+        Les administrateurs peuvent vous inviter à des réunions
+      </p>
+    </div>
+  </div>
+</div> 
