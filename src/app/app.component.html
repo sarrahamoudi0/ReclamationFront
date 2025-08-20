@@ -1,5 +1,27 @@
-<app-navbar-system *ngIf="isLoggedIn"></app-navbar-system>
-<app-navbar *ngIf="isLoggedIn && isUser"></app-navbar>
-<app-sideabr-admin *ngIf="isLoggedIn && isAgentOrAdmin"></app-sideabr-admin>
-<app-chatbot></app-chatbot>
-<router-outlet></router-outlet>
+<div class="app-container">
+    <!-- Top Navbar -->
+    <app-navbar-system *ngIf="isLoggedIn"></app-navbar-system>
+    <app-navbar *ngIf="isLoggedIn && isUser"></app-navbar>
+  
+    <div class="main-layout">
+      <!-- Sidebar -->
+      <app-sideabr-admin
+        *ngIf="isLoggedIn && isAgentOrAdmin"
+        class="sidebar"
+        [class.active]="sidebarOpen">
+      </app-sideabr-admin>
+  
+      <!-- Main Content -->
+      <div class="content">
+        <!-- Toggle button (only visible on mobile/tablet) -->
+       
+  
+        <!-- Routed pages -->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  
+    <!-- Chatbot -->
+    <app-chatbot></app-chatbot>
+  </div>
+  

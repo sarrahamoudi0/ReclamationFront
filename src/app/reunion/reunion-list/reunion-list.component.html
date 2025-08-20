@@ -176,19 +176,7 @@
           <i class="fas fa-edit"></i>
         </button>
         
-        <div class="dropdown">
-          <button class="btn-action btn-status" title="Changer le statut">
-            <i class="fas fa-cog"></i>
-          </button>
-          <div class="dropdown-menu">
-            <a *ngFor="let status of reunionStatuts" 
-               class="dropdown-item" 
-               href="#" 
-               (click)="changeStatus(reunion, status); $event.preventDefault()">
-              {{ getStatusLabel(status) }}
-            </a>
-          </div>
-        </div>
+      
         
         <button class="btn-action btn-delete" (click)="deleteReunion(reunion)" title="Supprimer">
           <i class="fas fa-trash"></i>

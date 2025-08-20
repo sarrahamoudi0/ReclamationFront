@@ -3,22 +3,6 @@ body {
   overflow: hidden;
 }
 
-/* Container */
-.table-container {
-  max-width: 2000px;
-  padding: 0.5rem;
-  margin: 5px auto;
-  margin-left: 300px;
-  margin-top: 60px;
-  background: transparent;
-  border-radius: 0;
-  box-shadow: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #0a1827;
-  position: relative;
-  border: none;
-  overflow: hidden;
-}
 
 /* Table */
 .reclamation-table {
