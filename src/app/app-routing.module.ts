@@ -20,6 +20,7 @@ import { LogsComponent } from './logs/logs.component';
 import { MynavbarComponent } from './mynavbar/mynavbar.component';
 import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileupdateComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,,UserRole.AGENT,UserRole.USER] }},
 
 
+  { path: 'dashboarding', component: DashboardComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
 
 
 

@@ -32,6 +32,7 @@ import { MynavbarComponent } from './mynavbar/mynavbar.component';
 import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
 import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
 import { ChatbotModule } from './chatbot/chatbot.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 
@@ -59,6 +60,7 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     LogsComponent,
     MynavbarComponent,
     ProfileupdateComponent,
+    DashboardComponent,
     
   ],
   imports: [

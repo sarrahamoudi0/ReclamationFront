@@ -19,7 +19,7 @@ export class SideabrAdminComponent {
   collapsed: boolean = false;
 
   menu: NavMenuItem[] = [
-    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/admin-dashboard' },
+    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboarding' },
     { label: 'Profile', icon: 'fa-solid fa-user', route: '' },
     { label: 'Les Utilisateursss', icon: 'fa-solid fa-users', route: '/user' },
     { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin' },
