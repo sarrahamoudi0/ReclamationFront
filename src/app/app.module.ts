@@ -35,6 +35,7 @@ import { ChatbotModule } from './chatbot/chatbot.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReunionModule } from './reunion/reunion.module';
 import { LayoutComponent } from './layout/layout.component';
+import { PresenceManagementComponent } from './presence/presence-management/presence-management.component';
 
 
 
@@ -64,6 +65,7 @@ import { LayoutComponent } from './layout/layout.component';
     ProfileupdateComponent,
     DashboardComponent,
     LayoutComponent,
+    PresenceManagementComponent,
     
   ],
   imports: [

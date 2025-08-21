@@ -1,0 +1,239 @@
+<div class="presence-management-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">
+          <i class="fas fa-clock"></i>
+          Gestion des Présences
+        </h1>
+        <p class="page-subtitle">Gérez les présences des agents</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-primary" (click)="prepareBulkMarking()" *ngIf="agentsWithoutPresence.length > 0">
+          <i class="fas fa-users"></i>
+          Marquage en lot
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="filters-container">
+      <div class="filter-group">
+        <label class="filter-label">Date</label>
+        <input type="date" 
+               class="filter-input" 
+               [(ngModel)]="selectedDate" 
+               (change)="onDateChange()">
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Statut</label>
+        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()">
+          <option value="">Tous les statuts</option>
+          <option *ngFor="let status of presenceStatuses" [value]="status">
+            {{ getStatusLabel(status) }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Agent</label>
+        <select class="filter-select" [(ngModel)]="selectedAgent">
+          <option value="">Tous les agents</option>
+          <option *ngFor="let agent of agents" [value]="agent.id">
+            {{ agent.firstname }} {{ agent.lastname }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-section" *ngIf="statistics">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon present">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ statistics.presentDays }}</h3>
+          <p>Présences</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon absent">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ statistics.absentDays }}</h3>
+          <p>Absences</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon late">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ statistics.lateDays }}</h3>
+          <p>Retards</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon percentage">
+          <i class="fas fa-percentage"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ statistics.attendancePercentage | number:'1.0-1' }}%</h3>
+          <p>Taux de présence</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement des présences...</p>
+    </div>
+  </div>
+
+  <!-- Presence List -->
+  <div *ngIf="!loading && presences.length > 0" class="presence-list">
+    <div class="list-header">
+      <h3>Présences du {{ formatDate(selectedDate) }}</h3>
+      <span class="presence-count">{{ presences.length }} enregistrement(s)</span>
+    </div>
+    
+    <div class="presence-grid">
+      <div *ngFor="let presence of presences" class="presence-card">
+        <div class="presence-header">
+          <div class="agent-info">
+            <h4>{{ presence.userFirstName }} {{ presence.userLastName }}</h4>
+            <p class="agent-email">{{ presence.userEmail }}</p>
+          </div>
+          <div class="presence-status">
+            <span [class]="getStatusClass(presence.status)">
+              {{ getStatusLabel(presence.status) }}
+            </span>
+          </div>
+        </div>
+        
+        
+        
+        <div class="presence-actions">
+          <button class="btn-action btn-edit" 
+                  (click)="updatePresence(presence, PresenceStatus.PRESENT)"
+                  title="Marquer comme présent">
+            <i class="fas fa-check"></i>
+          </button>
+          
+          <button class="btn-action btn-late" 
+                  (click)="updatePresence(presence, PresenceStatus.LATE)"
+                  title="Marquer comme en retard">
+            <i class="fas fa-clock"></i>
+          </button>
+          
+          <button class="btn-action btn-absent" 
+                  (click)="updatePresence(presence, PresenceStatus.ABSENT)"
+                  title="Marquer comme absent">
+            <i class="fas fa-times"></i>
+          </button>
+          
+          <button class="btn-action btn-delete" 
+                  (click)="deletePresence(presence.id)"
+                  title="Supprimer">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agents Without Presence -->
+  <div *ngIf="!loading && agentsWithoutPresence.length > 0" class="missing-agents-section">
+    <div class="section-header">
+      <h3>Agents sans présence</h3>
+      <span class="agent-count">{{ agentsWithoutPresence.length }} agent(s)</span>
+    </div>
+    
+    <div class="missing-agents-grid">
+      <div *ngFor="let agent of agentsWithoutPresence" class="agent-card">
+        <div class="agent-info">
+          <h4>{{ agent.firstname }} {{ agent.lastname }}</h4>
+          <p class="agent-email">{{ agent.email }}</p>
+        </div>
+        
+        <div class="agent-actions">
+          <button class="btn-action btn-present" 
+                  (click)="markPresence(agent.id, PresenceStatus.PRESENT)"
+                  title="Marquer comme présent">
+            <i class="fas fa-check"></i> Présent
+          </button>
+          
+          <button class="btn-action btn-late" 
+                  (click)="markPresence(agent.id, PresenceStatus.LATE)"
+                  title="Marquer comme en retard">
+            <i class="fas fa-clock"></i> En retard
+          </button>
+          
+          <button class="btn-action btn-absent" 
+                  (click)="markPresence(agent.id, PresenceStatus.ABSENT)"
+                  title="Marquer comme absent">
+            <i class="fas fa-times"></i> Absent
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && presences.length === 0 && agentsWithoutPresence.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-calendar-times"></i>
+    </div>
+    <h3>Aucune présence enregistrée</h3>
+    <p>Aucune présence n'a été enregistrée pour cette date.</p>
+  </div>
+
+  <!-- Bulk Marking Modal -->
+  <div *ngIf="showBulkForm" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Marquage en lot</h3>
+        <button class="btn-close" (click)="showBulkForm = false">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <p>{{ bulkRequests.length }} agents seront marqués</p>
+        
+       
+        
+        <div class="bulk-agents-list">
+          <h4>Agents concernés:</h4>
+          <ul>
+            <li *ngFor="let request of bulkRequests">
+              {{ getAgentName(request.userId) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="showBulkForm = false">Annuler</button>
+        <button class="btn-primary" (click)="markBulkPresences()">
+          <i class="fas fa-save"></i>
+          Confirmer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
