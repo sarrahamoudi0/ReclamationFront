@@ -1,1 +1,67 @@
 @import 'ngx-toastr/toastr';
+
+/* Global CSS Reset and Responsive Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+}
+/* Responsive utilities */
+.hidden-mobile {
+  display: block;
+}
+
+.hidden-desktop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none;
+  }
+  
+  .hidden-desktop {
+    display: block;
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Ensure proper scrolling */
+.page-wrapper {
+  scroll-behavior: smooth;
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 576px) {
+  /* Extra small devices */
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  /* Small devices */
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  /* Medium devices */
+}
+
+@media (min-width: 993px) and (max-width: 1200px) {
+  /* Large devices */
+}
+
+@media (min-width: 1201px) {
+  /* Extra large devices */
+}

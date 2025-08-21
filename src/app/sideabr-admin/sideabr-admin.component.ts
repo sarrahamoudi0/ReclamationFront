@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { AuthenticationService } from '../service/authentication.service';
 import { UserRole } from '../models/role';
 import Swal from 'sweetalert2';
@@ -19,11 +19,12 @@ interface NavMenuItem {
   styleUrls: ['./sideabr-admin.component.css']
 })
 export class SideabrAdminComponent {
-  collapsed: boolean = false;
+  @Input() collapsed: boolean = false;
+  @Output() toggle = new EventEmitter<void>();
 
   menu: NavMenuItem[] = [
-    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/admin-dashboard' },
-    { label: 'Profile', icon: 'fa-solid fa-user', route: '' },
+    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboarding' },
+    { label: 'Profile', icon: 'fa-solid fa-user', route: '/profile' },
     { label: 'Les Utilisateurs', icon: 'fa-solid fa-users', route: '/user' },
     { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin' },
     { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie' },
@@ -34,9 +35,9 @@ export class SideabrAdminComponent {
 
   constructor(private authService: AuthenticationService) {}
 
-  // Method to toggle sidebar state
+  // Method to toggle sidebar state - emits to parent
   toggleSidebar(): void {
-    this.collapsed = !this.collapsed;
+    this.toggle.emit();
   }
 
   // Method for logging out with confirmation
@@ -67,6 +68,7 @@ export class SideabrAdminComponent {
   isAgent(): boolean {
     return this.authService.hasRole(UserRole.AGENT);
   }
+  
   isAdmin(): boolean {
     return this.authService.hasRole(UserRole.ADMIN);
   }

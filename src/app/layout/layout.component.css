@@ -1,0 +1,60 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Main content container */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+  margin-left: 0; /* default, no sidebar */
+  width: 100%;
+}
+
+/* Shift when sidebar is visible */
+.main-content.with-sidebar {
+  margin-left: 240px; /* matches .navbar width in sidebar component */
+}
+
+/* Shift when sidebar is collapsed */
+.main-content.with-sidebar.collapsed {
+  margin-left: 70px; /* matches .navbar.collapsed width */
+}
+
+/* Page wrapper for content */
+.page-wrapper {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #f8f9fa;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  .page-wrapper {
+    padding: 15px;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content.with-sidebar {
+    margin-left: 200px;
+  }
+
+  .main-content.with-sidebar.collapsed {
+    margin-left: 60px;
+  }
+}

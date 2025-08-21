@@ -1,0 +1,26 @@
+<div class="app-layout">
+  <!-- Sidebar admin/agent -->
+  <app-sideabr-admin 
+      *ngIf="isLoggedIn && isAgentOrAdmin" 
+      [collapsed]="sidebarCollapsed"
+      (toggle)="toggleSidebar()">
+  </app-sideabr-admin>
+
+  <div class="main-content"
+       [class.with-sidebar]="isLoggedIn && isAgentOrAdmin"
+       [class.collapsed]="sidebarCollapsed">
+    <!-- Navbar system -->
+    <app-navbar-system *ngIf="isLoggedIn"></app-navbar-system>
+    
+    <!-- Navbar user -->
+    <app-navbar *ngIf="isLoggedIn && isUser"></app-navbar>
+    
+    <!-- Chatbot -->
+    <app-chatbot></app-chatbot>
+
+    <!-- Page content -->
+    <div class="page-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

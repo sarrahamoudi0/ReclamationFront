@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LayoutComponent } from './layout/layout.component'; // <- جديد
 import { ReclamationComponent } from './reclamation/reclamation.component';
 import { MyReclamationComponent } from './my-reclamation/my-reclamation.component';
 import { ReclamtionBackofficeComponent } from './reclamtion-backoffice/reclamtion-backoffice.component';
@@ -11,62 +12,57 @@ import { ActivationComponent } from './activation/activation.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { authGuard } from './guards/auth.guard';
-import { UserRole } from './models/role';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { UserListComponent } from './user-list/user-list.component';
-import { LogsComponent } from './logs/logs.component';
-import { MynavbarComponent } from './mynavbar/mynavbar.component';
-import { NavbarSystemComponent } from './navbar-system/navbar-system.component';
-import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReunionListComponent } from './reunion/reunion-list/reunion-list.component';
 import { ReunionFormComponent } from './reunion/reunion-form/reunion-form.component';
 import { ReunionViewComponent } from './reunion/reunion-view/reunion-view.component';
 import { ReunionAgentComponent } from './reunion/reunion-agent/reunion-agent.component';
-
+import { UserListComponent } from './user-list/user-list.component';
+import { LogsComponent } from './logs/logs.component';
+import { ProfileupdateComponent } from './profileupdate/profileupdate.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { authGuard } from './guards/auth.guard';
+import { UserRole } from './models/role';
 
 const routes: Routes = [
-  
-  // Reunion routes
-  { path: 'reunions', component: ReunionListComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
-  { path: 'reunions/create', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
-  { path: 'reunions/edit/:id', component: ReunionFormComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN] }},
-  { path: 'reunions/view/:id', component: ReunionViewComponent, canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
-  { path: 'myreunions', component: ReunionAgentComponent, canActivate: [authGuard], data: { roles: [UserRole.AGENT] }}
-
-,
-  {path:"reclamation",component:ReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
-  {path:"myreclamation",component:MyReclamationComponent,canActivate: [authGuard],data : { roles: [UserRole.USER]}},
-  {path:"admin",component:ReclamtionBackofficeComponent,canActivate: [authGuard], data: { roles: [UserRole.ADMIN, UserRole.AGENT] }},
-  {path:"reclamation/:id",component:ShowReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.USER]}},
-  {path:"reclamationadmin/:id",component:ShowAdminReclamationComponent,canActivate: [authGuard], data : { roles: [UserRole.ADMIN,UserRole.AGENT]}},
-  {path:"categorie",component:CategorieComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
-  {path:"register",component:RegisterComponent}, 
+  // Public routes (login/register/forgot/reset)
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'activate', component: ActivationComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgotpass', component: ForgotPasswordComponent },
-  { path: 'navbar', component: NavbarComponent },
-  {path:"user",component:UserListComponent,canActivate: [authGuard],data : { roles: [UserRole.ADMIN] }},
-  { path: 'logs', component: LogsComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
-  { path: 'mynavbar', component: MynavbarComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,UserRole.AGENT] }},
-  { path: 'profile', component: ProfileupdateComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN,,UserRole.AGENT,UserRole.USER] }},
 
+  // Protected routes wrapped in LayoutComponent
+  {
+    path: '',
+    component: LayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'dashboard', component: DashboardComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'reclamation', component: ReclamationComponent, data: { roles: [UserRole.USER] } },
+      { path: 'myreclamation', component: MyReclamationComponent, data: { roles: [UserRole.USER] } },
+      { path: 'admin', component: ReclamtionBackofficeComponent, data: { roles: [UserRole.ADMIN, UserRole.AGENT] } },
+      { path: 'reclamation/:id', component: ShowReclamationComponent, data: { roles: [UserRole.USER] } },
+      { path: 'reclamationadmin/:id', component: ShowAdminReclamationComponent, data: { roles: [UserRole.ADMIN, UserRole.AGENT] } },
+      { path: 'categorie', component: CategorieComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'user', component: UserListComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'logs', component: LogsComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'profile', component: ProfileupdateComponent, data: { roles: [UserRole.ADMIN, UserRole.AGENT, UserRole.USER] } },
 
-  { path: 'dashboarding', component: DashboardComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
+      // Reunion routes
+      { path: 'reunions', component: ReunionListComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'reunions/create', component: ReunionFormComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'reunions/edit/:id', component: ReunionFormComponent, data: { roles: [UserRole.ADMIN] } },
+      { path: 'reunions/view/:id', component: ReunionViewComponent, data: { roles: [UserRole.ADMIN, UserRole.AGENT] } },
+      { path: 'myreunions', component: ReunionAgentComponent, data: { roles: [UserRole.AGENT] } },
 
+      // Redirections / alias
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    ]
+  },
 
-
-  { path: 'login', component: LoginComponent },
-  { path: '**', component: NotFoundComponent },
-  { path: 'admin-dashboard', component: CategorieComponent, canActivate: [authGuard],data: { roles: [UserRole.ADMIN] }},
-  { path: 'reclamationclient', component: ReclamationComponent, canActivate: [authGuard],data: { roles: [UserRole.USER] }},
-  { path: 'reclamationagnet', component: ReclamtionBackofficeComponent, canActivate: [authGuard],data: { roles: [UserRole.AGENT] }},
-  
-
-
-
+  // 404
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

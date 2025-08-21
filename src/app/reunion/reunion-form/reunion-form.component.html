@@ -1,235 +1,235 @@
 <div class="reunion-form-container">
-  <!-- Form Header -->
-  <div class="form-header">
-    <div class="header-content">
-      <div class="header-left">
-        <h1 class="form-title">
-          <i class="fas fa-calendar-plus"></i>
-          {{ isEditMode ? 'Modifier la Réunion' : 'Nouvelle Réunion' }}
-        </h1>
-        <p class="form-subtitle">
-          {{ isEditMode ? 'Mettez à jour les informations de votre réunion' : 'Créez une nouvelle réunion pour votre équipe' }}
-        </p>
-      </div>
-      <div class="header-right">
-        <button class="btn-back" (click)="cancel()">
-          <i class="fas fa-arrow-left"></i>
-          Retour
-        </button>
+    <!-- Form Header -->
+    <div class="form-header">
+      <div class="header-content">
+        <div class="header-left">
+          <h1 class="form-title">
+            <i class="fas fa-calendar-plus"></i>
+            {{ isEditMode ? 'Modifier la Réunion' : 'Nouvelle Réunion' }}
+          </h1>
+          <p class="form-subtitle">
+            {{ isEditMode ? 'Mettez à jour les informations de votre réunion' : 'Créez une nouvelle réunion pour votre équipe' }}
+          </p>
+        </div>
+        <div class="header-right">
+          <button class="btn-back" (click)="cancel()">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Form Container -->
-  <div class="form-container">
-    <div class="form-card">
-      <form [formGroup]="reunionForm" (ngSubmit)="onSubmit()" class="reunion-form">
-        <!-- Main Information Section -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-info-circle"></i>
-            Informations Générales
-          </h3>
-          
-          <div class="form-row">
-            <div class="form-group main">
-              <label for="titre" class="form-label">
-                Titre de la réunion <span class="required">*</span>
-              </label>
-              <input type="text" 
-                     id="titre" 
-                     class="form-input" 
-                     formControlName="titre"
-                     [class.error]="isFieldInvalid('titre')"
-                     placeholder="Ex: Réunion d'équipe hebdomadaire">
-              <div class="error-message" *ngIf="isFieldInvalid('titre')">
-                {{ getFieldError('titre') }}
+  
+    <!-- Form Container -->
+    <div class="form-container">
+      <div class="form-card">
+        <form [formGroup]="reunionForm" (ngSubmit)="onSubmit()" class="reunion-form">
+          <!-- Main Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-info-circle"></i>
+              Informations Générales
+            </h3>
+            
+            <div class="form-row">
+              <div class="form-group main">
+                <label for="titre" class="form-label">
+                  Titre de la réunion <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="titre" 
+                       class="form-input" 
+                       formControlName="titre"
+                       [class.error]="isFieldInvalid('titre')"
+                       placeholder="Ex: Réunion d'équipe hebdomadaire">
+                <div class="error-message" *ngIf="isFieldInvalid('titre')">
+                  {{ getFieldError('titre') }}
+                </div>
+              </div>
+              
+              <div class="form-group side">
+                <label for="type" class="form-label">
+                  Type de réunion <span class="required">*</span>
+                </label>
+                <select id="type" 
+                        class="form-select" 
+                        formControlName="type"
+                        [class.error]="isFieldInvalid('type')">
+                  <option *ngFor="let type of reunionTypes" [value]="type">
+                    {{ getTypeLabel(type) }}
+                  </option>
+                </select>
+                <div class="error-message" *ngIf="isFieldInvalid('type')">
+                  {{ getFieldError('type') }}
+                </div>
               </div>
             </div>
-            
-            <div class="form-group side">
-              <label for="type" class="form-label">
-                Type de réunion <span class="required">*</span>
+  
+            <div class="form-group full">
+              <label for="description" class="form-label">
+                Description <span class="required">*</span>
               </label>
-              <select id="type" 
-                      class="form-select" 
-                      formControlName="type"
-                      [class.error]="isFieldInvalid('type')">
-                <option *ngFor="let type of reunionTypes" [value]="type">
-                  {{ getTypeLabel(type) }}
+              <textarea id="description" 
+                        class="form-textarea" 
+                        formControlName="description"
+                        [class.error]="isFieldInvalid('description')"
+                        rows="4"
+                        placeholder="Décrivez l'objectif et le contenu de la réunion"></textarea>
+              <div class="error-message" *ngIf="isFieldInvalid('description')">
+                {{ getFieldError('description') }}
+              </div>
+            </div>
+          </div>
+  
+          <!-- Location and Schedule Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-clock"></i>
+              Lieu et Planning
+            </h3>
+            
+            <div class="form-row">
+              <div class="form-group side">
+                <label for="lieu" class="form-label">
+                  Lieu <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="lieu" 
+                       class="form-input" 
+                       formControlName="lieu"
+                       [class.error]="isFieldInvalid('lieu')"
+                       placeholder="Ex: Salle de réunion A">
+                <div class="error-message" *ngIf="isFieldInvalid('lieu')">
+                  {{ getFieldError('lieu') }}
+                </div>
+              </div>
+              
+              <div class="form-group side">
+                <label for="dateDebut" class="form-label">
+                  Date et heure de début <span class="required">*</span>
+                </label>
+                <input type="datetime-local" 
+                       id="dateDebut" 
+                       class="form-input" 
+                       formControlName="dateDebut"
+                       [class.error]="isFieldInvalid('dateDebut')"
+                       (change)="onDateChange()">
+                <div class="error-message" *ngIf="isFieldInvalid('dateDebut')">
+                  {{ getFieldError('dateDebut') }}
+                </div>
+              </div>
+              
+              <div class="form-group side">
+                <label for="dateFin" class="form-label">
+                  Date et heure de fin <span class="required">*</span>
+                </label>
+                <input type="datetime-local" 
+                       id="dateFin" 
+                       class="form-input" 
+                       formControlName="dateFin"
+                       [class.error]="isFieldInvalid('dateFin')"
+                       (change)="onDateChange()">
+                <div class="error-message" *ngIf="isFieldInvalid('dateFin')">
+                  {{ getFieldError('dateFin') }}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Participants Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-users"></i>
+              Participants
+            </h3>
+            
+            <div class="form-group full">
+              <label for="participantIds" class="form-label">
+                Sélectionner les agents <span class="required">*</span>
+              </label>
+              <select id="participantIds" 
+                      class="form-select participants-select" 
+                      formControlName="participantIds"
+                      [class.error]="isFieldInvalid('participantIds')"
+                      multiple
+                      size="6"
+                      (change)="onParticipantSelectionChange()">
+                <option *ngFor="let agent of availableAgents" [value]="agent.id">
+                  {{ agent.firstname }} {{ agent.lastname }} ({{ agent.email }})
                 </option>
               </select>
-              <div class="error-message" *ngIf="isFieldInvalid('type')">
-                {{ getFieldError('type') }}
+              <div class="error-message" *ngIf="isFieldInvalid('participantIds')">
+                {{ getFieldError('participantIds') }}
+              </div>
+              <div class="form-help">
+                <i class="fas fa-info-circle"></i>
+                Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs participants
               </div>
             </div>
-          </div>
-
-          <div class="form-group full">
-            <label for="description" class="form-label">
-              Description <span class="required">*</span>
-            </label>
-            <textarea id="description" 
-                      class="form-textarea" 
-                      formControlName="description"
-                      [class.error]="isFieldInvalid('description')"
-                      rows="4"
-                      placeholder="Décrivez l'objectif et le contenu de la réunion"></textarea>
-            <div class="error-message" *ngIf="isFieldInvalid('description')">
-              {{ getFieldError('description') }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Location and Schedule Section -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-clock"></i>
-            Lieu et Planning
-          </h3>
-          
-          <div class="form-row">
-            <div class="form-group side">
-              <label for="lieu" class="form-label">
-                Lieu <span class="required">*</span>
-              </label>
-              <input type="text" 
-                     id="lieu" 
-                     class="form-input" 
-                     formControlName="lieu"
-                     [class.error]="isFieldInvalid('lieu')"
-                     placeholder="Ex: Salle de réunion A">
-              <div class="error-message" *ngIf="isFieldInvalid('lieu')">
-                {{ getFieldError('lieu') }}
-              </div>
-            </div>
-            
-            <div class="form-group side">
-              <label for="dateDebut" class="form-label">
-                Date et heure de début <span class="required">*</span>
-              </label>
-              <input type="datetime-local" 
-                     id="dateDebut" 
-                     class="form-input" 
-                     formControlName="dateDebut"
-                     [class.error]="isFieldInvalid('dateDebut')"
-                     (change)="onDateChange()">
-              <div class="error-message" *ngIf="isFieldInvalid('dateDebut')">
-                {{ getFieldError('dateDebut') }}
-              </div>
-            </div>
-            
-            <div class="form-group side">
-              <label for="dateFin" class="form-label">
-                Date et heure de fin <span class="required">*</span>
-              </label>
-              <input type="datetime-local" 
-                     id="dateFin" 
-                     class="form-input" 
-                     formControlName="dateFin"
-                     [class.error]="isFieldInvalid('dateFin')"
-                     (change)="onDateChange()">
-              <div class="error-message" *ngIf="isFieldInvalid('dateFin')">
-                {{ getFieldError('dateFin') }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Participants Section -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-users"></i>
-            Participants
-          </h3>
-          
-          <div class="form-group full">
-            <label for="participantIds" class="form-label">
-              Sélectionner les agents <span class="required">*</span>
-            </label>
-            <select id="participantIds" 
-                    class="form-select participants-select" 
-                    formControlName="participantIds"
-                    [class.error]="isFieldInvalid('participantIds')"
-                    multiple
-                    size="6"
-                    (change)="onParticipantSelectionChange()">
-              <option *ngFor="let agent of availableAgents" [value]="agent.id">
-                {{ agent.firstname }} {{ agent.lastname }} ({{ agent.email }})
-              </option>
-            </select>
-            <div class="error-message" *ngIf="isFieldInvalid('participantIds')">
-              {{ getFieldError('participantIds') }}
-            </div>
-            <div class="form-help">
-              <i class="fas fa-info-circle"></i>
-              Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs participants
-            </div>
-          </div>
-
-          <!-- Selected Participants Display -->
-          <div class="selected-participants" *ngIf="selectedParticipants.length > 0">
-            <label class="form-label">Participants sélectionnés:</label>
-            <div class="participants-grid">
-              <div *ngFor="let participant of selectedParticipants" 
-                   class="participant-tag">
-                <div class="participant-avatar">
-                  {{ participant.firstname.charAt(0) }}{{ participant.lastname.charAt(0) }}
+  
+            <!-- Selected Participants Display -->
+            <div class="selected-participants" *ngIf="selectedParticipants.length > 0">
+              <label class="form-label">Participants sélectionnés:</label>
+              <div class="participants-grid">
+                <div *ngFor="let participant of selectedParticipants" 
+                     class="participant-tag">
+                  <div class="participant-avatar">
+                    {{ participant.firstname.charAt(0) }}{{ participant.lastname.charAt(0) }}
+                  </div>
+                  <span class="participant-name">{{ participant.firstname }} {{ participant.lastname }}</span>
+                  <span class="participant-email">{{ participant.email }}</span>
                 </div>
-                <span class="participant-name">{{ participant.firstname }} {{ participant.lastname }}</span>
-                <span class="participant-email">{{ participant.email }}</span>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Optional Information Section -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <i class="fas fa-edit"></i>
-            Informations Optionnelles
-          </h3>
-          
-          <div class="form-row">
-            <div class="form-group side">
-              <label for="ordreDuJour" class="form-label">Ordre du jour</label>
-              <textarea id="ordreDuJour" 
-                        class="form-textarea" 
-                        formControlName="ordreDuJour"
-                        rows="4"
-                        placeholder="Points à aborder lors de la réunion"></textarea>
-            </div>
+  
+          <!-- Optional Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="fas fa-edit"></i>
+              Informations Optionnelles
+            </h3>
             
-            <div class="form-group side">
-              <label for="notes" class="form-label">Notes additionnelles</label>
-              <textarea id="notes" 
-                        class="form-textarea" 
-                        formControlName="notes"
-                        rows="4"
-                        placeholder="Informations complémentaires"></textarea>
+            <div class="form-row">
+              <div class="form-group side">
+                <label for="ordreDuJour" class="form-label">Ordre du jour</label>
+                <textarea id="ordreDuJour" 
+                          class="form-textarea" 
+                          formControlName="ordreDuJour"
+                          rows="4"
+                          placeholder="Points à aborder lors de la réunion"></textarea>
+              </div>
+              
+              <div class="form-group side">
+                <label for="notes" class="form-label">Notes additionnelles</label>
+                <textarea id="notes" 
+                          class="form-textarea" 
+                          formControlName="notes"
+                          rows="4"
+                          placeholder="Informations complémentaires"></textarea>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" 
-                  class="btn-secondary" 
-                  (click)="cancel()"
-                  [disabled]="loading">
-            <i class="fas fa-times"></i>
-            Annuler
-          </button>
-          
-          <button type="submit" 
-                  class="btn-primary" 
-                  [disabled]="loading || reunionForm.invalid">
-            <span *ngIf="loading" class="loading-spinner"></span>
-            <i *ngIf="!loading" class="fas fa-save"></i>
-            {{ isEditMode ? 'Mettre à jour' : 'Créer la réunion' }}
-          </button>
-        </div>
-      </form>
+  
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" 
+                    class="btn-secondary" 
+                    (click)="cancel()"
+                    [disabled]="loading">
+              <i class="fas fa-times"></i>
+              Annuler
+            </button>
+            
+            <button type="submit" 
+                    class="btn-primary" 
+                    [disabled]="loading || reunionForm.invalid">
+              <span *ngIf="loading" class="loading-spinner"></span>
+              <i *ngIf="!loading" class="fas fa-save"></i>
+              {{ isEditMode ? 'Mettre à jour' : 'Créer la réunion' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</div> 
+  </div> 
