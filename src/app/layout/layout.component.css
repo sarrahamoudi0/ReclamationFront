@@ -12,6 +12,7 @@
   transition: margin-left 0.3s ease;
   margin-left: 0; /* default, no sidebar */
   width: 100%;
+  padding-top: 60px; /* reserve space for fixed navbar */
 }
 
 /* Shift when sidebar is visible */
@@ -41,6 +42,7 @@
   .main-content {
     margin-left: 0 !important;
     width: 100%;
+    padding-top: 60px; /* keep space for navbar */
   }
 
   .page-wrapper {

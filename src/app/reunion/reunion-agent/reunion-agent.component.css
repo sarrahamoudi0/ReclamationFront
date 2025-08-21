@@ -587,3 +587,35 @@
     font-size: 0.9rem;
   }
 } 
+
+/* === Orange Theme Overrides (White background, dark text, Orange accents) === */
+.reunion-agent-dashboard { background: #ffffff; color: #111827; }
+
+.dashboard-header { background: #ffffff; border-bottom: 1px solid #e5e7eb; backdrop-filter: none; }
+.dashboard-title { color: #111827; }
+.dashboard-subtitle { color: #6b7280; }
+
+.stat-card,
+.filters-container,
+.reunion-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  backdrop-filter: none;
+}
+
+.stat-content h3,
+.reunion-title { color: #111827; }
+.stat-label,
+.reunion-description,
+.detail-item,
+.search-icon,
+.type-badge { color: #6b7280; }
+
+.btn-search { background: #e47429; color: #ffffff; }
+.btn-search:hover { box-shadow: 0 8px 25px rgba(228, 116, 41, 0.3); }
+
+.badge.bg-primary { background: #e47429 !important; color: #ffffff !important; }
+.badge.bg-warning { background: #ffb020 !important; color: #1f2937 !important; }
+.badge.bg-success { background: #22c55e !important; color: #ffffff !important; }
+.badge.bg-danger { background: #ef4444 !important; color: #ffffff !important; }
+.badge.bg-info { background: #60a5fa !important; color: #ffffff !important; } 

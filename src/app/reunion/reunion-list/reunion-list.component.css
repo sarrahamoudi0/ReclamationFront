@@ -1,7 +1,8 @@
 /* Premium ThemeForest Style - Reunion Dashboard */
 
 .reunion-dashboard {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: lightgray;
+
   min-height: 100vh;
   padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -730,4 +731,321 @@
     margin: 0 0.5rem;
   }
 }
+  
+/* === Orange Theme Overrides (White background, dark text, Orange accents) === */
+.reunion-dashboard {
+  background: #ffffff;
+  color: #111827;
+}
+
+.dashboard-header {
+  background: #ffffff;
+  backdrop-filter: none;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-left .dashboard-title {
+  color: #111827;
+}
+
+.dashboard-subtitle {
+  color: #6b7280;
+}
+
+.btn-create-reunion {
+  background: #e47429;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(228, 116, 41, 0.28);
+}
+.btn-create-reunion:hover {
+  box-shadow: 0 12px 35px rgba(228, 116, 41, 0.4);
+}
+
+.stats-section,
+.filters-section,
+.reunions-grid,
+.pagination-section,
+.summary-footer {
+  color: #111827;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  backdrop-filter: none;
+}
+
+.stat-content h3 {
+  color: #111827;
+}
+
+.stat-label {
+  color: #6b7280;
+}
+
+/* Enhanced Statistics Details */
+.stats-details-section {
+  margin-top: 2rem;
+}
+
+.stats-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.stats-detail-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.stats-detail-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.detail-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-card-header h4 {
+  color: #111827;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.detail-card-header h4 i {
+  margin-right: 0.5rem;
+  color: #e47429;
+}
+
+.detail-count {
+  background: #e47429;
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.meeting-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.meeting-detail-item:hover {
+  background: #ffffff;
+  border-left-color: #e47429;
+  box-shadow: 0 2px 8px rgba(228, 116, 41, 0.1);
+}
+
+.meeting-detail-item.featured {
+  background: linear-gradient(135deg, #fff7f3 0%, #ffffff 100%);
+  border-left-color: #e47429;
+  box-shadow: 0 4px 12px rgba(228, 116, 41, 0.15);
+}
+
+.meeting-detail-item.active {
+  background: linear-gradient(135deg, #fef3c7 0%, #ffffff 100%);
+  border-left-color: #f59e0b;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.meeting-info {
+  flex: 1;
+}
+
+.meeting-info h5 {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.meeting-time,
+.meeting-location,
+.meeting-duration,
+.meeting-participants,
+.meeting-progress {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0.25rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.meeting-time i,
+.meeting-location i,
+.meeting-duration i,
+.meeting-participants i,
+.meeting-progress i {
+  margin-right: 0.5rem;
+  width: 14px;
+  color: #e47429;
+}
+
+.meeting-status {
+  margin-left: 1rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.ongoing {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.completed {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-badge.upcoming {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.status-badge.active {
+  background: #fef3c7;
+  color: #d97706;
+  animation: pulse 2s infinite;
+}
+
+.completion-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-item .stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.stat-item .stat-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #e47429;
+}
+
+/* Responsive design for stats details */
+@media (max-width: 768px) {
+  .stats-details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .completion-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .meeting-detail-item {
+    flex-direction: column;
+  }
+  
+  .meeting-status {
+    margin-left: 0;
+    margin-top: 0.75rem;
+    align-self: flex-start;
+  }
+}
+
+/* Ongoing details specific styling */
+.ongoing-details .detail-card-header h4 i {
+  color: #f59e0b;
+}
+
+.ongoing-details .meeting-detail-item {
+  border-left-color: #f59e0b;
+}
+
+/* Completed details specific styling */
+.completed-details .detail-card-header h4 i {
+  color: #059669;
+}
+
+.completed-details .meeting-detail-item {
+  border-left-color: #059669;
+}
+
+/* Next meeting specific styling */
+.next-meeting .detail-card-header h4 i {
+  color: #2563eb;
+}
+
+.next-meeting .meeting-detail-item {
+  border-left-color: #2563eb;
+}
+
+/* Current meeting specific styling */
+.current-meeting .detail-card-header h4 i {
+  color: #f59e0b;
+}
+
+.current-meeting .meeting-detail-item {
+  border-left-color: #f59e0b;
+}
+
+/* Pagination on light theme */
+.page-link {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+}
+.page-link:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+.page-item.active .page-link {
+  background: #e47429;
+  color: #ffffff;
+  border-color: #e47429;
+}
+
+/* Empty state on light theme */
+.empty-state { color: #6b7280; }
+.empty-icon { color: #9ca3af; }
+.summary-text { color: #6b7280; }
   

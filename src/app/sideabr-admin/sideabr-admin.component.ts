@@ -24,7 +24,6 @@ export class SideabrAdminComponent {
 
   menu: NavMenuItem[] = [
     { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboarding' },
-    { label: 'Profile', icon: 'fa-solid fa-user', route: '/profile' },
     { label: 'Les Utilisateurs', icon: 'fa-solid fa-users', route: '/user' },
     { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin' },
     { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie' },

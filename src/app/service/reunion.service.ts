@@ -102,11 +102,24 @@ export class ReunionService {
     return this.http.get<ReunionResponse>(`${this.apiUrl}/${reunionId}`);
   }
 
-  // Get all reunions with pagination
-  getAllReunions(page: number = 0, size: number = 10): Observable<ReunionPage> {
-    const params = new HttpParams()
+  // Get all reunions with pagination and optional filters
+  getAllReunions(page: number = 0, size: number = 10, status?: ReunionStatut | '', type?: ReunionType | '', search?: string): Observable<ReunionPage> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
+    
+    if (status) {
+      params = params.set('status', status);
+    }
+    
+    if (type) {
+      params = params.set('type', type);
+    }
+    
+    if (search && search.trim() !== '') {
+      params = params.set('search', search.trim());
+    }
+    
     return this.http.get<ReunionPage>(this.apiUrl, { params });
   }
 

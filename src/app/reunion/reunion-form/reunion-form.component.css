@@ -7,13 +7,16 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Form Header */
+/* === Orange Theme Overrides (White background, dark text, Orange accents) === */
+.reunion-form-container {
+  background: #ffffff;
+  color: #111827;
+}
+
 .form-header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 2rem 0;
-  margin-bottom: 2rem;
+  background: #ffffff;
+  backdrop-filter: none;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .header-content {
@@ -26,7 +29,7 @@
 }
 
 .header-left .form-title {
-  color: white;
+  color: #111827;
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
@@ -41,7 +44,7 @@
 }
 
 .form-subtitle {
-  color: rgba(255, 255, 255, 0.8);
+  color: #6b7280;
   font-size: 1.1rem;
   margin: 0;
   font-weight: 400;
@@ -76,12 +79,12 @@
 }
 
 .form-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: #ffffff;
+  backdrop-filter: none;
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e5e7eb;
 }
 
 .reunion-form {
@@ -100,13 +103,13 @@
 .section-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: #111827;
   margin: 0 0 2rem 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f1f3f4;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 .section-title i {
@@ -146,7 +149,7 @@
 /* Form Labels */
 .form-label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #111827;
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
   display: flex;
@@ -167,8 +170,8 @@
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 1rem;
-  background: white;
-  color: #2c3e50;
+  background: #ffffff;
+  color: #111827;
   transition: all 0.3s ease;
   font-family: inherit;
 }
@@ -219,14 +222,14 @@
 .form-help {
   margin-top: 0.75rem;
   padding: 0.75rem 1rem;
-  background: #f8f9fa;
+  background: #f9fafb;
   border-radius: 8px;
-  color: #6c757d;
+  color: #6b7280;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-left: 3px solid #667eea;
+  border-left: 3px solid #e47429;
 }
 
 .form-help i {
@@ -266,7 +269,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #e47429;
   color: white;
   display: flex;
   align-items: center;
@@ -332,13 +335,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #e47429;
+  color: #ffffff;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(228, 116, 41, 0.3);
 }
 
 .btn-primary:disabled,

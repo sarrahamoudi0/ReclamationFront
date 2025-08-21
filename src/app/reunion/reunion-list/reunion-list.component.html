@@ -95,7 +95,9 @@
             <input type="text" 
                    class="search-input" 
                    placeholder="Rechercher une réunion..." 
-                   [(ngModel)]="searchTerm">
+                   [(ngModel)]="searchTerm"
+                   (keyup.enter)="onSearch()"
+                   (input)="onSearchInputChange()">
           </div>
           <button class="btn-search" (click)="onSearch()">
             Rechercher

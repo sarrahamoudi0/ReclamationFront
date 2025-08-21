@@ -8,9 +8,13 @@
 
   <div class="main-content"
        [class.with-sidebar]="isLoggedIn && isAgentOrAdmin"
-       [class.collapsed]="sidebarCollapsed">
-    <!-- Navbar system -->
-    <app-navbar-system *ngIf="isLoggedIn"></app-navbar-system>
+       [class.collapsed]="sidebarCollapsed"
+       [class.with-navbar]="isLoggedIn"
+       [class.with-user-navbar]="isLoggedIn && isUser">
+    <!-- Navbar system aligned with sidebar -->
+    <app-navbar-system *ngIf="isLoggedIn"
+                       [class.with-sidebar]="isLoggedIn && isAgentOrAdmin"
+                       [class.collapsed]="sidebarCollapsed"></app-navbar-system>
     
     <!-- Navbar user -->
     <app-navbar *ngIf="isLoggedIn && isUser"></app-navbar>

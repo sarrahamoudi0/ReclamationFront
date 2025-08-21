@@ -574,6 +574,41 @@
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
 }
 
+/* === Orange Theme Overrides (White background, dark text, Orange accents) === */
+.reunion-view-container { background: #ffffff; color: #111827; }
+
+.view-header { background: #ffffff; border-bottom: 1px solid #e5e7eb; backdrop-filter: none; }
+.view-title { color: #111827; }
+
+.main-info-card,
+.participants-section,
+.optional-info-section,
+.timeline-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  backdrop-filter: none;
+}
+
+.card-header { background: #f9fafb; border-bottom-color: #e5e7eb; }
+.reunion-title-section h2 { color: #111827; }
+.reunion-meta .reunion-date { color: #6b7280; }
+
+.highlight-item { background: #f9fafb; border-color: #e5e7eb; }
+.highlight-item:hover { background: #ffffff; }
+
+.highlight-icon { background: #e47429; }
+
+.info-card { background: #ffffff; border: 1px solid #e5e7eb; }
+.info-header h4 { color: #111827; }
+.info-content { color: #374151; }
+
+/* Badges */
+.badge.bg-primary { background: #e47429 !important; color: #ffffff !important; }
+.badge.bg-warning { background: #ffb020 !important; color: #1f2937 !important; }
+.badge.bg-success { background: #22c55e !important; color: #ffffff !important; }
+.badge.bg-danger { background: #ef4444 !important; color: #ffffff !important; }
+.badge.bg-info { background: #60a5fa !important; color: #ffffff !important; }
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .reunion-details {

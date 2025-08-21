@@ -22,7 +22,7 @@
 .table-wrapper {
   max-width: 1200px; /* Increased for larger screens */
   margin: 0 auto;
-  margin-top: 40px; /* Move contents to the bottom */
+ 
   padding: 2rem;
   background: transparent; /* Remove white background */
   border-radius: 0; /* Remove border radius */
