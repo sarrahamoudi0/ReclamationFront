@@ -8,6 +8,7 @@ import { Client, IMessage } from '@stomp/stompjs';
 import { Router } from '@angular/router';
 import { Notification } from '../models/Notification';
 import { NotificationService } from '../service/notification.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -72,10 +73,27 @@ export class NavbarSystemComponent implements OnInit, OnDestroy {
     return this.authService.isAuthenticated();
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+   logout(): void {
+     Swal.fire({
+       title: 'Déconnexion',
+       text: 'Voulez-vous vraiment vous déconnecter ?',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#e47429',
+       cancelButtonColor: '#3085d6',
+       confirmButtonText: 'Oui, déconnecter',
+       cancelButtonText: 'Annuler',
+       customClass: {
+         popup: 'swal2-popup-custom'
+       }
+     }).then((result: import('sweetalert2').SweetAlertResult) => {
+       if (result.isConfirmed) {
+         this.authService.logout();
+         this.router.navigate(['/login'])
+       }
+     });
+   }
+ 
 
   ngOnInit(): void {
     this.loadNotifications();

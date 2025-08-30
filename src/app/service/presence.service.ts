@@ -164,3 +164,4 @@ export class PresenceService {
     return classes[status] || 'badge bg-secondary';
   }
 }
+

@@ -486,7 +486,7 @@ display: flex;
 justify-content: center; /* Center the card horizontally */
 align-items: flex-start;
 padding-left: 24px; /* Extra space from sidebar */
-padding-top: 100px; /* Extra space from sidebar */
+padding-top: 40px; /* Extra space from sidebar */
 }
 
 .reclamation-card {
@@ -511,9 +511,9 @@ margin: 0 auto;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   height: auto;
-  max-height: 650px; /* Increased max height for more space at the bottom */
+  max-height: 590px; /* Increased max height for more space at the bottom */
   overflow-y: auto;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 
 .comments-header {

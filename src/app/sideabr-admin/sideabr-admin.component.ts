@@ -23,7 +23,7 @@ export class SideabrAdminComponent {
   @Output() toggle = new EventEmitter<void>();
 
   menu: NavMenuItem[] = [
-    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboarding' },
+    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboard' },
     { label: 'Les Utilisateurs', icon: 'fa-solid fa-users', route: '/user' },
     { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin' },
     { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie' },

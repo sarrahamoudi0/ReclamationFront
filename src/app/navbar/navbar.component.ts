@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { AuthenticationService } from '../service/authentication.service';
+import Swal from 'sweetalert2';
 
 interface NavMenuItem {
   label: string;
@@ -15,18 +16,16 @@ interface NavMenuItem {
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-
-  collapsed: boolean = false;
+  @Input() collapsed: boolean = false;
+  @Output() toggle = new EventEmitter<void>();
 
   // Example avatar (replace with user avatar if available)
   avatarUrl: string = 'assets/img/default-avatar.png';
   userName: string = 'Utilisateur';
 
   menu: NavMenuItem[] = [
-    { label: 'Profile', icon: 'fa-solid fa-user', route: '/profile' },
-    { label: 'Nouveau Reclamation', icon: 'fa-solid fa-envelope', route: '/reclamation' },
+    { label: 'Reclamation', icon: 'fa-solid fa-envelope', route: '/reclamation' },
     { label: 'Mes Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/myreclamation' },
-    { label: 'A propos', icon: 'fa-solid fa-circle-info', route: '/about' }
   ];
 
   constructor(private authService: AuthenticationService) {}
@@ -37,12 +36,25 @@ export class NavbarComponent {
   }
 
   // Method for logging out with confirmation
-  logout(): void {
-    const confirmation = window.confirm('Are you sure you want to log out?');  // Confirmation dialog
-    if (confirmation) {
-      this.authService.logout();  // Log out if confirmed
+ logout(): void {
+  Swal.fire({
+    title: 'Déconnexion',
+    text: 'Voulez-vous vraiment vous déconnecter ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#e47429',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, déconnecter',
+    cancelButtonText: 'Annuler',
+    customClass: {
+      popup: 'swal2-popup-custom'
     }
-  }
+  }).then((result: import('sweetalert2').SweetAlertResult) => {
+    if (result.isConfirmed) {
+      this.authService.logout();
+    }
+  });
+}
 
   isLoggedIn(): boolean {
     return this.authService.isAuthenticated();

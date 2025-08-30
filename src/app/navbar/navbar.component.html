@@ -16,11 +16,7 @@
         <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
       </a>
     </li>
-    <li *ngIf="isLoggedIn()">
-      <button class="logout" (click)="logout()">
-        <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-        <span class="text" *ngIf="!collapsed">Se déconnecter</span>
-      </button>
-    </li>
+    
   </ul>
 </nav>
+   
