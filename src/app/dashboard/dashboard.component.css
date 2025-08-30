@@ -1,5 +1,14 @@
-.powerbi-container iframe {
+.powerbi-container {
+  position: relative;
   width: 100%;
-  height: 100vh;
-  border: none;
+  padding-bottom: 50%; /* 16:9 */
+  height: 0;
+}
+
+.powerbi-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

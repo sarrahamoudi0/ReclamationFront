@@ -26,6 +26,7 @@ pageSize = 5;
 currentPage = 1;
 searchTerm: string = '';
 filteredUsers: User[] = [];
+showAddUserModal = false;
 
 
 
@@ -209,77 +210,49 @@ closeDropdown(): void {
     }
     return roles[0].replace('ROLE_', '') || 'Inconnu'; // Display the first role, removing the 'ROLE_' prefix
   }
+openAddUserForm(): void {
+  // Réinitialiser les données du formulaire
+  this.newUser = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: UserRole.AGENT,
+    enabled: true,
+    accountLocked: false
+  };
+  this.errorMessage = '';
 
-  openAddUserForm(): void {
-    // Prevent multiple simultaneous opens
-    if (this.isModalOpening) {
-      console.log('Modal already opening, ignoring request');
-      return;
-    }
+  // Afficher le modal
+  this.showAddUserModal = true;
 
-    console.log('Opening Add User Modal');
-    this.isModalOpening = true;
-
-    // Prevent any accidental modal opening
-    this.preventAccidentalModalOpen();
-
-    // Reset the newUser object to clear previous values
-    this.newUser = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      phone: '',
-      password: '',
-      role: UserRole.AGENT,
-      enabled: true,
-      accountLocked: false
-    };
-
-    // Clear any previous error messages
-    this.errorMessage = '';
-
+  // Attendre que Angular ait rendu le DOM
+  setTimeout(() => {
     const modalElement = document.getElementById('addUserModal');
-    if (modalElement) {
-      try {
-        // Force close any existing modal first
-        this.forceCloseModal('addUserModal');
+    if (!modalElement) return;
 
-        // Check if Bootstrap is available
-        if (typeof bootstrap !== 'undefined') {
-          // Create new modal instance with strict options
-          this.addModalInstance = new bootstrap.Modal(modalElement, {
-            backdrop: 'static',
-            keyboard: false,
-            focus: true
-          });
+    // Déplacer le modal dans le body pour qu'il soit au-dessus de tout
+    document.body.appendChild(modalElement);
 
-          // Add event listeners for proper cleanup
-          const hiddenListener = () => {
-            this.onModalHidden();
-            this.addModalInstance = null;
-            this.isModalOpening = false;
-            modalElement.removeEventListener('hidden.bs.modal', hiddenListener);
-          };
+    // Initialiser Bootstrap Modal et assigner à l’instance
+    this.addModalInstance = new bootstrap.Modal(modalElement, {
+      backdrop: 'static', // empêcher la fermeture par clic hors modal
+      keyboard: false,    // empêcher fermeture par échap
+      focus: true
+    });
 
-          modalElement.addEventListener('hidden.bs.modal', hiddenListener);
+    // Afficher le modal
+    this.addModalInstance.show();
 
-          // Show modal
-          this.addModalInstance.show();
-          console.log('Add user modal opened successfully with Bootstrap');
-        } else {
-          // Use fallback method
-          console.log('Using fallback modal method for add user');
-          this.showFallbackModal('addUserModal');
-        }
-      } catch (error) {
-        console.error('Error opening add user modal:', error);
-        this.isModalOpening = false;
-      }
-    } else {
-      console.error('Add user modal element not found');
-      this.isModalOpening = false;
-    }
-  }
+    // Écouter la fermeture pour remettre showAddUserModal à false
+    modalElement.addEventListener('hidden.bs.modal', () => {
+      this.showAddUserModal = false;
+      this.addModalInstance = null; // nettoyer l’instance
+    });
+  }, 0);
+}
+
 
   addUser(): void {
     const form = document.querySelector('#addUserModal form') as HTMLFormElement;

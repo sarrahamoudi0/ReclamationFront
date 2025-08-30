@@ -21,6 +21,8 @@ import { AuthenticationService } from '../service/authentication.service';
 })
 export class ShowAdminReclamationComponent implements OnInit, AfterViewChecked {
   @ViewChild('commentsContainer') private commentsContainer?: ElementRef;
+    sendingComment: boolean = false;
+
   
   reclamation!: Reclamation;
     categories: Categorie[] = []; 
@@ -52,6 +54,8 @@ hoverBtn = false;
   showPrioriteList = false;
 
   userRoles: string[] = [];
+  userRolesLoaded: boolean = false;
+
 
   constructor(
     private reclamationService: ReclamationService,
@@ -74,6 +78,7 @@ hoverBtn = false;
       this.getCategories();
     this.authService.getCurrentUser().subscribe(user => {
       this.userRoles = (user.roles || []).map(r => r.replace('ROLE_', ''));
+          this.userRolesLoaded = true;
     });
   }
 
@@ -81,9 +86,14 @@ hoverBtn = false;
     return this.userRoles.includes('AGENT');
   }
 
-  canEdit(): boolean {
-    return !(this.isAgent() && this.reclamation?.statut === Statut.Escale);
-  }
+canEdit(): boolean {
+  // On attend que les rôles soient chargés
+  if (!this.userRolesLoaded) return false;
+
+  if (this.userRoles.includes('ADMIN')) return true;
+
+  return !(this.isAgent() && this.reclamation?.statut === Statut.Escale);
+}
 
   showEditBlockedMsg(): void {
     console.log('Edit blocked: agent cannot edit escalated reclamation');
@@ -251,6 +261,47 @@ selectSousCategorie(sousCategorie: SousCategorie): void {
         }
       );
   }
+addComment(): void {
+  // On bloque si les rôles ne sont pas encore chargés
+  if (!this.userRolesLoaded) return;
+
+  if (!this.reclamation?.idReclamation || !this.newCommentContent.trim()) return;
+
+  const isAdmin = this.userRoles.includes('ADMIN');
+
+  // Bloque uniquement les non-admins qui n'ont pas le droit
+  if (!isAdmin && !this.canEdit()) {
+    this.showEditBlockedMsg();
+    return;
+  }
+
+  this.sendingComment = true;
+
+  const commentObservable = this.showInternalComments
+    ? this.commentaireService.addCommentInterne(this.reclamation.idReclamation, this.newCommentContent)
+    : this.commentaireService.addComment(this.reclamation.idReclamation, this.newCommentContent);
+
+  commentObservable.subscribe({
+    next: (commentaire) => {
+      this.commentaires.push(commentaire);
+      this.newCommentContent = '';
+      setTimeout(() => this.scrollToBottom(), 0);
+      this.toastrService.success(
+        this.showInternalComments 
+          ? 'Commentaire interne ajouté avec succès' 
+          : 'Commentaire ajouté avec succès'
+      );
+      this.sendingComment = false;
+    },
+    error: (error) => {
+      console.error('Erreur ajout commentaire:', error);
+     this.toastrService.error('Action interdite : vous ne pouvez ajouter un commentaire pour une réclamation escalée.');
+      this.sendingComment = false;
+    }
+  });
+}
+
+
 
   toggleStatutList(event: MouseEvent): void {
     this.showStatutList = !this.showStatutList;
@@ -322,41 +373,6 @@ loadCommentaires(idReclamation: string): void {
 }
 
 
-addComment(): void {
-  if (!this.canEdit()) {
-    this.showEditBlockedMsg();
-    return;
-  }
-  if (!this.newCommentContent.trim() || !this.reclamation?.idReclamation) return;
-
-  if (this.showInternalComments) {
-    // Ajouter un commentaire interne
-    this.commentaireService.addCommentInterne(this.reclamation.idReclamation, this.newCommentContent).subscribe({
-      next: (commentaire) => {
-        this.commentaires.push(commentaire);
-        this.newCommentContent = '';
-        setTimeout(() => this.scrollToBottom(), 0);
-      },
-      error: (error) => {
-        console.error('Erreur ajout commentaire interne:', error);
-        this.toastrService.error('Action interdite : vous ne pouvez pas ajouter un commentaire interne à une réclamation escalée.');
-      }
-    });
-  } else {
-    // Ajouter un commentaire normal
-    this.commentaireService.addComment(this.reclamation.idReclamation, this.newCommentContent).subscribe({
-      next: (commentaire) => {
-        this.commentaires.push(commentaire);
-        this.newCommentContent = '';
-        setTimeout(() => this.scrollToBottom(), 0);
-      },
-      error: (error) => {
-        console.error('Erreur ajout commentaire:', error);
-        this.toastrService.error('Action interdite : vous ne pouvez pas ajouter un commentaire à une réclamation escalée.');
-      }
-    });
-  }
-}
 showCommentaires(): void {
   this.showInternalComments = false;
   if (this.reclamation?.idReclamation) {

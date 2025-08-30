@@ -28,8 +28,7 @@
           <button
           class="btn-add-user"
           (click)="openAddUserForm()"
-          data-bs-toggle="modal"
-          data-bs-target="#addUserModal"
+       
           aria-label="Ajouter un utilisateur"
         >
           <i class="fas fa-user-plus"></i>
@@ -127,53 +126,22 @@
 </div>
 
 <!-- Update User Modal -->
-<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form (ngSubmit)="updateUser()">
-        <div class="modal-header">
-          <h5 class="modal-title" id="updateUserModalLabel">Modifier un utilisateur</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="firstname" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="firstname" [(ngModel)]="selectedUser.firstname" name="firstname" required>
-          </div>
-          <div class="mb-3">
-            <label for="lastname" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="lastname" [(ngModel)]="selectedUser.lastname" name="lastname" required>
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="selectedUser.email" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label for="phone" class="form-label">Téléphone</label>
-            <input type="text" class="form-control" id="phone" [(ngModel)]="selectedUser.phone" name="phone">
-          </div>
-          <div class="mb-3">
-            <label for="roles" class="form-label">Rôle</label>
-            <input type="text" class="form-control" id="roles" [(ngModel)]="selectedUser.roles" name="roles" readonly>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Mettre à jour</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+
+
+
+
+
+
+<!-- Bootstrap JS Bundle -->
+
 
 <!-- Add User Modal -->
 <!-- Modal Ajout Utilisateur -->
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg pour un plus grand format -->
-    <div class="modal-content shadow rounded-3">
-      <div class="modal-header border-bottom-0">
-        <h5 class="modal-title" id="addUserModalLabel">
-          <i class="fas fa-user-plus me-2"></i> Ajouter un utilisateur
-        </h5>
+<div class="modal fade" [class.show]="showAddUserModal" [style.display]="showAddUserModal ? 'block' : 'none'" id="addUserModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter utilisateur</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
       </div>
       <div class="modal-body">
@@ -254,8 +222,3 @@
   </div>
 </div>
 
-
-
-
-
-<!-- Bootstrap JS Bundle -->

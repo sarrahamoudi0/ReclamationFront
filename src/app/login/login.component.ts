@@ -42,7 +42,7 @@ onLogin() {
       const roles = this.authService.getRoles();
 
       if (roles.includes(UserRole.ADMIN)) {
-        this.router.navigate(['/user']);
+        this.router.navigate(['/dashboard']);
       } else if (roles.includes(UserRole.AGENT)) {
         this.router.navigate(['/admin']);
       } else if (roles.includes(UserRole.USER)) {
