@@ -13,27 +13,41 @@
             <i class="fa fa-users me-2" aria-hidden="true"></i> Les Utilisateurs
           </h2>
         </div>
-        <!-- Search and Add button container -->
-        <div class="search-add-container">
-          <div class="search-container">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Rechercher un utilisateur..."
-              [(ngModel)]="searchTerm"
-              (input)="onSearch()"
-            >
-            <i class="fas fa-search search-icon"></i>
-          </div>
-          <button
-          class="btn-add-user"
-          (click)="openAddUserForm()"
-       
-          aria-label="Ajouter un utilisateur"
-        >
-          <i class="fas fa-user-plus"></i>
-        </button>
+
+  <div class="mb-3">
+  <div class="filter-and-add-btn-row justify-content-end">
+    <div class="filter-section p-0 m-0 flex-grow-1 order-2">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="emailFilter">Email</label>
+          <input type="text" id="emailFilter" class="filter-input" [(ngModel)]="filterEmail" (input)="applyFilters()" placeholder="Search by email...">
         </div>
+        <div class="filter-group">
+          <label for="roleFilter">Role</label>
+          <select id="roleFilter" class="filter-select" [(ngModel)]="filterRole" (change)="applyFilters()">
+            <option value="">All Roles</option>
+            <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter" class="filter-select" [(ngModel)]="filterStatus" (change)="applyFilters()">
+            <option value="">All Status</option>
+            <option value="active">Actif</option>
+            <option value="banned">Banni</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button
+      class="btn-add-user order-3"
+      (click)="showAddUserModal = true"
+      aria-label="Ajouter un utilisateur"
+    >
+      <i class="fas fa-user-plus"></i>
+    </button>
+    </div>
+  </div>
         <table class="table table-striped table-hover table-bordered align-middle text-center shadow rounded">
           <thead class="table-dark">
             <tr>
@@ -135,14 +149,14 @@
 <!-- Bootstrap JS Bundle -->
 
 
-<!-- Add User Modal -->
-<!-- Modal Ajout Utilisateur -->
-<div class="modal fade" [class.show]="showAddUserModal" [style.display]="showAddUserModal ? 'block' : 'none'" id="addUserModal" tabindex="-1" aria-hidden="true">
+
+<!-- Add User Modal: moved outside main layout for proper overlay -->
+<div *ngIf="showAddUserModal" class="modal fade" [class.show]="showAddUserModal" [style.display]="showAddUserModal ? 'block' : 'none'" id="addUserModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Ajouter utilisateur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        <button type="button" class="btn-close" (click)="showAddUserModal = false" aria-label="Fermer"></button>
       </div>
       <div class="modal-body">
         <form #addUserForm="ngForm" (ngSubmit)="addUser()" novalidate>
@@ -209,7 +223,7 @@
           </div>
 
           <div class="form-group d-flex justify-content-end gap-2 mt-2 mb-0">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-secondary" (click)="showAddUserModal = false">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>

@@ -18,5 +18,5 @@ export class Reclamation {
      categorie!: Categorie | null;  // Allow null for category
 sousCategorie!: SousCategorie;
 
-
+ref?: string;
   }

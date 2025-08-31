@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Reclamation } from 'src/app/models/Reclamation';
 import { ReclamationService } from '../service/reclamation.service';
+import { CategorieService } from '../service/categorie.service';
 import { Statut } from '../models/Statut';
 import { Priorite } from '../models/Priorite';
+import { Categorie } from '../models/Categorie';
 
 @Component({
   selector: 'app-reclamtion-backoffice',
@@ -12,15 +14,31 @@ import { Priorite } from '../models/Priorite';
 export class ReclamtionBackofficeComponent implements OnInit {
 
   reclamations: Reclamation[] = [];
+  filteredReclamations: Reclamation[] = [];
+  categories: Categorie[] = [];
+
+  // Filter properties
+  filterRef: string = '';
+  filterCategory: string = '';
+  filterStatus: string = '';
+  filterStartDate: string = '';
+  filterEndDate: string = '';
 
   // Pagination
   pageSize = 7;
   currentPage = 1;
 
-  constructor(private reclamationService: ReclamationService) {}
+  // Status options for filter
+  statusOptions = Object.values(Statut);
+
+  constructor(
+    private reclamationService: ReclamationService,
+    private categorieService: CategorieService
+  ) {}
 
   ngOnInit(): void {
     this.getAllReclamations();
+    this.getAllCategories();
   }
 
   getAllReclamations(): void {
@@ -31,6 +49,7 @@ export class ReclamtionBackofficeComponent implements OnInit {
           const priorityOrder = { 'Élevé': 0, 'Moyenne': 1, 'Faible': 2 };
           return priorityOrder[a.priorite] - priorityOrder[b.priorite];
         });
+        this.applyFilters();
         this.currentPage = 1; // reset to first page when data is loaded/refreshed
       },
       (error) => {
@@ -39,15 +58,83 @@ export class ReclamtionBackofficeComponent implements OnInit {
     );
   }
 
-  // Pagination getter : les reclamations affichées sur la page courante
+  getAllCategories(): void {
+    this.categorieService.getAllCategories().subscribe(
+      (data: Categorie[]) => {
+        this.categories = data;
+      },
+      (error) => {
+        console.error('Error fetching categories:', error);
+      }
+    );
+  }
+
+  // Apply all filters
+  applyFilters(): void {
+    this.filteredReclamations = this.reclamations.filter(reclamation => {
+      // Filter by reference
+      if (this.filterRef && !reclamation.ref?.toLowerCase().includes(this.filterRef.toLowerCase())) {
+        return false;
+      }
+
+      // Filter by category
+      if (this.filterCategory && reclamation.categorie?.nomCategorie !== this.filterCategory) {
+        return false;
+      }
+
+      // Filter by status
+      if (this.filterStatus && reclamation.statut !== this.filterStatus) {
+        return false;
+      }
+
+      // Filter by date range
+      if (this.filterStartDate || this.filterEndDate) {
+        if (!reclamation.createdDate) {
+          return false; // Skip reclamations without dates
+        }
+        const reclamationDate = new Date(reclamation.createdDate);
+
+        if (this.filterStartDate) {
+          const startDate = new Date(this.filterStartDate);
+          if (reclamationDate < startDate) {
+            return false;
+          }
+        }
+
+        if (this.filterEndDate) {
+          const endDate = new Date(this.filterEndDate);
+          endDate.setHours(23, 59, 59, 999); // Set to end of day
+          if (reclamationDate > endDate) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+
+    this.currentPage = 1; // Reset to first page when filters are applied
+  }
+
+  // Clear all filters
+  clearFilters(): void {
+    this.filterRef = '';
+    this.filterCategory = '';
+    this.filterStatus = '';
+    this.filterStartDate = '';
+    this.filterEndDate = '';
+    this.applyFilters();
+  }
+
+  // Pagination getter: les reclamations affichées sur la page courante
   get pagedReclamations(): Reclamation[] {
     const start = (this.currentPage - 1) * this.pageSize;
-    return this.reclamations.slice(start, start + this.pageSize);
+    return this.filteredReclamations.slice(start, start + this.pageSize);
   }
 
   // Nombre total de pages
   get totalPages(): number {
-    return Math.ceil(this.reclamations.length / this.pageSize);
+    return Math.ceil(this.filteredReclamations.length / this.pageSize);
   }
 
   // Changer de page
@@ -116,11 +203,17 @@ export class ReclamtionBackofficeComponent implements OnInit {
     }
   }
 
+  // Helper methods to get user info
   getUserFullName(reclamation: Reclamation): string {
     return `${reclamation.user?.firstname || 'Unknown'} ${reclamation.user?.lastname || 'Unknown'}`;
   }
 
   getUserEmail(reclamation: Reclamation): string {
     return reclamation.user?.email || 'No email provided';
+  }
+
+  // Helper method to get reference
+  getReclamationRef(reclamation: Reclamation): string {
+    return reclamation.ref || 'N/A';
   }
 }

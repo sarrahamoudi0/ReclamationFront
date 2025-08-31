@@ -4,17 +4,92 @@
     <h1 class="page-title"><i class="fas fa-file-alt page-title-icon"></i> Les Réclamations</h1>
   </div>
 
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="refFilter">Reference:</label>
+        <input
+          type="text"
+          id="refFilter"
+          [(ngModel)]="filterRef"
+          (input)="applyFilters()"
+          placeholder="Search by reference..."
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label for="categoryFilter">Category:</label>
+        <select
+          id="categoryFilter"
+          [(ngModel)]="filterCategory"
+          (change)="applyFilters()"
+          class="filter-select">
+          <option value="">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category.nomCategorie">
+            {{ category.nomCategorie }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="statusFilter">Status:</label>
+        <select
+          id="statusFilter"
+          [(ngModel)]="filterStatus"
+          (change)="applyFilters()"
+          class="filter-select">
+          <option value="">All Status</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="startDateFilter">Start Date:</label>
+        <input
+          type="date"
+          id="startDateFilter"
+          [(ngModel)]="filterStartDate"
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label for="endDateFilter">End Date:</label>
+        <input
+          type="date"
+          id="endDateFilter"
+          [(ngModel)]="filterEndDate"
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <button (click)="clearFilters()" class="clear-filters-btn">
+          <i class="fas fa-times"></i> Clear Filters
+        </button>
+      </div>
+    </div>
+
+
+
+
   <!-- Message si aucun résultat -->
-  <div *ngIf="reclamations.length === 0" class="loading-message" style="padding-left: 35%;">
-    <p>No reclamations found or loading...</p>
+  <div *ngIf="filteredReclamations.length === 0" class="loading-message" style="padding-left: 35%;">
+    <p *ngIf="reclamations.length === 0">No reclamations found or loading...</p>
+    <p *ngIf="reclamations.length > 0">No reclamations match your filters.</p>
   </div>
 
   <!-- Table des réclamations -->
-  <table *ngIf="reclamations.length > 0" class="reclamation-table">
+  <table *ngIf="filteredReclamations.length > 0" class="reclamation-table">
     <thead>
       <tr>
+        <th>Ref</th>
         <th>User Name</th>
-        <th>Title</th>
         <th>Categorie</th>
         <th class="small-column">Status</th>
         <th class="small-column">Priority</th>
@@ -24,8 +99,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let reclamation of pagedReclamations">
+        <td>{{ reclamation.ref }}</td>
         <td>{{ reclamation.user?.firstname }} {{ reclamation.user?.lastname }}</td>
-        <td>{{ reclamation.titre }}</td>
+
         <td>{{ reclamation.categorie?.nomCategorie | slice:0:150 }}...</td>
         <td>
           <span [ngClass]="getStatutClass(reclamation.statut)" class="badge">

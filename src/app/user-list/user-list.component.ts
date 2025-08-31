@@ -27,7 +27,44 @@ currentPage = 1;
 searchTerm: string = '';
 filteredUsers: User[] = [];
 showAddUserModal = false;
+filterEmail: string = '';
+filterRole: string = '';
+filterStatus: string = '';
 
+userRoles = Object.values(UserRole);
+
+applyFilters(): void {
+  this.filteredUsers = this.users.filter(user => {
+    if (this.filterEmail && !user.email.toLowerCase().includes(this.filterEmail.toLowerCase())) {
+      return false;
+    }
+
+    if (this.filterRole) {
+      const userRolesNormalized = user.roles.map(r => r.replace('ROLE_', ''));
+      if (!userRolesNormalized.includes(this.filterRole)) {
+        return false;
+      }
+    }
+
+   if (this.filterStatus) {
+  if (this.filterStatus === 'active' && (user.banned || !user.enabled)) return false;
+  if (this.filterStatus === 'banned' && !user.banned) return false;
+}
+
+
+    return true;
+  });
+
+  this.currentPage = 1; // reset to first page
+}
+
+
+clearFilters(): void {
+  this.filterEmail = '';
+  this.filterRole = '';
+  this.filterStatus = '';
+  this.applyFilters();
+}
 
 
 toggleRoleDropdown(user: User, roleIndex: number) {
@@ -211,7 +248,7 @@ closeDropdown(): void {
     return roles[0].replace('ROLE_', '') || 'Inconnu'; // Display the first role, removing the 'ROLE_' prefix
   }
 openAddUserForm(): void {
-  // Réinitialiser les données du formulaire
+  // Reset form data
   this.newUser = {
     firstname: '',
     lastname: '',
@@ -223,44 +260,14 @@ openAddUserForm(): void {
     accountLocked: false
   };
   this.errorMessage = '';
-
-  // Afficher le modal
   this.showAddUserModal = true;
-
-  // Attendre que Angular ait rendu le DOM
-  setTimeout(() => {
-    const modalElement = document.getElementById('addUserModal');
-    if (!modalElement) return;
-
-    // Déplacer le modal dans le body pour qu'il soit au-dessus de tout
-    document.body.appendChild(modalElement);
-
-    // Initialiser Bootstrap Modal et assigner à l’instance
-    this.addModalInstance = new bootstrap.Modal(modalElement, {
-      backdrop: 'static', // empêcher la fermeture par clic hors modal
-      keyboard: false,    // empêcher fermeture par échap
-      focus: true
-    });
-
-    // Afficher le modal
-    this.addModalInstance.show();
-
-    // Écouter la fermeture pour remettre showAddUserModal à false
-    modalElement.addEventListener('hidden.bs.modal', () => {
-      this.showAddUserModal = false;
-      this.addModalInstance = null; // nettoyer l’instance
-    });
-  }, 0);
 }
 
 
   addUser(): void {
-    const form = document.querySelector('#addUserModal form') as HTMLFormElement;
-    if (form && !form.checkValidity()) {
-      this.errorMessage = 'Veuillez vérifier les champs du formulaire et corriger les erreurs.';
-      return;
-    }
-
+    // Angular form validation will handle errors, so just check the form state
+    // The form is passed as a template reference variable in the template
+    // We'll close the modal and reset state on success
     const updatedUser: AdminCreateUserRequest = {
       ...this.newUser,
       role: this.newUser.role
@@ -269,17 +276,9 @@ openAddUserForm(): void {
     this.authenticationService.createUser(updatedUser).subscribe({
       next: (response) => {
         this.toastrService.success('Utilisateur créé avec succès');
-
-        // Close the modal properly
-        this.closeModal('addUserModal');
-
-        // Clear error message
+        this.showAddUserModal = false;
         this.errorMessage = '';
-
-        // Reset form and page state
         this.resetPageState();
-
-        // Add the new user to the list and refresh the view
         this.loadUsers();
       },
       error: (err) => {

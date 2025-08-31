@@ -5,48 +5,83 @@
 
   <div class="logs-header">
     <h2><span class="icon">📝</span> Historique</h2>
-    <div class="logs-controls">
-      <div class="search-container">
-        <div class="search-field">
-          <input 
-            type="email" 
-            [(ngModel)]="searchEmail" 
-            (input)="onSearchChange()"
-            placeholder="Rechercher par email..."
-            class="search-input"
-          >
-          <button *ngIf="searchEmail" (click)="clearEmailSearch()" class="clear-search" aria-label="Effacer la recherche email">
-            ✕
-          </button>
-        </div>
-        <div *ngIf="currentLogType === 'reclamation'" class="search-field">
-          <input 
-            type="text" 
-            [(ngModel)]="searchId" 
-            (input)="onSearchChange()"
-            placeholder="Rechercher par ID réclamation..."
-            class="search-input"
-          >
-          <button *ngIf="searchId" (click)="clearSearch()" class="clear-search" aria-label="Effacer la recherche ID">
-            ✕
-          </button>
-        </div>
-        <button *ngIf="searchEmail || searchId" (click)="clearAllSearches()" class="clear-all-search" aria-label="Effacer toutes les recherches">
-          Effacer tout
-        </button>
-      </div>
-      <div class="logs-toggle-icons">
-        <button (click)="switchLogType('auth')" [class.active]="currentLogType === 'auth'" aria-label="Authentification logs">
-          <i class="icon" aria-hidden="true">🔒</i>
-        </button>
-        <button (click)="switchLogType('reclamation')" [class.active]="currentLogType === 'reclamation'" aria-label="Réclamation logs">
-          <i class="icon" aria-hidden="true">📄</i>
-        </button>
-      </div>
+
+    <!-- Log Type Toggle -->
+    <div class="logs-toggle-icons">
+      <button (click)="switchLogType('auth')" [class.active]="currentLogType === 'auth'" aria-label="Authentification logs">
+        <i class="icon" aria-hidden="true">🔒</i>
+      </button>
+      <button (click)="switchLogType('reclamation')" [class.active]="currentLogType === 'reclamation'" aria-label="Réclamation logs">
+        <i class="icon" aria-hidden="true">📄</i>
+      </button>
     </div>
   </div>
 
-  <div class="logs-table-container" *ngIf="!loading && logs.length > 0">
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="emailFilter">Email:</label>
+        <input
+          type="email"
+          id="emailFilter"
+          [(ngModel)]="filterEmail"
+          (input)="applyFilters()"
+          placeholder="Search by email..."
+          class="filter-input">
+      </div>
+
+
+      <div class="filter-group">
+        <label for="actionFilter">Action:</label>
+        <select
+          id="actionFilter"
+          [(ngModel)]="filterAction"
+          (change)="applyFilters()"
+          class="filter-select">
+          <option value="">All Actions</option>
+          <option *ngFor="let action of actionOptions" [value]="action">
+            {{ action }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="startDateFilter">Start Date:</label>
+        <input
+          type="date"
+          id="startDateFilter"
+          [(ngModel)]="filterStartDate"
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label for="endDateFilter">End Date:</label>
+        <input
+          type="date"
+          id="endDateFilter"
+          [(ngModel)]="filterEndDate"
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <button (click)="clearFilters()" class="clear-filters-btn">
+          <i class="fas fa-times"></i> Clear Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Results count -->
+    <div class="results-info">
+      <span class="results-count">Showing {{ filteredLogs.length }} of {{ logs.length }} logs</span>
+    </div>
+  </div>
+
+  <div class="logs-table-container" *ngIf="!loading && filteredLogs.length > 0">
     <table>
       <thead>
         <tr>
@@ -68,7 +103,7 @@
               {{ log.details }}
             </ng-template>
           </td>
-          
+
           <td data-label="Date">{{ log.timestamp | date: 'short' }}</td>
         </tr>
       </tbody>
@@ -85,7 +120,8 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && logs.length === 0" class="message-block warning">
-    Aucun log disponible.
+  <div *ngIf="!loading && filteredLogs.length === 0" class="message-block warning">
+    <p *ngIf="logs.length === 0">Aucun log disponible.</p>
+    <p *ngIf="logs.length > 0">Aucun log ne correspond à vos filtres.</p>
   </div>
 </div>

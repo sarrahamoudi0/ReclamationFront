@@ -19,6 +19,10 @@ export class CategorieComponent implements OnInit {
   sousCategorieName: string = '';
   reclamations: Reclamation[] = [];
 
+  // Filter properties
+  searchTerm: string = '';
+  selectedFilter: string = 'all'; // 'all', 'withSubcategories', 'withoutSubcategories'
+
   // Modals état
   isModalOpen = false;
   editMode = false;
@@ -29,12 +33,51 @@ export class CategorieComponent implements OnInit {
   currentCategorie: Categorie = { nomCategorie: '', sousCategories: [] };
   selectedCategory?: Categorie;
 
-  constructor(private categorieService: CategorieService,   private reclamationService: ReclamationService, private toastrService: ToastrService) {}
+  constructor(
+    private categorieService: CategorieService,
+    private reclamationService: ReclamationService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
     this.loadReclamations();
+  }
 
+  // Filter methods
+  get filteredCategories(): Categorie[] {
+    let filtered = this.categories;
+
+    // Filter by search term
+    if (this.searchTerm.trim()) {
+      filtered = filtered.filter(category =>
+        category.nomCategorie.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by subcategory status
+    switch (this.selectedFilter) {
+      case 'withSubcategories':
+        filtered = filtered.filter(category =>
+          category.sousCategories && category.sousCategories.length > 0
+        );
+        break;
+      case 'withoutSubcategories':
+        filtered = filtered.filter(category =>
+          !category.sousCategories || category.sousCategories.length === 0
+        );
+        break;
+      default:
+        // 'all' - no additional filtering
+        break;
+    }
+
+    return filtered;
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedFilter = 'all';
   }
 
   // === Modal Catégorie ===
@@ -60,7 +103,11 @@ export class CategorieComponent implements OnInit {
 
   addCategorie(): void {
     const name = this.categorieName.trim();
-    if (!name) return;
+    if (!name) {
+      this.toastrService.error('Le nom de la catégorie ne peut pas être vide');
+      return;
+    }
+
     const newCat: Categorie = { nomCategorie: name, sousCategories: [] };
     this.categorieService.addCategorie(newCat).subscribe({
       next: cat => {
@@ -68,7 +115,10 @@ export class CategorieComponent implements OnInit {
         this.closeModal();
         this.toastrService.success('Catégorie ajoutée avec succès');
       },
-      error: err => console.error('Erreur ajout catégorie', err)
+      error: err => {
+        console.error('Erreur ajout catégorie', err);
+        this.toastrService.error('Erreur lors de l\'ajout de la catégorie');
+      }
     });
   }
 
@@ -94,7 +144,10 @@ export class CategorieComponent implements OnInit {
         this.closeModal();
         this.toastrService.success('Catégorie mise à jour avec succès');
       },
-      error: err => console.error('Erreur mise à jour', err)
+      error: err => {
+        console.error('Erreur mise à jour', err);
+        this.toastrService.error('Erreur lors de la mise à jour de la catégorie');
+      }
     });
   }
 
@@ -149,15 +202,23 @@ export class CategorieComponent implements OnInit {
   confirmAddSubCategorie(): void {
     const parentId = this.selectedCategory?.idCategorie;
     const name = this.sousCategorieName.trim();
-    if (!parentId || !name) return;
+    if (!parentId || !name) {
+      this.toastrService.error('Le nom de la sous-catégorie ne peut pas être vide');
+      return;
+    }
+
     this.categorieService.ajouterSousCategorie(parentId, name).subscribe({
       next: updatedCat => {
         this.categories = this.categories.map(cat =>
           cat.idCategorie === updatedCat.idCategorie ? updatedCat : cat
         );
         this.closeSubModal();
+        this.toastrService.success('Sous-catégorie ajoutée avec succès');
       },
-      error: err => console.error('Erreur ajout sous-catégorie', err)
+      error: err => {
+        console.error('Erreur ajout sous-catégorie', err);
+        this.toastrService.error('Erreur lors de l\'ajout de la sous-catégorie');
+      }
     });
   }
 
@@ -174,7 +235,7 @@ export class CategorieComponent implements OnInit {
 
   onDeleteSousCategorie(category: Categorie | undefined, sousCategory: SousCategorie | undefined): void {
     if (category?.idCategorie && sousCategory?.idSousCategorie) {
-      this.deleteSousCategorie(category.idCategorie, sousCategory.idSousCategorie); // Passing valid strings
+      this.deleteSousCategorie(category.idCategorie, sousCategory.idSousCategorie);
     } else {
       console.warn('Invalid IDs for deletion. category or sousCategory ID is missing.');
     }
@@ -206,10 +267,11 @@ export class CategorieComponent implements OnInit {
   loadCategories(): void {
     this.categorieService.getAllCategories().subscribe(
       (data) => {
-        this.categories = data;  // Assuming 'categories' is your list in the component
+        this.categories = data;
       },
       (error) => {
         console.error('Erreur de récupération des catégories:', error);
+        this.toastrService.error('Erreur lors du chargement des catégories');
       }
     );
   }
@@ -227,5 +289,20 @@ export class CategorieComponent implements OnInit {
     return this.reclamations.some(
       (r) => r.categorie?.idCategorie === categorie.idCategorie
     );
+  }
+
+  // Get category statistics
+  getCategoryStats(): { total: number; withSubcategories: number; totalSubcategories: number } {
+    const total = this.categories.length;
+    const withSubcategories = this.categories.filter(cat =>
+      cat.sousCategories && cat.sousCategories.length > 0
+    ).length;
+    
+    // Calculate total subcategories across all categories
+    const totalSubcategories = this.categories.reduce((sum, cat) => {
+      return sum + (cat.sousCategories ? cat.sousCategories.length : 0);
+    }, 0);
+
+    return { total, withSubcategories, totalSubcategories };
   }
 }
