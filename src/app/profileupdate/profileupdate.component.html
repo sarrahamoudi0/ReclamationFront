@@ -47,19 +47,57 @@
   <!-- Modal activation code -->
 <div *ngIf="showActivationModal" class="modal-backdrop">
   <div class="modal-content code-modal">
-    <h3 class="modal-title">Vérification de l'email</h3>
-    <p class="modal-desc">Un code de confirmation a été envoyé à votre nouvelle adresse email.<br>Veuillez le saisir ci-dessous :</p>
-    <form [formGroup]="activationForm" (ngSubmit)="confirmEmailChange()">
-      <input formControlName="activationCode" id="activationCode" type="text" maxlength="8"
-        class="code-input" placeholder="Code de confirmation" autocomplete="one-time-code" />
-      <div *ngIf="activationForm.get('activationCode')?.invalid && activationForm.get('activationCode')?.touched" class="error">
-        Le code est requis.
+    <div class="modal-header">
+      <div class="verification-icon">
+        <i class="fas fa-shield-check"></i>
       </div>
+      <h3 class="modal-title">Vérification de l'email</h3>
+      <p class="modal-desc">Un code de confirmation a été envoyé à votre nouvelle adresse email.<br><strong>Veuillez le saisir ci-dessous :</strong></p>
+    </div>
+    
+    <form [formGroup]="activationForm" (ngSubmit)="confirmEmailChange()" class="verification-form">
+      <div class="code-input-container">
+        <label for="activationCode" class="code-label">Code de confirmation</label>
+        <input formControlName="activationCode" 
+               id="activationCode" 
+               type="text" 
+               maxlength="8"
+               class="code-input" 
+               placeholder="Entrez le code à 8 chiffres" 
+               autocomplete="one-time-code" />
+        <div class="code-hint">
+          <i class="fas fa-info-circle"></i>
+          <span>Code à 8 chiffres envoyé par email</span>
+        </div>
+      </div>
+      
+      <div *ngIf="activationForm.get('activationCode')?.invalid && activationForm.get('activationCode')?.touched" class="code-error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Le code de confirmation est requis</span>
+      </div>
+      
       <div class="modal-actions">
-        <button type="submit" [disabled]="activationForm.invalid" class="modal-btn confirm">Confirmer</button>
-        <button type="button" (click)="cancelActivation()" class="modal-btn cancel">Annuler</button>
+        <button type="submit" 
+                [disabled]="activationForm.invalid" 
+                class="modal-btn confirm">
+          <i class="fas fa-check"></i>
+          <span>Confirmer</span>
+        </button>
+        <button type="button" 
+                (click)="cancelActivation()" 
+                class="modal-btn cancel">
+          <i class="fas fa-times"></i>
+          <span>Annuler</span>
+        </button>
       </div>
     </form>
+    
+    <div class="modal-footer">
+      <p class="resend-hint">
+        <i class="fas fa-clock"></i>
+        <span>Le code expire dans 15 minutes</span>
+      </p>
+    </div>
   </div>
 </div>
   

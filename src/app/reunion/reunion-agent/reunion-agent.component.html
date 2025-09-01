@@ -3,7 +3,7 @@
   <div class="dashboard-header">
     <div class="header-content">
       <div class="header-left">
-        <h1 class="dashboard-title">
+        <h1 class="dashboard-title" style="color: black;">
           <i class="fas fa-calendar-check"></i>
           Mes Réunions
         </h1>
@@ -58,52 +58,7 @@
   </div>
 
   <!-- Filters and Search Section -->
-  <div class="filters-section">
-    <div class="filters-container">
-      <div class="filters-left">
-        <div class="filter-group">
-          <label class="filter-label">Statut</label>
-          <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()">
-            <option value="">Tous les statuts</option>
-            <option *ngFor="let status of reunionStatuts" [value]="status">
-              {{ getStatusLabel(status) }}
-            </option>
-          </select>
-        </div>
-        
-        <div class="filter-group">
-          <label class="filter-label">Type</label>
-          <select class="filter-select" [(ngModel)]="selectedType" (change)="onTypeFilterChange()">
-            <option value="">Tous les types</option>
-            <option *ngFor="let type of reunionTypes" [value]="type">
-              {{ getTypeLabel(type) }}
-            </option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="filters-right">
-        <div class="search-container">
-          <div class="search-input-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" 
-                   class="search-input" 
-                   placeholder="Rechercher une réunion..." 
-                   [(ngModel)]="searchTerm">
-          </div>
-          <button class="btn-search" (click)="onSearch()">
-            Rechercher
-          </button>
-        </div>
-        
-        <button class="btn-clear-filters" (click)="clearFilters()">
-          <i class="fas fa-times"></i>
-          Effacer
-        </button>
-      </div>
-    </div>
-  </div>
-
+ 
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner">
