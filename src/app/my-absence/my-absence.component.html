@@ -1,0 +1,139 @@
+<div class="container-fluid py-4">
+     <div class="dashboard-header-gradient">
+      <div class="header-content">
+        <h2 class="modern-title">
+          <i class="fas fa-calendar-minus header-icon"></i>
+          Mes Absences
+        </h2>
+        <div class="header-decoration"></div>
+      </div>
+    </div>
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-icon bg-success">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value">{{ totalPresences }}</div>
+        <div class="stat-label">Présences</div>
+
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon bg-danger">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value">{{ totalAbsences }}</div>
+        <div class="stat-label">Absences</div>
+
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon bg-warning">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value">{{ totalRetards }}</div>
+        <div class="stat-label">Retards</div>
+
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon bg-info">
+        <i class="fas fa-chart-pie"></i>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value">{{ tauxPresence }}%</div>
+        <div class="stat-label">Taux de présence</div>
+        <div class="progress presence-progress">
+          <div class="progress-bar" [style.width]="tauxPresence + '%'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="modern-dashboard-card">
+
+
+    <div class="content-wrapper">
+      <div *ngIf="loading" class="loading-container">
+        <div class="pulse-loader"></div>
+        <span class="loading-text">Chargement en cours...</span>
+      </div>
+
+      <div *ngIf="!loading && absences">
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>
+                  <i class="far fa-calendar-alt me-2"></i>
+                  Date
+                </th>
+                <th>
+                  <i class="far fa-clock me-2"></i>
+                  Statut
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let presence of absences.content">
+                <td>
+                  <strong>{{ presence.date | date:'dd MMMM yyyy' }}</strong>
+                </td>
+                <td>
+                  <span [class]="'status-badge ' + getStatusClass(presence.status)">
+                    <i class="fas"
+                       [ngClass]="{
+                         'fa-check-circle': presence.status === PresenceStatus.PRESENT,
+                         'fa-clock': presence.status === PresenceStatus.LATE,
+                         'fa-times-circle': presence.status === PresenceStatus.ABSENT
+                       }">
+                    </i>
+                    {{ getStatusLabel(presence.status) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="custom-pagination d-flex justify-content-between align-items-center mt-3">
+          <div class="pagination-info">
+            <strong>{{ absences.totalElements }}</strong> enregistrements au total
+          </div>
+          <nav *ngIf="absences.totalPages > 1">
+            <ul class="pagination mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 0">
+                <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0)">
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+              </li>
+              <li class="page-item" *ngFor="let page of [].constructor(absences.totalPages); let i = index"
+                  [class.active]="i === currentPage">
+                <a class="page-link" (click)="onPageChange(i)" href="javascript:void(0)">{{ i + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage >= absences.totalPages - 1">
+                <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && (!absences || absences.content.length === 0)" class="empty-state">
+        <i class="fas fa-inbox empty-state-icon d-block"></i>
+        <h4>Aucune absence enregistrée</h4>
+        <p class="text-muted">Vous n'avez pas encore d'absences dans votre historique.</p>
+      </div>
+    </div>
+  </div>
+</div>

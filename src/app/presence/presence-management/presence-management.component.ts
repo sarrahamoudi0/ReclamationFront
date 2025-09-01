@@ -17,14 +17,14 @@ export class PresenceManagementComponent implements OnInit {
   selectedDate = new Date().toISOString().split('T')[0];
   selectedStatus: PresenceStatus | '' = '';
   selectedAgent: string = '';
-  
+
   // Statistics
   statistics: PresenceStatisticsResponse | null = null;
-  
+
   // Enums for template
   PresenceStatus = PresenceStatus;
   presenceStatuses = Object.values(PresenceStatus);
-  
+
   // Bulk operations
   bulkRequests: PresenceRequest[] = [];
   showBulkForm = false;
@@ -47,7 +47,7 @@ export class PresenceManagementComponent implements OnInit {
         this.agents = users.filter((user: User) => user.role === 'ROLE_AGENT');
       },
       error: (error: any) => {
-        
+
       }
     });
   }

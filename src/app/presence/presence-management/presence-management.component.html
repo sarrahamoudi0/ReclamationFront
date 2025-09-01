@@ -38,16 +38,7 @@
           </option>
         </select>
       </div>
-      
-      <div class="filter-group">
-        <label class="filter-label">Agent</label>
-        <select class="filter-select" [(ngModel)]="selectedAgent">
-          <option value="">Tous les agents</option>
-          <option *ngFor="let agent of agents" [value]="agent.id">
-            {{ agent.firstname }} {{ agent.lastname }}
-          </option>
-        </select>
-      </div>
+    
     </div>
   </div>
 

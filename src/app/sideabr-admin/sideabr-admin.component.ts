@@ -28,8 +28,10 @@ export class SideabrAdminComponent {
     { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin', showForAgent: true, showForAdmin: true },
     { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie', showForAdmin: true },
     { label: 'Réunions', icon: 'fa-solid fa-calendar', route: '/reunions', showForAdmin: true },
+    { label: 'Gerer Présences', icon: 'fa-solid fa-calendar', route: '/presence', showForAdmin: true },
     { label: 'Mes Réunions', icon: 'fa-solid fa-calendar-check', route: '/myreunions', showForAgent: true },
-    { label: 'Historique', icon: 'fa-solid fa-clock-rotate-left', route: '/logs', showForAdmin: true }
+    { label: 'Historique', icon: 'fa-solid fa-clock-rotate-left', route: '/logs', showForAdmin: true },
+    { label: 'Mes Absences', icon: 'fa-solid fa-calendar-check', route: '/absence', showForAgent: true },
   ];
 
   constructor(private authService: AuthenticationService) {}

@@ -24,6 +24,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { authGuard } from './guards/auth.guard';
 import { UserRole } from './models/role';
 import { PresenceManagementComponent } from './presence/presence-management/presence-management.component';
+import { MyAbsenceComponent } from './my-absence/my-absence.component';
 
 const routes: Routes = [
   // Public routes (login/register/forgot/reset)
@@ -57,7 +58,7 @@ const routes: Routes = [
       { path: 'reunions/view/:id', component: ReunionViewComponent, data: { roles: [UserRole.ADMIN, UserRole.AGENT] } },
       { path: 'myreunions', component: ReunionAgentComponent, data: { roles: [UserRole.AGENT] } },
       { path: 'presence', component: PresenceManagementComponent, data: { roles: [UserRole.ADMIN] } },
-
+ { path: 'absence', component: MyAbsenceComponent, data: { roles: [UserRole.AGENT] } },
       // Redirections / alias
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]

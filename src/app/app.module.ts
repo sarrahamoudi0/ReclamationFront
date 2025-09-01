@@ -36,6 +36,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReunionModule } from './reunion/reunion.module';
 import { LayoutComponent } from './layout/layout.component';
 import { PresenceManagementComponent } from './presence/presence-management/presence-management.component';
+import { MyAbsenceComponent } from './my-absence/my-absence.component';
 
 
 
@@ -66,6 +67,7 @@ import { PresenceManagementComponent } from './presence/presence-management/pres
     DashboardComponent,
     LayoutComponent,
     PresenceManagementComponent,
+    MyAbsenceComponent
     
   ],
   imports: [
