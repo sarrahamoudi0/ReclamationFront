@@ -17,12 +17,12 @@ export class ReunionListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   totalElements = 0;
   totalPages = 0;
-  
+
   // Filters
   selectedStatus: ReunionStatut | '' = '';
   selectedType: ReunionType | '' = '';
   searchTerm = '';
-  
+
   // Enums for template
   reunionStatuts = Object.values(ReunionStatut);
   reunionTypes = Object.values(ReunionType);
@@ -40,10 +40,10 @@ export class ReunionListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Setup debounced search
     this.searchSubscription = this.searchSubject.pipe(
-      debounceTime(500), // Wait 500ms after user stops typing
-      distinctUntilChanged() // Only emit if value has changed
+      debounceTime(500),
+      distinctUntilChanged()
     ).subscribe(() => {
-      this.currentPage = 0; // Reset to first page when searching
+      this.currentPage = 0;
       this.loadReunions();
     });
 
@@ -51,18 +51,17 @@ export class ReunionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
-    }
+    this.searchSubscription?.unsubscribe();
   }
 
+  // === LOAD REUNIONS ===
   loadReunions(): void {
     this.loading = true;
     this.reunionService.getAllReunions(
-      this.currentPage, 
-      this.pageSize, 
-      this.selectedStatus, 
-      this.selectedType, 
+      this.currentPage,
+      this.pageSize,
+      this.selectedStatus,
+      this.selectedType,
       this.searchTerm
     )
       .subscribe({
@@ -80,6 +79,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
       });
   }
 
+  // === PAGINATION & FILTERS ===
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadReunions();
@@ -95,13 +95,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     this.loadReunions();
   }
 
-  onSearch(): void {
-    this.currentPage = 0;
-    this.loadReunions();
-  }
-
   onSearchInputChange(): void {
-    // Use debounced search to avoid too many API calls
     this.searchSubject.next(this.searchTerm);
   }
 
@@ -113,6 +107,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     this.loadReunions();
   }
 
+  // === CRUD ACTIONS ===
   createReunion(): void {
     this.router.navigate(['/reunions/create']);
   }
@@ -130,9 +125,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (updatedReunion) => {
           const index = this.reunions.findIndex(r => r.id === reunion.id);
-          if (index !== -1) {
-            this.reunions[index] = updatedReunion;
-          }
+          if (index !== -1) this.reunions[index] = updatedReunion;
           this.toastr.success('Statut de la réunion mis à jour avec succès');
         },
         error: (error) => {
@@ -148,9 +141,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (updatedReunion) => {
             const index = this.reunions.findIndex(r => r.id === reunion.id);
-            if (index !== -1) {
-              this.reunions[index] = updatedReunion;
-            }
+            if (index !== -1) this.reunions[index] = updatedReunion;
             this.toastr.success('Réunion annulée avec succès');
           },
           error: (error) => {
@@ -177,6 +168,7 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     }
   }
 
+  // === HELPERS ===
   getStatusClass(statut: ReunionStatut): string {
     return this.reunionService.getReunionStatutClass(statut);
   }
@@ -204,27 +196,31 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     return new Date(dateString).toLocaleDateString('fr-FR');
   }
 
-  isUpcoming(dateString: string): boolean {
-    return new Date(dateString) > new Date();
+  // === LOGIQUE DYNAMIQUE PAR DATE ===
+  isFinished(reunion: ReunionResponse): boolean {
+    return new Date(reunion.dateFin) < new Date();
   }
 
-  isCurrentlyActive(reunion: ReunionResponse): boolean {
+  isOngoing(reunion: ReunionResponse): boolean {
     const now = new Date();
-    const startTime = new Date(reunion.dateDebut);
-    const endTime = new Date(reunion.dateFin);
-    return now >= startTime && now <= endTime && reunion.statut === ReunionStatut.EN_COURS;
+    return new Date(reunion.dateDebut) <= now && new Date(reunion.dateFin) >= now;
   }
 
-  getUpcomingCount(): number {
-    return this.reunions.filter(r => this.isUpcoming(r.dateDebut)).length;
+  isUpcomingByDate(reunion: ReunionResponse): boolean {
+    return new Date(reunion.dateDebut) > new Date();
+  }
+
+  // === STATISTIQUES ===
+  getCompletedCount(): number {
+    return this.reunions.filter(r => this.isFinished(r)).length;
   }
 
   getActiveCount(): number {
-    return this.reunions.filter(r => r.statut === ReunionStatut.EN_COURS).length;
+    return this.reunions.filter(r => this.isOngoing(r)).length;
   }
 
-  getCompletedCount(): number {
-    return this.reunions.filter(r => r.statut === ReunionStatut.TERMINEE).length;
+  getUpcomingCount(): number {
+    return this.reunions.filter(r => this.isUpcomingByDate(r)).length;
   }
 
   getCancelledCount(): number {
@@ -235,13 +231,13 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     return this.reunions.filter(r => r.statut === ReunionStatut.REPORTEE).length;
   }
 
-  // Enhanced statistics methods
+  // === AUTRES STATISTIQUES ===
   getOngoingReunions(): ReunionResponse[] {
-    return this.reunions.filter(r => r.statut === ReunionStatut.EN_COURS);
+    return this.reunions.filter(r => this.isOngoing(r));
   }
 
   getCompletedReunions(): ReunionResponse[] {
-    return this.reunions.filter(r => r.statut === ReunionStatut.TERMINEE);
+    return this.reunions.filter(r => this.isFinished(r));
   }
 
   getAverageMeetingDuration(): string {
@@ -273,13 +269,11 @@ export class ReunionListComponent implements OnInit, OnDestroy {
   }
 
   getNextMeeting(): ReunionResponse | null {
-    const upcomingReunions = this.reunions.filter(r => this.isUpcoming(r.dateDebut));
+    const upcomingReunions = this.reunions.filter(r => this.isUpcomingByDate(r));
     if (upcomingReunions.length === 0) return null;
 
     return upcomingReunions.reduce((next, current) => {
-      const nextDate = new Date(next.dateDebut);
-      const currentDate = new Date(current.dateDebut);
-      return nextDate < currentDate ? next : current;
+      return new Date(next.dateDebut) < new Date(current.dateDebut) ? next : current;
     });
   }
 
@@ -288,18 +282,15 @@ export class ReunionListComponent implements OnInit, OnDestroy {
     if (activeReunions.length === 0) return null;
 
     return activeReunions.reduce((current, next) => {
-      const currentEnd = new Date(current.dateFin);
-      const nextEnd = new Date(next.dateFin);
-      return currentEnd < nextEnd ? current : next;
+      return new Date(current.dateFin) < new Date(next.dateFin) ? current : next;
     });
   }
 
   getMeetingDuration(reunion: ReunionResponse): string {
     const start = new Date(reunion.dateDebut);
     const end = new Date(reunion.dateFin);
-    const durationMs = end.getTime() - start.getTime();
-    const minutes = Math.round(durationMs / 60000);
-    
+    const minutes = Math.round((end.getTime() - start.getTime()) / 60000);
+
     if (minutes < 60) {
       return `${minutes} min`;
     } else {
@@ -311,17 +302,28 @@ export class ReunionListComponent implements OnInit, OnDestroy {
 
   getMeetingProgress(reunion: ReunionResponse | null): number {
     if (!reunion) return 0;
-    
+
     const now = new Date();
     const start = new Date(reunion.dateDebut);
     const end = new Date(reunion.dateFin);
-    
+
     if (now < start) return 0;
     if (now > end) return 100;
-    
+
     const totalDuration = end.getTime() - start.getTime();
     const elapsed = now.getTime() - start.getTime();
-    
+
     return Math.round((elapsed / totalDuration) * 100);
   }
-} 
+  onSearch(): void {
+    this.currentPage = 0;
+    this.loadReunions();
+  }
+  getCardClass(reunion: ReunionResponse): string {
+    if (this.isOngoing(reunion)) return 'reunion-card active';
+    if (this.isUpcomingByDate(reunion)) return 'reunion-card upcoming';
+    if (this.isFinished(reunion)) return 'reunion-card completed';
+    return 'reunion-card';
+  }
+
+}

@@ -8,29 +8,27 @@
   </div>
 
   <ul class="nav-links">
-    <li *ngFor="let item of menu">
-      <!-- Internal route -->
-      <a *ngIf="item.route 
-                && ((!item.showForAgent && !item.showForAdmin) 
-                || (item.showForAgent && isAgent()) 
-                || (item.showForAdmin && isAdmin()))"
-         [routerLink]="item.route"
-         routerLinkActive="active">
-        <span class="icon"><i [class]="item.icon"></i></span>
-        <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
-      </a>
+    <ng-container *ngFor="let item of menu">
+      <li *ngIf="(!item.showForAgent && !item.showForAdmin) 
+                  || (item.showForAgent && isAgent()) 
+                  || (item.showForAdmin && isAdmin())">
+        <!-- Internal route -->
+        <a *ngIf="item.route && !item.external"
+           [routerLink]="item.route"
+           routerLinkActive="active">
+          <span class="icon"><i [class]="item.icon"></i></span>
+          <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
 
-      <!-- External link -->
-      <a *ngIf="item.external 
-                && ((!item.showForAgent && !item.showForAdmin) 
-                || (item.showForAgent && isAgent()) 
-                || (item.showForAdmin && isAdmin()))"
-         [href]="item.route"
-         target="_blank">
-        <span class="icon"><i [class]="item.icon"></i></span>
-        <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
-      </a>
-    </li>
+        <!-- External link -->
+        <a *ngIf="item.route && item.external"
+           [href]="item.route"
+           target="_blank">
+          <span class="icon"><i [class]="item.icon"></i></span>
+          <span class="text" *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ng-container>
 
     <!-- Logout -->
  

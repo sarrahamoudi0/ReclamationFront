@@ -23,13 +23,13 @@ export class SideabrAdminComponent {
   @Output() toggle = new EventEmitter<void>();
 
   menu: NavMenuItem[] = [
-    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboard' },
-    { label: 'Les Utilisateurs', icon: 'fa-solid fa-users', route: '/user' },
-    { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin' },
-    { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie' },
+    { label: 'Dashboard', icon: 'fa-solid fa-house', route: '/dashboard', showForAdmin: true },
+    { label: 'Les Utilisateurs', icon: 'fa-solid fa-users', route: '/user', showForAdmin: true },
+    { label: 'Les Reclamations', icon: 'fa-solid fa-clipboard-list', route: '/admin', showForAgent: true, showForAdmin: true },
+    { label: 'Catégories', icon: 'fa-solid fa-list', route: '/categorie', showForAdmin: true },
     { label: 'Réunions', icon: 'fa-solid fa-calendar', route: '/reunions', showForAdmin: true },
-    { label: 'Mes Réunions', icon: 'fa-solid fa-calendar-check', route: '/myreunions', showForAgent: true },
-    { label: 'Historique', icon: 'fa-solid fa-clock-rotate-left', route: '/logs' }
+    { label: 'Mes Réunions', icon: 'fa-solid fa-calendar-check', route: '/myreunions', showForAgent: true, showForAdmin: true },
+    { label: 'Historique', icon: 'fa-solid fa-clock-rotate-left', route: '/logs', showForAdmin: true }
   ];
 
   constructor(private authService: AuthenticationService) {}

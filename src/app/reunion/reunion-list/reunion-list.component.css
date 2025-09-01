@@ -672,46 +672,46 @@
   .dashboard-header {
     padding: 1.5rem 0;
   }
-  
+
   .header-content {
     flex-direction: column;
     gap: 1.5rem;
     text-align: center;
   }
-  
+
   .dashboard-title {
     font-size: 2rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
   }
-  
+
   .stat-card {
     padding: 1.5rem;
   }
-  
+
   .filters-container {
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .filters-left {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .search-input {
     width: 100%;
     min-width: auto;
   }
-  
+
   .reunions-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .reunion-card-actions {
     flex-wrap: wrap;
     justify-content: center;
@@ -722,16 +722,16 @@
   .dashboard-title {
     font-size: 1.8rem;
   }
-  
+
   .stat-content h3 {
     font-size: 2rem;
   }
-  
+
   .reunion-card {
     margin: 0 0.5rem;
   }
 }
-  
+
 /* === Orange Theme Overrides (White background, dark text, Orange accents) === */
 .reunion-dashboard {
   background: #ffffff;
@@ -976,15 +976,15 @@
   .stats-details-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .completion-stats {
     grid-template-columns: 1fr;
   }
-  
+
   .meeting-detail-item {
     flex-direction: column;
   }
-  
+
   .meeting-status {
     margin-left: 0;
     margin-top: 0.75rem;
@@ -1043,9 +1043,8 @@
   color: #ffffff;
   border-color: #e47429;
 }
-
 /* Empty state on light theme */
 .empty-state { color: #6b7280; }
 .empty-icon { color: #9ca3af; }
 .summary-text { color: #6b7280; }
-  
+

@@ -12,7 +12,7 @@
           Détails de la Réunion
         </h1>
       </div>
-    
+
     </div>
   </div>
 
@@ -31,22 +31,33 @@
       <div class="card-header">
         <div class="reunion-title-section">
           <h2 class="reunion-title">{{ reunion.titre }}</h2>
-          <div class="reunion-meta">
-            <span class="reunion-id">#{{ reunion.id.slice(-8) }}</span>
-            <span class="reunion-date">Créée le {{ formatDate(reunion.createdDate) }}</span>
-          </div>
         </div>
         <div class="reunion-status-section">
           <span [class]="getStatusClass(reunion.statut)" class="status-badge">
-            {{ getStatusLabel(reunion.statut) }}
+            {{ getTypeLabel(reunion.type) }}
           </span>
-          <span class="type-badge">{{ getTypeLabel(reunion.type) }}</span>
+          <span class="type-badge"></span>
         </div>
       </div>
-      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-icon">
+            <i class="fas fa-calendar-plus"></i>
+          </div>
+          <div class="timeline-content">
+            <h4>Réunion créée</h4>
+            <p>{{ formatDate(reunion.createdDate) }}</p>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
       <div class="card-body">
         <p class="reunion-description">{{ reunion.description }}</p>
-        
+
         <div class="reunion-highlights">
           <div class="highlight-item">
             <div class="highlight-icon">
@@ -57,7 +68,7 @@
               <span>{{ reunion.lieu }}</span>
             </div>
           </div>
-          
+
           <div class="highlight-item">
             <div class="highlight-icon">
               <i class="fas fa-clock"></i>
@@ -66,11 +77,11 @@
               <label>Date de début</label>
               <span [class]="{'upcoming': isUpcoming(reunion.dateDebut)}">
                 {{ formatDate(reunion.dateDebut) }}
-                <span *ngIf="isUpcoming(reunion.dateDebut)" class="upcoming-indicator">À venir</span>
+
               </span>
             </div>
           </div>
-          
+
           <div class="highlight-item">
             <div class="highlight-icon">
               <i class="fas fa-clock"></i>
@@ -79,11 +90,13 @@
               <label>Date de fin</label>
               <span [class]="{'completed': isPast(reunion.dateFin)}">
                 {{ formatDate(reunion.dateFin) }}
-                <span *ngIf="isPast(reunion.dateFin)" class="completed-indicator">Terminée</span>
+
               </span>
             </div>
+
           </div>
         </div>
+
       </div>
     </div>
 
@@ -95,7 +108,7 @@
           Participants et Organisateur
         </h3>
       </div>
-      
+
       <div class="participants-grid">
         <!-- Organizer Card -->
         <div class="participant-card organizer">
@@ -110,7 +123,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Participants Cards -->
         <div *ngFor="let participant of reunion.participants" class="participant-card">
           <div class="participant-header">
@@ -135,7 +148,7 @@
           Informations Complémentaires
         </h3>
       </div>
-      
+
       <div class="optional-info-grid">
         <div *ngIf="reunion.ordreDuJour" class="info-card">
           <div class="info-header">
@@ -146,7 +159,7 @@
             {{ reunion.ordreDuJour }}
           </div>
         </div>
-        
+
         <div *ngIf="reunion.notes" class="info-card">
           <div class="info-header">
             <i class="fas fa-sticky-note"></i>
@@ -154,48 +167,6 @@
           </div>
           <div class="info-content">
             {{ reunion.notes }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Timeline Section -->
-    <div class="timeline-section">
-      <div class="section-header">
-        <h3 class="section-title">
-          <i class="fas fa-history"></i>
-          Historique
-        </h3>
-      </div>
-      
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-icon">
-            <i class="fas fa-calendar-plus"></i>
-          </div>
-          <div class="timeline-content">
-            <h4>Réunion créée</h4>
-            <p>{{ formatDate(reunion.createdDate) }}</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item" *ngIf="reunion.lastModifiedDate !== reunion.createdDate">
-          <div class="timeline-icon">
-            <i class="fas fa-edit"></i>
-          </div>
-          <div class="timeline-content">
-            <h4>Dernière modification</h4>
-            <p>{{ formatDate(reunion.lastModifiedDate) }}</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-icon">
-            <i class="fas fa-clock"></i>
-          </div>
-          <div class="timeline-content">
-            <h4>Statut actuel</h4>
-            <p>{{ getStatusLabel(reunion.statut) }}</p>
           </div>
         </div>
       </div>
@@ -214,4 +185,4 @@
       Retour à la liste
     </button>
   </div>
-</div> 
+</div>
