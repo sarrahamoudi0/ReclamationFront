@@ -74,6 +74,9 @@ public class ReclamationController {
             reclamation.setImage_reclamation(fileReclamation.getBytes());
         }
 
+        // ► Générer ref unique
+        reclamation.generateRef(); // just generate a ref
+
         // ► Appeler le service AVEC l'utilisateur
         Reclamation createdReclamation = reclamationService.createReclamation(
                 reclamation,
