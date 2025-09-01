@@ -80,14 +80,7 @@
                     <i [class]="getRoleBadgeInfo(role).icon"></i>
                     {{ getRoleBadgeInfo(role).label }}
                   </span>
-                  <div *ngIf="isDropdownOpen(user, i) && isUserAdminOrAgent(user)" class="dropdown-menu show">
-                    <button
-                      *ngFor="let r of availableRoles"
-                      class="dropdown-item"
-                      (click)="onRoleClick($event, user.id!, r)">
-                      {{ getRoleBadgeInfo(r).label }}
-                    </button>
-                  </div>
+                  <!-- Dropdown menu is now rendered in a portal at the end of the component for proper stacking -->
                 </div>
               </td>
               <td>

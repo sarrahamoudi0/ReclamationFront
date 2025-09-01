@@ -108,16 +108,31 @@ export class CategorieComponent implements OnInit {
       return;
     }
 
-    const newCat: Categorie = { nomCategorie: name, sousCategories: [] };
-    this.categorieService.addCategorie(newCat).subscribe({
-      next: cat => {
-        this.categories.push(cat);
-        this.closeModal();
-        this.toastrService.success('Catégorie ajoutée avec succès');
-      },
-      error: err => {
-        console.error('Erreur ajout catégorie', err);
-        this.toastrService.error('Erreur lors de l\'ajout de la catégorie');
+    // Show confirmation dialog
+    Swal.fire({
+      title: 'Créer une nouvelle catégorie',
+      text: `Êtes-vous sûr de vouloir créer la catégorie "${name}" ?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Oui, créer',
+      cancelButtonText: 'Annuler',
+      customClass: { popup: 'swal2-popup-custom' }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newCat: Categorie = { nomCategorie: name, sousCategories: [] };
+        this.categorieService.addCategorie(newCat).subscribe({
+          next: cat => {
+            this.categories.push(cat);
+            this.closeModal();
+            this.toastrService.success('Catégorie ajoutée avec succès');
+          },
+          error: err => {
+            console.error('Erreur ajout catégorie', err);
+            this.toastrService.error('Erreur lors de l\'ajout de la catégorie');
+          }
+        });
       }
     });
   }
