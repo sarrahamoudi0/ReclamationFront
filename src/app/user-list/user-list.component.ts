@@ -266,35 +266,21 @@ openAddUserForm(): void {
 
 
   addUser(): void {
-    // Show confirmation dialog before adding user
-    Swal.fire({
-      title: 'Confirmation',
-      text: 'Voulez-vous vraiment ajouter cet utilisateur ?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Oui, ajouter',
-      cancelButtonText: 'Annuler'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedUser: AdminCreateUserRequest = {
-          ...this.newUser,
-          role: this.newUser.role
-        };
-        this.authenticationService.createUser(updatedUser).subscribe({
-          next: (response) => {
-            this.toastrService.success('Utilisateur créé avec succès');
-            this.showAddUserModal = false;
-            this.errorMessage = '';
-            this.resetPageState();
-            this.loadUsers();
-          },
-          error: (err) => {
-            this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";
-            console.error('Error creating user:', err);
-          }
-        });
+    const updatedUser: AdminCreateUserRequest = {
+      ...this.newUser,
+      role: this.newUser.role
+    };
+    this.authenticationService.createUser(updatedUser).subscribe({
+      next: (response) => {
+        this.toastrService.success('Utilisateur créé avec succès');
+        this.showAddUserModal = false;
+        this.errorMessage = '';
+        this.resetPageState();
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.errorMessage = "Échec de la création de l'utilisateur. Veuillez réessayer plus tard.";
+        console.error('Error creating user:', err);
       }
     });
   }
