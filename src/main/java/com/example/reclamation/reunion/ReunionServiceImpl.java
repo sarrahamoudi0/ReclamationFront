@@ -1,5 +1,7 @@
 package com.example.reclamation.reunion;
 
+import com.example.reclamation.email.EmailService;
+import com.example.reclamation.email.EmailTemplateName;
 import com.example.reclamation.reunion.dto.CreateReunionRequest;
 import com.example.reclamation.reunion.dto.ReunionResponse;
 import com.example.reclamation.reunion.dto.UpdateReunionRequest;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,19 +25,21 @@ public class ReunionServiceImpl implements IReunionService {
     
     private final ReunionRepository reunionRepository;
     private final UserRepository userRepository;
-    
+    private final EmailService emailService;
+
+
     @Override
-    public ReunionResponse createReunion(CreateReunionRequest request, String adminId) {
+    public ReunionResponse createReunion(CreateReunionRequest request, String adminId)  {
         // Validate admin user
         User admin = userRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin utilisateur non trouvé"));
-        
+
         // Validate participants
         List<User> participants = userRepository.findAllById(request.getParticipantIds());
         if (participants.size() != request.getParticipantIds().size()) {
             throw new RuntimeException("Certains participants n'ont pas été trouvés");
         }
-        
+
         // Validate dates
         if (request.getDateDebut().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("La date de début ne peut pas être dans le passé");
@@ -42,7 +47,7 @@ public class ReunionServiceImpl implements IReunionService {
         if (request.getDateFin().isBefore(request.getDateDebut())) {
             throw new RuntimeException("La date de fin doit être après la date de début");
         }
-        
+
         // Create reunion
         Reunion reunion = Reunion.builder()
                 .titre(request.getTitre())
@@ -56,13 +61,42 @@ public class ReunionServiceImpl implements IReunionService {
                 .ordreDuJour(request.getOrdreDuJour())
                 .notes(request.getNotes())
                 .build();
-        
+
         Reunion savedReunion = reunionRepository.save(reunion);
         log.info("Réunion créée avec succès: {}", savedReunion.getId());
-        
+
+        // -----------------------------
+        // Envoyer un email simple aux participants
+        // -----------------------------
+        for (User participant : savedReunion.getParticipants()) {
+            try {
+                String email = participant.getEmail();
+                String sujet = "Nouvelle réunion assignée";
+                String lienFront = "http://localhost:4200/reunions/view/" + savedReunion.getId();
+
+                Context context = new Context();
+                context.setVariable("username", participant.getFullName());
+                context.setVariable("confirmationUrl", lienFront);
+
+                emailService.sendEmail(
+                        email,
+                        participant.getFullName(),
+                        EmailTemplateName.réunion_notification, // template simple sans date/titre/lieu
+                        lienFront,
+                        "",
+                        sujet
+                );
+
+                log.info("Email envoyé à {}", email);
+            } catch (Exception e) {
+                log.error("Erreur lors de l'envoi d'email à {} : {}", participant.getEmail(), e.getMessage());
+            }
+        }
+
         return ReunionResponse.fromReunion(savedReunion);
     }
-    
+
+
     @Override
     public ReunionResponse updateReunion(String reunionId, UpdateReunionRequest request, String adminId) {
         Reunion reunion = reunionRepository.findById(reunionId)
